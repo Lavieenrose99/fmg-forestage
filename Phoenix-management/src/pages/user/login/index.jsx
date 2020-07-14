@@ -52,7 +52,7 @@ const Login = props => {
           />
           <Password
             name="password"
-            placeholder="密码: ant.design"
+            placeholder="密码: 123456"
             rules={[
               {
                 required: true,

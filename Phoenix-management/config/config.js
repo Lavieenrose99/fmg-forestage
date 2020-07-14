@@ -2,7 +2,6 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -47,26 +46,25 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/welcome',
+              redirect: '/index',
             },
             {
-              path: '/welcome',
-              name: 'welcome',
+              name: '首页',
               icon: 'smile',
-              component: './Welcome',
+              path: '/index',
+              component: './DashboardAnalysis',
             },
             {
               path: '/admin',
               name: 'admin',
               icon: 'crown',
-              component: './Admin',
               authority: ['admin'],
               routes: [
                 {
                   path: '/admin/sub-page',
                   name: 'sub-page',
                   icon: 'smile',
-                  component: './Welcome',
+                  component: './Admin/Admin',
                   authority: ['admin'],
                 },
               ],
