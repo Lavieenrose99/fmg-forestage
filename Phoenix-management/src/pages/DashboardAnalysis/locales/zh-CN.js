@@ -1,5 +1,5 @@
 export default {
-  'dashboardanalysis.analysis.test': '工专路 {no} 号店',
+  'dashboardanalysis.analysis.test': '香草小镇',
   'dashboardanalysis.analysis.introduce': '指标说明',
   'dashboardanalysis.analysis.total-sales': '总销售额',
   'dashboardanalysis.analysis.day-sales': '日销售额',
@@ -13,7 +13,7 @@ export default {
   'dashboardanalysis.analysis.conversion-rate': '转化率',
   'dashboardanalysis.analysis.operational-effect': '运营活动效果',
   'dashboardanalysis.analysis.sales-trend': '销售趋势',
-  'dashboardanalysis.analysis.sales-ranking': '门店销售额排名',
+  'dashboardanalysis.analysis.sales-ranking': '销售额排名',
   'dashboardanalysis.analysis.all-year': '全年',
   'dashboardanalysis.analysis.all-month': '本月',
   'dashboardanalysis.analysis.all-week': '本周',

@@ -2,6 +2,7 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -10,9 +11,7 @@ export default defineConfig({
     hmr: true,
   },
   locale: {
-    // default zh-CN
     default: 'zh-CN',
-    // default true, when it is true, will use `navigator.language` overwrite default
     antd: true,
     baseNavigator: true,
   },
@@ -22,7 +21,6 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-  // umi routes: https://umijs.org/docs/routing
   routes: [
     {
       path: '/user',
@@ -32,7 +30,7 @@ export default defineConfig({
           name: 'login',
           path: '/user/login',
           component: './user/login',
-        },
+        }
       ],
     },
     {
@@ -66,7 +64,51 @@ export default defineConfig({
                   icon: 'smile',
                   component: './Admin/Admin',
                   authority: ['admin'],
+                }
+              ],
+            },
+            {
+              path: '/goods',
+              name: '商品管理',
+              icon: 'setting',
+              authority: ['admin'],
+              routes: [
+                {
+                  path: '/goods/goods-list',
+                  name: '商品列表',
+                  icon: 'smile',
+                  component: './GoodsManagement/GoodsListTable',
+                  authority: ['admin'],
                 },
+                {
+                  path: '/goods/add-goods',
+                  name: '添加商品',
+                  icon: 'add',
+                  component: './GoodsManagement/GoodsAddEditor',
+                  authority: ['admin'],
+                },
+             
+                {
+                  path: '/goods/goods-class-tags-management',
+                  name: '商品类别',
+                  icon: 'setting',
+                  component: './GoodsManagement/GoodsTags/GoodsClassIndex',
+                  authority: ['admin'],
+                },
+                {
+                  path: '/goods/goods-tags-management',
+                  name: '商品标签管理',
+                  icon: 'setting',
+                  component: './GoodsManagement/GoodsTags/GoodsTagsIndex',
+                  authority: ['admin'],
+                },
+                {
+                  path: '/goods/goods-models-management',
+                  name: '商品模版',
+                  icon: 'setting',
+                  component: './GoodsManagement/GoodsModels/GoodsModelsList',
+                  authority: ['admin'],
+                }
               ],
             },
             {
@@ -77,17 +119,17 @@ export default defineConfig({
             },
             {
               component: './404',
-            },
+            }
           ],
         },
         {
           component: './404',
-        },
+        }
       ],
     },
     {
       component: './404',
-    },
+    }
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

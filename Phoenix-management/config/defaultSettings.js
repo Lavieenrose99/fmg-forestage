@@ -10,7 +10,7 @@ const proSettings = {
   menu: {
     locale: true,
   },
-  title: 'Phoenix-Mount',
+  title: '凤鸣谷',
   pwa: false,
   iconfontUrl: '',
 };

@@ -15,6 +15,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
+const plainOptions= ['总管理员','货品管理员','客服',]
 const residences = [
   {
     value: 'zhejiang',
@@ -118,15 +119,15 @@ const RegistrationForm = () => {
     >
       <Form.Item
         name="email"
-        label="E-mail"
+        label="电子邮箱"
         rules={[
           {
             type: 'email',
-            message: 'The input is not valid E-mail!',
+            message: '请输入正确大邮箱格式',
           },
           {
             required: true,
-            message: 'Please input your E-mail!',
+            message: '请填写你的邮箱',
           },
         ]}
       >
@@ -135,11 +136,11 @@ const RegistrationForm = () => {
 
       <Form.Item
         name="password"
-        label="Password"
+        label="密码"
         rules={[
           {
             required: true,
-            message: 'Please input your password!',
+            message: '请输入密码',
           },
         ]}
         hasFeedback
@@ -149,13 +150,13 @@ const RegistrationForm = () => {
 
       <Form.Item
         name="confirm"
-        label="Confirm Password:"
+        label="确认密码"
         dependencies={['password']}
         hasFeedback
         rules={[
           {
             required: true,
-            message: 'Please confirm your password!',
+            message: '请确认你输入的密码',
           },
           ({ getFieldValue }) => ({
             validator(rule, value) {
@@ -175,8 +176,8 @@ const RegistrationForm = () => {
         name="nickname"
         label={
           <span>
-            Nickname&nbsp;
-            <Tooltip title="What do you want others to call you?">
+            名字&nbsp;
+            <Tooltip title="你想被别人如何称呼?">
               <QuestionCircleOutlined />
             </Tooltip>
           </span>
@@ -184,7 +185,7 @@ const RegistrationForm = () => {
         rules={[
           {
             required: true,
-            message: 'Please input your nickname!',
+            message: '请输入你的昵称!',
             whitespace: true,
           },
         ]}
@@ -194,12 +195,12 @@ const RegistrationForm = () => {
 
       <Form.Item
         name="residence"
-        label="Habitual Residence"
+        label="所属分区"
         rules={[
           {
             type: 'array',
             required: true,
-            message: 'Please select your habitual residence!',
+            message: '请填写你所属的分区!',
           },
         ]}
       >
@@ -208,11 +209,11 @@ const RegistrationForm = () => {
 
       <Form.Item
         name="phone"
-        label="Phone Number"
+        label="电话号码"
         rules={[
           {
             required: true,
-            message: 'Please input your phone number!',
+            message: '请输入你的电话号码',
           },
         ]}
       >
@@ -224,22 +225,7 @@ const RegistrationForm = () => {
         />
       </Form.Item>
 
-      <Form.Item
-        name="website"
-        label="Website"
-        rules={[
-          {
-            required: true,
-            message: 'Please input website!',
-          },
-        ]}
-      >
-        <AutoComplete options={websiteOptions} onChange={onWebsiteChange} placeholder="website">
-          <Input />
-        </AutoComplete>
-      </Form.Item>
-
-      <Form.Item label="Captcha" extra="We must make sure that your are a human.">
+      <Form.Item label="验证" extra="We must make sure that your are a human.">
         <Row gutter={8}>
           <Col span={12}>
             <Form.Item
@@ -256,11 +242,23 @@ const RegistrationForm = () => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Button>Get captcha</Button>
+            <Button>验证</Button>
           </Col>
         </Row>
       </Form.Item>
-
+      <Form.Item
+        name="transportcompany"
+        label="授予权限"
+        rules={[
+            {
+              required: true,
+            },
+          ]}
+      >
+          <Checkbox.Group
+          options={plainOptions}
+        />
+      </Form.Item>
       <Form.Item
         name="agreement"
         valuePropName="checked"
@@ -278,7 +276,7 @@ const RegistrationForm = () => {
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" htmlType="submit">
-          Register
+         注册
         </Button>
       </Form.Item>
     </Form>
