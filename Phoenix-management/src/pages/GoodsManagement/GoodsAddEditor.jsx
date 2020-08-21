@@ -2,17 +2,19 @@
 import {
   Form, Input, Button, Select,
   Checkbox, InputNumber, DatePicker,
-  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Icon
+  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table
 } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import moment, { isMoment } from 'moment';
-import { get, values } from 'lodash';
-import React, { useState, useEffect, useRef } from 'react';
+import { get } from 'lodash';
+import React, {
+  useState, useEffect, useRef, Children 
+} from 'react';
 import FormItem from 'antd/lib/form/FormItem';
 import { connect } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
-import { value } from 'numeral';
+import PropTypes from 'prop-types';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import '../../style/GoodsAddEditor.less';
 import GoodsModelsList from './GoodsModels/GoodsModelsList.jsx';
@@ -24,6 +26,12 @@ const layout = {
   },
   wrapperCol: {
     span: 12,
+  },
+};
+const EditorLayout = {
+  wrapperCol: {
+    offset: 4,
+    //span: 8,
   },
 };
 const tailLayout = {
@@ -40,6 +48,7 @@ const { Step } = Steps;
 
 const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
+  const [fromSpec] = Form.useForm();
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -55,11 +64,13 @@ const GoodsAddEditor = (props) => {
   const formRef = useRef(null);
   const [goodsDetails, setGoodsDetails] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
+  const [richTextContent, setRichTextContent] = useState('');
   const [rubbish, setRubbish] = useState([]);
   const [check, setCheck] = useState(false);
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [submitGoods, setSubmitGoods] = useState([]);
   const [goodsModels, setgoodsModels] = useState([]);
+  const [templateId, setTemplateId] = useState(0);
   const [goodID, setGoodsId] = useState(0);
   const [submitValues, setSumitvalues] = useState({});
   const [current, setCurrent] = useState(0);
@@ -68,13 +79,29 @@ const GoodsAddEditor = (props) => {
   }) || []).map((tem) => {
     return tem.name;
   });
-  const detailsName = [...ModelsName, { name: '库存', itemValue: 'total' },
-    { name: '重量', itemValue: 'weight' }, { name: '价格', itemValue: 'price' },
-    { name: '成本价', itemValue: 'cost_price' }];
-
-  const goodsColumn = detailsName.map((arr) => {
-    return { title: arr.name, dataIndex: arr.itemValue, key: arr.name };
+  const ModelsColums = ModelsName.map((arr) => {
+    return {
+      title: arr,
+      dataIndex: 'specification',
+      render: (text, record) => (
+        <span>
+          {
+           record.specification[arr]
+         }
+        </span> 
+      ), 
+    };
   });
+  const detailsName = [{
+    title: '规格',
+    children: ModelsColums, 
+  }, { title: '库存', dataIndex: 'total' },
+  { title: '重量', dataIndex: 'weight' }, { title: '价格', dataIndex: 'price' },
+  { title: '成本价', dataIndex: 'cost_price' }];
+
+  // const goodsColumn = detailsName.map((arr) => {
+  //   return { title: arr.name, dataIndex: arr.itemValue, key: arr.name };
+  // });
   const settingGoods = {
     title: '操作',
     dataIndex: goodsColumns,
@@ -87,7 +114,7 @@ const GoodsAddEditor = (props) => {
       </>
     ),
   };
-  const goodsColumns = [...goodsColumn, settingGoods];
+  const goodsColumns = [...detailsName, settingGoods];
   const handlePreview = (file) => {
     setPreviewImage(file.url || file.thumbUrl);
     setPreviewVisible(true);
@@ -136,6 +163,9 @@ const GoodsAddEditor = (props) => {
   const getUploadToken = () => {
     getQiNiuToken();
   };
+  const subscribeRichText = (text) => {
+    setRichTextContent(text);
+  };
   const handleChangeAlot = ({ file  }) => {
     const {
       uid, name, type, thumbUrl, status, response = {},
@@ -172,6 +202,15 @@ const GoodsAddEditor = (props) => {
       </div>
     </div>
   );
+  useEffect(() => {
+    fromSpec.setFieldsValue({
+      specification: [''],
+    });
+  });
+  useEffect(() => {
+    const { goodId } = props;
+    setGoodsId(goodId.id);
+  }, []);
 
   useEffect(() => {
     props.dispatch({
@@ -203,6 +242,14 @@ const GoodsAddEditor = (props) => {
       localStorage.setItem('storage', JSON.stringify(newGoods));
     }
   };
+  const selectTemplate = (template) => {
+    props.dispatch({
+      type: 'goodsModels/getModelEntity',
+      paload: template,
+    });
+    setTemplateId(template);
+  };
+
   useEffect(() => {
     subscriptions();
     formRef.current.setFieldsValue({
@@ -228,28 +275,48 @@ const GoodsAddEditor = (props) => {
       sale_tag: storeageGoods.sale_tag,
       palce_tag: (storeageGoods.palce_tag ?? []),
       total: storeageGoods.total,
-      sale_price: (storeageGoods.sale_price),
+      price_reduce: (storeageGoods.price_reduce),
       carriage: storeageGoods.carriage,
       min_sale: storeageGoods.min_sale,
       limit_total: storeageGoods.limit_total,
     });
   }, []);
+  const subGoodsSpec = () => {
+    props.dispatch({
+      type: 'CreateGoods/createGoodsSpec',
+      payload: {
+        pid: props.goodId.id,
+        specification: goodsDetails,
+        template_id: templateId,
+      },
+    });
+  };
   const addSpecification = (data) => {
-    setGoodsDetails([...goodsDetails, data]);
+    const dataArr = Object.values(data);
+    const specification = dataArr[0][0];
+    const item = { specification };
+    const FinalDels = Object.assign(data, item);
+    setGoodsDetails([...goodsDetails, FinalDels]);
+  };
+  const submitSpc = () => {
+    Modal.confirm({
+      mask: false,
+      title: '凤鸣谷',
+      content: '确认提交商品信息吗',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => { subGoodsSpec(); },
+    });
   };
   const subGoodsInfos = (subValues) => {
     localStorage.removeItem('storage');
-    const templateId = [subValues.template_id];
-    const goodId =  props.dispatch({
+    const { dispatch } = props;
+    dispatch({
       type: 'CreateGoods/createGoods',
       payload: subValues,
     });
     setSubmitGoods(subValues);
     setCurrent(current + 1);
-    props.dispatch({
-      type: 'goodsModels/getModelEntity',
-      paload: templateId,
-    });
   };
   const onFinish = (values) => {
     const advance_time =  moment(values.advance_time).valueOf();
@@ -259,14 +326,22 @@ const GoodsAddEditor = (props) => {
     const sale_tag = [values.sale_tag];
     const cover = fileList[0].response.key;
     const view = fileVidoList[0].response.key;
+    const detail = richTextContent;
     const pictures = fileListAlot.map((arrFiles, index) => {
       return { picture: arrFiles.judege, order: index };
     });
     const timestap = {
-      advance_time, putaway_time, kind_tag, palce_tag, sale_tag, pictures, cover, view,
+      advance_time,
+      putaway_time, 
+      kind_tag,
+      palce_tag,
+      sale_tag, 
+      pictures,
+      cover,
+      view,
+      detail,
     };
     const subValues = Object.assign(values, timestap);
-    console.log(subValues);
     Modal.confirm({
       mask: false,
       title: '凤鸣谷',
@@ -449,22 +524,22 @@ const GoodsAddEditor = (props) => {
                 <FormItem name="price" noStyle>
                   <InputNumber
                     style={{ minWidth: '6vw' }}
-                    formatter={(value) => `¥ ${value}`}
-                    parser={(value) => value.replace(/\¥\s?|(,*)/g, '')}
+                    formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    parser={(Goodvalues) => Goodvalues.replace(/¥\s?|(,*)/g, '')}
                     min={0}
-                    step={0.1}
+                    step={0.01}
                   />
                 </FormItem>
               </span>
               <span className="goods-create-price-setting-item">
-                <span>优惠价格: </span>
-                <FormItem name="sale_price" noStyle>
+                <span>优惠多少: </span>
+                <FormItem name="price_reduce" noStyle>
                   <InputNumber
                     style={{ minWidth: '6vw' }}
-                    formatter={(value) => `¥ ${value}`}
-                    parser={(value) => value.replace(/\¥ \s?|(,*)/g, '')}
+                    formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    parser={(Goodvalues) => Goodvalues.replace(/¥ \s?|(,*)/g, '')}
                     min={0}
-                    step={0.1}
+                    step={0.01}
                   />
                 </FormItem>
               </span>
@@ -473,10 +548,10 @@ const GoodsAddEditor = (props) => {
                 <FormItem noStyle name="carriage">
                   <InputNumber
                     style={{ minWidth: '6vw' }}
-                    formatter={(value) => `¥ ${value}`}
-                    parser={(value) => value.replace(/\¥ \s?|(,*)/g, '')}
+                    formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    parser={(Goodvalues) => Goodvalues.replace(/¥ \s?|(,*)/g, '')}
                     min={0}
-                    step={0.1}
+                    step={0.01}
                   />
                 </FormItem>
               </span>
@@ -619,17 +694,14 @@ const GoodsAddEditor = (props) => {
                 listType="picture-card"
                 beforeUpload={getUploadToken}
                 fileList={fileVidoList}
-                //showUploadList={false}
-                onPreview={handlePreview}
                 onChange={handleVidoChange}
               >
-                {previewImage ? <img
-                  src={previewImage}
-                  alt="previewImg"
-                  style={{ width: '100%' }}
-                /> : uploadButton}
+                {fileVidoList.length >= 1 ? null : uploadButton}
               </Upload>
             </>
+          </Form.Item>
+          <Form.Item {...EditorLayout}>
+            <RichTextEditor subscribeRichText={subscribeRichText} />
           </Form.Item>
           <Form.Item label=" " colon={false} className="goods-create-swtich-contianer">
             <Space size="middle">
@@ -710,13 +782,11 @@ const GoodsAddEditor = (props) => {
               </span>
             </Space>
           </Form.Item>
-          <RichTextEditor />
-
+         
           <FormItem {...tailLayout}>
             <Button
               type="primary"
               htmlType="submit"
-              //onClick={() => setCurrent(current + 1)}
             >
               下一步
             </Button>
@@ -728,41 +798,115 @@ const GoodsAddEditor = (props) => {
       return (<div style={{ textAlign: 'center', backgroundColor: 'white' }}>
         <Divider>{(goodsModel[0] || []).title}</Divider>
         <Divider plain orientation="left">规格</Divider>
+        <Select
+          style={{ marginBottom: 20 }}
+          onChange={selectTemplate}
+          placeholder="选择规格模版"
+          allowClear
+        >
+          {goodsModelsList.map((arr) => {
+            return  <Option value={arr.id} key={arr.id}>{arr.title}</Option>;
+          })}
+
+        </Select>
         <Form
           onFinish={addSpecification}
+          form={fromSpec}
+          
         >
-          <div>
-            {
+          <Form.List name="specification">
+            {(fields) => {
+              return (
+                <div style={{ textAlign: 'center', backgroundColor: 'white' }}>
+                  {fields.map((field) => (
+                    <>
+                      <div>
+                        {
             (((goodsModel[0] || []).template || []).filter((arr) => {
               return arr.use !== false;
             }) || []).map((tem) => {
               return <div>
-                <FormItem name={`${tem.name}`} noStyle>
-                  <Input addonBefore={tem.name} style={{ width: '14vw', marginBottom: 10 }} />
+                <FormItem
+                  {...field}
+                  name={[field.name, `${tem.name}`]}
+                  fieldKey={[[field.fieldKey, `${tem.name}`]]}
+                  rules={[
+                    {
+                      //required: true,
+                    }
+                  ]}
+                  noStyle
+                >
+                  <Input
+                    addonBefore={['', tem.name]} 
+                    style={{ width: '14vw', marginBottom: 10 }}
+                  />
                 </FormItem>
               </div>;
             })
           }
-          </div>
+                      </div>
+                    </>
+                  ))}
+                </div>
+                
+              );
+            }}
+          </Form.List>
           <Divider plain orientation="left">常规设置</Divider>
           <div>
-            <FormItem name="total" noStyle>
-              <Input addonBefore="库存" style={{ width: '14vw', marginBottom: 10 }} />
+            <FormItem
+              name="total"
+              label="库存"
+              rules={[
+                {
+                  required: true,
+                }
+              ]}
+              noStyle
+            >
+              <InputNumber style={{ width: '14vw', marginBottom: 10 }} />
             </FormItem>
           </div>
           <div>
-            <FormItem name="price" noStyle>
-              <Input addonBefore="价格" style={{ width: '14vw', marginBottom: 10 }} />
+            <FormItem
+              name="price"
+              rules={[
+                {
+                  required: true,
+                }
+              ]}
+              noStyle
+            >
+              <InputNumber addonBefore="价格" style={{ width: '14vw', marginBottom: 10 }} />
             </FormItem>
           </div>
           <div>
-            <FormItem name="weight" noStyle>
-              <Input addonBefore="重量" style={{ width: '14vw', marginBottom: 10 }} />
+            <FormItem
+              name="weight"
+              
+              rules={[
+                {
+                  required: true,
+                }
+              ]}
+              noStyle
+            >
+              <InputNumber addonBefore="重量" style={{ width: '14vw', marginBottom: 10 }} />
             </FormItem>
           </div>
           <div>
-            <FormItem name="cost_price" noStyle>
-              <Input addonBefore="成本价" style={{ width: '14vw', marginBottom: 10 }} />
+            <FormItem
+              name="cost_price"
+              addonBefore="价格"
+              rules={[
+                {
+                  required: true,
+                }
+              ]}
+              noStyle
+            >
+              <InputNumber addonBefore="成本价" style={{ width: '14vw', marginBottom: 10 }} />
             </FormItem>
           </div>
           <Divider />
@@ -774,6 +918,7 @@ const GoodsAddEditor = (props) => {
           dataSource={goodsDetails}
           style={{ paddingLeft: 20, paddingRight: 20 }}
         />
+        <Button onClick={submitSpc}>提交</Button>
 
       </div>);
     }
@@ -783,6 +928,24 @@ const GoodsAddEditor = (props) => {
 
     </>
   );
+};
+GoodsAddEditor.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  goodId: PropTypes.number,
+  goodsArea: PropTypes.arrayOf({}),
+  goodsSale: PropTypes.arrayOf({}),
+  goodsClassFather: PropTypes.arrayOf({}),
+  goodsClassChild: PropTypes.arrayOf({}),
+  goodsModelsList: PropTypes.arrayOf({}),
+};
+GoodsAddEditor.defaultProps = {
+  goodId: 0,
+  goodsArea: [],
+  goodsSale: [],
+  goodsClassFather: [],
+  goodsClassChild: [],
+  goodsModelsList: [],
+
 };
 
 export default connect(({
@@ -802,4 +965,3 @@ export default connect(({
   GoodsAreaTags: goodsArea.GoodsAreaTags,
 
 }))(GoodsAddEditor);
-

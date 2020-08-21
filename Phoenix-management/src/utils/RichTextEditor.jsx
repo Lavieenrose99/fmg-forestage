@@ -1,15 +1,21 @@
+/* eslint-disable react/no-string-refs */
+/* eslint-disable react/jsx-no-bind */
 import React, { Component } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Button, Modal, message } from 'antd';
+import request from '@/utils/request';
 import { ImageDrop } from 'quill-image-drop-module';
+import PropTypes from 'prop-types';
+import { noop } from 'lodash';
 //import MYURL  from '../api/config';
-
+const MYURL = 'http://upload-z2.qiniup.com';
+const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 Quill.register('modules/imageDrop', ImageDrop);
 class RichTextEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: '' }; // You can also pass a Quill Delta here
+    this.state = { text: '', qiniutoken: '' }; // You can also pass a Quill Delta here
     this.handleChange = this.handleChange.bind(this);
     this.selectImage = this.selectImage.bind(this);
     this.changeImageBeforeUpload = this.changeImageBeforeUpload.bind(this);
@@ -20,18 +26,12 @@ class RichTextEditor extends Component {
     this.handleUpload = this.handleUpload.bind(this);
   }
 
-  handleChange(value) {
-    // if (value) ReactQuill.getSelection().dangerouslyPasteHTML(value);
-    this.setState({ text: value });
-  }
-
     modules={ //富文本配置
       toolbar: {
         container: [
           [{ header: [1, 2, 3, 4, 5, 6, false] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],        // toggled buttons
           ['blockquote', 'code-block'],
-          // [{ 'header': 1 }, { 'header': 2 }],               // custom button values
           [{ script: 'sub' }, { script: 'super' }],      // superscript/subscript
           [{ indent: '-1' }, { indent: '+1' }],          // outdent/indent
           [{ direction: 'rtl' }],                         // text direction
@@ -40,7 +40,7 @@ class RichTextEditor extends Component {
           [{ color: [] }, { background: [] }],          // dropdown with defaults from theme
           [{ font: [] }],
           [{ align: [] }],
-          ['link', 'image', 'video'],
+          ['link', 'image'],
           ['clean']
         ],
         handlers: {
@@ -68,12 +68,20 @@ class RichTextEditor extends Component {
 
     changeImageBeforeUpload(e) {
       const file = e.target.files[0];
-      console.log(file)
+      request('/api.farm/goods/resources/qiniu/upload_token', {
+        method: 'GET',
+      }).then(
+        (response) => {
+          this.setState({
+            qiniutoken: response,
+          });
+        }
+      );
+     
       if (!file) {
         return;
       }
       let src;
-      // 匹配类型为image/开头的字符串
       if (file.type === 'image/png' || file.type === 'image/jpeg') {
         src = URL.createObjectURL(file);
       } else {
@@ -88,83 +96,72 @@ class RichTextEditor extends Component {
         src,
         file,
       });
-      console.log('eeeeeee', window);
     }
 
-    /*3.开始上传图片*/
+    uploadForImage(files, token) {
+      const uploadItem = new FormData();
+      uploadItem.append('action', 'z2');
+      uploadItem.append('token', token.token);
+      uploadItem.append('file', files);
+      uploadItem.append('key', `richText-${Date.parse(new Date())}`);
+      request(MYURL, {
+        credentials: 'omit',
+        method: 'POST',
+        data: uploadItem,
+        //requestType: 'form',
+      }).then(
+        (response) => {
+          console.log(response);
+          this.imageHandler(`${BASE_QINIU_URL}${response.key}`);
+        }
+      );
+    }
+
+    imageHandler(url) {
+      console.log(url);
+      const quill = this.reactQuillRef.getEditor();
+      const range = quill.getSelection();
+      const index = range ? range.index : 0;
+      quill.insertEmbed(index, 'image', url, Quill.sources.USER);//插入图片
+      quill.setSelection(index + 1);//光标位置加1 
+    }
+
     handleUpload() {      
       const this_ = this;
       /*调用上传图片的封装方法*/
       if (!this.state.file) {
         alert('请选择图片！！');
       } else {
-        const fileServerAddr = MYURL.fileServer; //服务器地址
-        const file = this.state.file.name;
-        const { size } = this.state.file;
-        this.uploadForImage(fileServerAddr, file, size, (response) => { //回调函数处理进度和后端返回值
-          console.log('res----?>', response);
-          if ((response && response.status === 200) || (response && response.status === '200')) {
-            message.success('上传成功！');
-            this_.hideUploadBox();//隐藏弹框
-            console.log('response.data.url???=>', response.data.url);
-            this_.imageHandler(response.data.url);//处理插入图片到编辑器
-          } else if (response && response.status !== 200) {
-            message.error(response.msg);
-          }
-        },
-        localStorage.getItem('access_token'));
+        const { file } = this.state;
+        const { qiniutoken } = this.state;
+        this.uploadForImage(file, qiniutoken);
       }
     }
-
-    uploadForImage(url, data, size, callback, token) { //data是数据列表
-      if (!data) {
-        alert('请选择图片！！');
-        console.log('未选择文件');
-      } else {
-        const xhr = new XMLHttpRequest();
-        const formdata = new FormData();
-        formdata.append('file', data);
-        formdata.append('fileSize', size);
-        xhr.onload = () => {
-          if (xhr.status === 200 || xhr.statusn === '200') {
-            const response = JSON.parse(xhr.response);
-            console.log('res====', response);
-            callback(response);
-          }
-        };
-        // xhr.open('POST', url, true);  // 第三个参数为async?，异步/同步
-        xhr.open('GET', url, true);  // 第三个参数为async?，异步/同步
-        xhr.setRequestHeader('accessToken', token);
-        xhr.send(formdata);
-      }
-    }
-
-    /*4.处理图片插入*/
-    imageHandler(url) {
-      if (typeof this.reactQuillRef.getEditor !== 'function') return;
-      const quill = this.reactQuillRef.getEditor();
-      const range = quill.getSelection();
-      const index = range ? range.index : 0;
-      quill.insertEmbed(index, 'image', url, Quill.sources.USER);//插入图片
-      quill.setSelection(index + 1);//光标位置加1 
-      console.log('quill.getSelection.======', quill.getSelection().index);
+    
+    handleChange(value) {
+      const { subscribeRichText } = this.props;
+      this.setState({ text: value }, () => {
+        const { text } = this.state;
+        subscribeRichText(text);
+      });
     }
 
     render() {
+      const { uploadBoxVisible, src, text } = this.state;
       return (
-        <div style={{ maxHeight: '500px' }}>
+        <div style={{ height: 400 }}> 
           <ReactQuill
             id="ddd"
             ref={(el) => { this.reactQuillRef = el; }}
-            value={this.state.text}
+            value={text}
             onChange={this.handleChange}
             theme="snow"
             modules={this.modules}
-            style={{ height: '300px' }}
+            style={{ height: 300, width: '60vw' }}
           />
           <Modal
             title="上传图片"
-            visible={this.state.uploadBoxVisible}
+            visible={uploadBoxVisible}
             onCancel={this.hideUploadBox}
             onOk={this.handleUpload}
             maskClosable={false}
@@ -184,8 +181,8 @@ class RichTextEditor extends Component {
                 />
               </div>
               <div style={{ textAlign: 'center', margin: '10px 0' }}>
-                {this.state.src
-                  ? <img src={this.state.src} alt="" style={{ maxWidth: '100%', height: '300px' }} />
+                {src
+                  ? <img src={src} alt="" style={{ maxWidth: '100%', height: '300px' }} />
                   :                            <div style={{ background: '#f2f2f2', width: '100%', height: '300px' }} />}
               </div>
             </div>
@@ -194,4 +191,10 @@ class RichTextEditor extends Component {
       );
     }
 }
+RichTextEditor.propTypes = {
+  subscribeRichText: PropTypes.func,
+};
+RichTextEditor.defaultProps = {
+  subscribeRichText: noop,
+};
 export default RichTextEditor;

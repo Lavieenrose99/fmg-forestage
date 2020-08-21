@@ -35,7 +35,7 @@ const GoodsTemplateModels = {
       });
     },
     * getModelEntity(payload, { call, put }) {
-      const response = yield call(mGetSpecificationTemplate, payload.paload);
+      const response = yield call(mGetSpecificationTemplate, [payload.paload]);
       yield put({
         type: 'saveGoodsModel',
         payload: response,
