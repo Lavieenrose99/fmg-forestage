@@ -15,7 +15,7 @@ Quill.register('modules/imageDrop', ImageDrop);
 class RichTextEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: '', qiniutoken: '' }; // You can also pass a Quill Delta here
+    this.state = { text: this.props.defaultText, qiniutoken: '' }; // You can also pass a Quill Delta here
     this.handleChange = this.handleChange.bind(this);
     this.selectImage = this.selectImage.bind(this);
     this.changeImageBeforeUpload = this.changeImageBeforeUpload.bind(this);
@@ -111,14 +111,12 @@ class RichTextEditor extends Component {
         //requestType: 'form',
       }).then(
         (response) => {
-          console.log(response);
           this.imageHandler(`${BASE_QINIU_URL}${response.key}`);
         }
       );
     }
 
     imageHandler(url) {
-      console.log(url);
       const quill = this.reactQuillRef.getEditor();
       const range = quill.getSelection();
       const index = range ? range.index : 0;
@@ -193,8 +191,10 @@ class RichTextEditor extends Component {
 }
 RichTextEditor.propTypes = {
   subscribeRichText: PropTypes.func,
+  defaultText: PropTypes.string,
 };
 RichTextEditor.defaultProps = {
   subscribeRichText: noop,
+  defaultText: '',
 };
 export default RichTextEditor;

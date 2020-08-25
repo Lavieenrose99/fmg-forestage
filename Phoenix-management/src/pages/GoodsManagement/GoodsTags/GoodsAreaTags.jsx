@@ -2,16 +2,28 @@
 import React from 'react';
 import {
   Table, Input, Button, Popconfirm, Form, Modal, Space, message,
-  Divider 
+  Divider, 
+  Upload
 } from 'antd';
+import request from '@/utils/request';
 import { connect } from 'umi';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import { PlusCircleTwoTone } from '@ant-design/icons';
+import { PlusCircleTwoTone, UploadOutlined } from '@ant-design/icons';
 
+const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+const QINIU_SERVER = 'http://upload-z2.qiniup.com';
+const uploadButton = (
+  <div>
+    <div className="ant-upload-text">
+      <UploadOutlined />
+      上传
+    </div>
+  </div>
+);
 @connect(({ goodsArea, goodsSale }) => ({
   goodsSale,
-  goodsArea: get(goodsArea, 'tags', []),
+  goodsArea: get(goodsArea, 'info', []),
   AreaTotal: get(goodsArea, 'total', ''),
   GoodsAreaTags: goodsArea.GoodsAreaTags,
   //addAreaTags: goodsArea.setAreaTag,
@@ -23,7 +35,20 @@ class GoodAreaTags extends React.Component {
       {
         title: '属地名称',
         dataIndex: 'place',
-        //editable: true,
+      },
+      {
+        title: '图标',
+        dataIndex: 'picture',
+        render: (pictures, source) => (
+          <div style={{ textAlign: 'center' }}>
+            <img
+              src={BASE_QINIU_URL + pictures}
+              alt={pictures} 
+              style={{ width: 30, height: 30  }}
+            />
+          </div>
+        )
+        ,
       },
       {
         title: '操作',
@@ -32,7 +57,7 @@ class GoodAreaTags extends React.Component {
           <>
             <Space size="large">
               <a>查看商品</a>
-              <a onClick={() => this.handleChange(text, record.place)}>修改</a>
+              <a onClick={() => this.handleChange(text, record.place, record.picture)}>修改</a>
               <a onClick={() => this.comfirmDelArea(text)}>删除</a>
             </Space>
           </>
@@ -45,6 +70,8 @@ class GoodAreaTags extends React.Component {
       current: 1,
       setGoodspalce: '',
       setPlaceId: '',
+      qiniuToken: '',
+      fileList: [],
       visible: false,
       changeVisible: false,
       page: 1,
@@ -57,12 +84,30 @@ class GoodAreaTags extends React.Component {
     //初始化拉取表格数据
     this.handleGetListData();
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { qiniuToken } = this.state;
+    if (nextState.qiniuToken !== qiniuToken);
+    return true;
+  }
   
   InputGoodsPlace=(e) => {
     this.setState({
       Goodsplace: e.target.value,
     });
   }
+
+   getQiNiuToken = () => {
+     request('/api.farm/goods/resources/qiniu/upload_token', {
+       method: 'GET',
+     }).then(
+       (response) => {
+         this.setState({
+           qiniuToken: response.token,
+         });
+       }
+     );
+   };
 
   changePage=(current) => {
     this.setState({
@@ -117,13 +162,14 @@ class GoodAreaTags extends React.Component {
  changeArea=() => {
    const { dispatch } = this.props;
    const {
-     page, limit, setGoodspalce, setPlaceId, 
+     page, limit, setGoodspalce, setPlaceId, fileList,
    } = this.state;
    if (setGoodspalce !== '') {
      dispatch({
        type: 'goodsArea/adjAreaTags',
        payload: {
          place: setGoodspalce,
+         picture: fileList[0].response.key,
          tid: setPlaceId,
          query: {
            page,
@@ -143,12 +189,15 @@ class GoodAreaTags extends React.Component {
 
  subArea=() => {
    const { dispatch } = this.props;
-   const { page, limit, Goodsplace } = this.state;
+   const {
+     page, limit, Goodsplace, fileList, 
+   } = this.state;
    if (Goodsplace !== '') {
      dispatch({
        type: 'goodsArea/setAreaTags',
        payload: {
          place: Goodsplace,
+         picture: fileList[0].response.key,
          query: {
            page,
            limit,
@@ -162,6 +211,25 @@ class GoodAreaTags extends React.Component {
      message.error('属性不能为空');
    }
  }
+
+ handleChangefile = ({ file  }) => {
+   const {
+     uid, name, type, thumbUrl, status, response = {},
+   } = file;
+   const fileItem = {
+     uid,
+     name,
+     type,
+     thumbUrl,
+     status,
+     response,
+     url: BASE_QINIU_URL + (response.key || ''),
+   };
+   
+   this.setState({
+     fileList: [fileItem],
+   });
+ };
 
  handleCancel=() => {
    const { visible } = this.state;
@@ -184,11 +252,12 @@ class GoodAreaTags extends React.Component {
    });
  }
 
- handleChange=(id, place) => {
+ handleChange=(id, place, picture) => {
    const { visible } = this.state;
    this.setState({
      changeVisible: !visible,
      setGoodspalce: place,
+     setPicture: picture,
      setPlaceId: id,
    });
  }
@@ -218,7 +287,8 @@ class GoodAreaTags extends React.Component {
 
  render() {
    const {
-     visible, changeVisible, setGoodspalce, pageSize, current, 
+     visible, changeVisible, setGoodspalce, 
+     pageSize, current, qiniuToken, fileList, setPicture,
    } = this.state;
    const { goodsArea, AreaTotal } = this.props;
    const EnigoodsArea = goodsArea.filter((tags) => { return tags.place !== ''; }); 
@@ -256,6 +326,24 @@ class GoodAreaTags extends React.Component {
        >
          <Divider orientation="left" plain>属地名称</Divider>
          <Input placeholder="请输入属地名称" onChange={this.InputGoodsPlace} />
+         <Divider orientation="left" plain>属地LOGO</Divider>
+         <span onClick={this.getQiNiuToken}>
+           <Upload
+             action={QINIU_SERVER}
+             data={
+             {
+               token: qiniuToken,
+               key: `icon-${Date.parse(new Date())}`,
+             }
+}
+             listType="picture-card"
+             beforeUpload={this.getQiNiuToken}
+             fileList={fileList}
+             onChange={this.handleChangefile}
+           >
+             {fileList.length >= 1 ? null : uploadButton}
+           </Upload>
+         </span>
        </Modal>
        <Modal
          mask={false}
@@ -268,6 +356,26 @@ class GoodAreaTags extends React.Component {
        >
          <Divider orientation="left" plain>属地名称</Divider>
          <Input value={setGoodspalce} onChange={this.ChangeGoodsPlace} />
+         <Divider orientation="left" plain>属地LOGO</Divider>
+         <span onClick={this.getQiNiuToken}>
+           <Upload
+             action={QINIU_SERVER}
+             data={
+             {
+               token: qiniuToken,
+               key: `icon-${Date.parse(new Date())}`,
+             }
+}
+             listType="picture-card"
+             beforeUpload={this.getQiNiuToken}
+             fileList={fileList}
+             onChange={this.handleChangefile}
+           >
+             {fileList.length >= 1 ? null : uploadButton}
+           </Upload>
+         </span>
+         <img src={BASE_QINIU_URL + setPicture} alt="" style={{ height: 50, width: 50 }} />
+         <Upload />
        </Modal>
        <Table
          rowClassName={() => 'editable-row'}

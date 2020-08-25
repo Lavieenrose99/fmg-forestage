@@ -3,7 +3,8 @@ import {
   setGoodsAreaTags, 
   getGoodsAreaTags, 
   delGoodsAreaTags, 
-  adjustGoodsAreaTags 
+  adjustGoodsAreaTags,
+  mGetGoodsAreaTags
 } from '@/services/GoodsTags/GoodsAreaTags';
 
 const GoodsAreaModel = {
@@ -14,6 +15,21 @@ const GoodsAreaModel = {
   effects: {
     * fetchAreaTags({ payload }, { call, put }) {
       const response = yield call(getGoodsAreaTags, payload);
+      const { tags } = response;
+      const ids = tags.map((arr) => {
+        return arr.id;
+      });
+      yield put({
+        type: 'fetchAreaEntity',
+        payload: ids,
+      });
+      yield put({
+        type: 'saveAreaTagsTotal',
+        payload: response.total,
+      });
+    },
+    * fetchAreaEntity({ payload }, { call, put }) {
+      const response = yield call(mGetGoodsAreaTags, payload);
       yield put({
         type: 'saveAreaTags',
         payload: response,
@@ -21,8 +37,8 @@ const GoodsAreaModel = {
     },
 
     * setAreaTags({ payload }, { call, put }) {
-      const { query, place } = payload;
-      const result = yield call(setGoodsAreaTags, place);
+      const { query, place, picture } = payload;
+      const result = yield call(setGoodsAreaTags, place, picture);
       yield put({
         type: 'fetchAreaTags',
         payload: query,
@@ -47,8 +63,8 @@ const GoodsAreaModel = {
       }
     },
     * adjAreaTags({ payload }, { call, put }) {
-      const { tid, query, place } = payload;
-      const result = yield call(adjustGoodsAreaTags, tid, place);
+      const { tid, query, place, picture } = payload;
+      const result = yield call(adjustGoodsAreaTags, tid, place, picture);
       yield put({
         type: 'fetchAreaTags',
         payload: query,
@@ -66,7 +82,13 @@ const GoodsAreaModel = {
     saveAreaTags(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        info: payload,
+      };
+    },
+    saveAreaTagsTotal(state, { payload }) {
+      return {
+        ...state,
+        total: payload,
       };
     },
   },

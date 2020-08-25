@@ -25,7 +25,6 @@ const GoodsClassModel = {
       }
     },
     * createGoodsSpec({ payload }, { call, put }) {
-      console.log(payload)
       const result = yield call(setGoodsSpec, payload);
       if (result) {
         yield message.success('添加商品规格成功'); 
@@ -43,6 +42,7 @@ const GoodsClassModel = {
     },
     savePageTotals(state, { payload }) {
       return {
+        ...state,
         total: payload,
       };
     },

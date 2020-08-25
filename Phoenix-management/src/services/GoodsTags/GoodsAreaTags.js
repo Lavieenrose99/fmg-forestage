@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 
-export async function setGoodsAreaTags(payload) {
+export async function setGoodsAreaTags(place, picture) {
   return request('/api.farm/goods/place_tag', {
     method: 'POST',
-    data: { place: payload },
+    data: { place, picture },
   });
 }
 export async function getGoodsAreaTags(payload) {
@@ -15,7 +15,7 @@ export async function getGoodsAreaTags(payload) {
 export async function mGetGoodsAreaTags(payload) {
   return request('/api.farm/goods/place_tag/_mget', {
     method: 'POST',
-    params: { ids: payload },
+    data: { ids: payload },
   });
 }
 
@@ -25,11 +25,12 @@ export async function delGoodsAreaTags(payload) {
     //params: payload, 
   });
 }
-export async function adjustGoodsAreaTags(id, name) {
+export async function adjustGoodsAreaTags(id, name, picture) {
   return request(`/api.farm/goods/place_tag/${id}`, {
     method: 'PUT',
     data: {
       place: name, 
+      picture,
     },
   });
 }
