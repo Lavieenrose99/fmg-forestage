@@ -3,6 +3,8 @@ import { get } from 'lodash';
 import {
   setGoods,
   setGoodsSpec,
+  getGoodsList,
+  MgetGoods
 } from '@/services/CreateGoods/CreateGoods';
   
 const GoodsClassModel = {
@@ -11,7 +13,6 @@ const GoodsClassModel = {
     GoodsClassTags: [],
   },
   effects: {
-  
     * createGoods({ payload }, { call, put }) {
       const result = yield call(setGoods, payload);
       yield put({
@@ -24,6 +25,30 @@ const GoodsClassModel = {
         yield message.error('添加失败请稍后重试');
       }
     },
+    * getGoodsList({ payload }, { call, put }) {
+      const result = yield call(getGoodsList, payload);
+      const { goods, total } = result;
+      const ids = goods.map((arr) => {
+        return arr.id;
+      });
+      yield put({
+        type: 'fetchGoodsEntity',
+        payload: ids,
+      });
+      yield put({
+        type: 'savePageTotals',
+        payload: total,
+      });
+    },
+
+    * fetchGoodsEntity({ payload }, { call, put }) {
+      const response = yield call(MgetGoods, payload);
+      yield put({
+        type: 'saveGoods',
+        payload: response,
+      });
+    },
+
     * createGoodsSpec({ payload }, { call, put }) {
       const result = yield call(setGoodsSpec, payload);
       if (result) {
@@ -38,6 +63,12 @@ const GoodsClassModel = {
       return {
         ...state,
         goodId: payload,
+      };
+    },
+    saveGoods(state, { payload }) {
+      return {
+        ...state,
+        info: payload,
       };
     },
     savePageTotals(state, { payload }) {

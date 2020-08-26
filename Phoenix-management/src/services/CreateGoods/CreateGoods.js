@@ -6,6 +6,20 @@ export async function setGoods(payload) {
     data: payload,
   });
 }
+export async function getGoodsList(payload) {
+  return request('/api.farm/goods/list', {
+    method: 'GET',
+    params: payload.query,
+  });
+}
+
+export async function MgetGoods(payload) {
+  return request('/api.farm/goods/_mget', {
+    method: 'POST',
+    data: { ids: payload },
+  });
+}
+
 export async function setGoodsSpec(payload) {
   return request(`/api.farm/goods/specification/${payload.pid}`, {
     method: 'POST',

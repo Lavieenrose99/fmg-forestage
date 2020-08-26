@@ -1,135 +1,79 @@
 import React from 'react';
 import {
-  Table, Tag, Space, TreeSelect, Modal, Icon 
+  Table, Tag, Space, TreeSelect, 
+  Modal, Icon, Input, Divider, Select
 } from 'antd';
+import request from '@/utils/request';
+import moment from 'moment';
+import { connect } from 'umi';
+import { get } from 'lodash';
+import PropTypes from 'prop-types';
 import GoodsAddEditor from '../GoodsAddEditor';
 import styles from './index.less';
+import '../../../style/GoodsTagsIndex.less';
 
 const { Column, ColumnGroup } = Table;
+const { Option, OptGroup } = Select;
 const { SHOW_PARENT } = TreeSelect;
-const treeData = [
-  {
-    title: '蔬菜',
-    value: '蔬菜',
-    key: '蔬菜',
-    children: [
-      {
-        title: '西兰花',
-        value: '西兰花',
-        key: '西兰花',
-      }
-    ],
-  },
-  {
-    title: '水果',
-    value: '水果',
-    key: '水果',
-    children: [
-      {
-        title: '苹果',
-        value: '苹果',
-        key: '苹果',
-      },
-      {
-        title: '李子',
-        value: '李子',
-        key: '李子',
-      },
-      {
-        title: '大桂圆',
-        value: '大桂圆',
-        key: '大桂圆',
-      }
-    ],
-  },
-  {
-    title: '香草制品',
-    value: '香草制品',
-    key: '香草制品',
-    children: [
-      {
-        title: '檀木香氛',
-        value: '檀木香氛',
-        key: '檀木香氛',
-      }
-    ],
-  },
-  {
-    title: '香草苗苗',
-    value: '0-3',
-    key: '0-3',
-    children: [
-      {
-        title: '薰衣草苗',
-        value: '0-3-0',
-        key: '0-3-0',
-      }
-    ],
-  }
-];
-
-const data = [
-  {
-    key: '1',
-    name: '檀木香氛',
-    price: 99.98,
-    amount: 99,
-    goodsArea: '香草小镇',
-    updateTime: '2020-7-19',
-    tags: ['轮播展示'],
-    classification: { index: 1, name: '香草制品' },
-  },
-  {
-    key: '2',
-    name: '迷迭香马迷纯喷雾',
-    price: 32.3,
-    amount: 66,
-    goodsArea: '香草小镇',
-    updateTime: '2020-7-19',
-    tags: ['轮播展示'],
-    classification: { index: 1, name: '香草制品' },
-  },
-  {
-    key: '3',
-    name: '本地现摘大桂圆',
-    price: 32.3,
-    amount: 99,
-    goodsArea: '一号营地',
-    updateTime: '2020-7-19',
-    tags: ['新品上市'],
-    classification: { index: 2, name: '水果' },
-  },
-  {
-    key: '4',
-    name: '户外拓展一日体验',
-    price: 99,
-    amount: 99,
-    goodsArea: '躬耕乐园',
-    updateTime: '2020-7-19',
-    tags: ['新品上市'],
-    classification: { index: 3, name: '生态体验' },
-  },
-  {
-    key: '5',
-    name: '西兰花',
-    price: 10,
-    amount: 99,
-    goodsArea: '躬耕乐园',
-    updateTime: '2020-7-19',
-    tags: ['轮播展示'],
-    classification: { index: 4, name: '蔬菜' },
-  }
-];
+const treeData = [];
+const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+@connect(({
+  goodsArea, goodsSale, CreateGoods, goodsClass, 
+}) => ({
+  goodsSale: get(goodsSale, 'tags', []),
+  goodsArea: get(goodsArea, 'info', []),
+  AreaTotal: get(goodsArea, 'total', ''),
+  Goods: get(CreateGoods, 'info', []),
+  goodsClassFather: get(goodsClass, 'tags', [])
+    .filter((arr) => { return arr.parent_id === 0; }),
+  goodsClassChild: get(goodsClass, 'tags', [])
+    .filter((arr) => { return arr.parent_id !== 0; }),
+  GoodsTotal: get(CreateGoods, 'total', ''),
+  GoodsAreaTags: goodsArea.GoodsAreaTags,
+})) 
 
 class GoodsList extends React.Component {
   constructor() {
     super();
     this.state = {
       visable: false,
-
+      FilterText: '',
+      tagsCheck: 0,
+      pageSize: 10,
+      current: 1,
     };
   }
-  
+
+  componentDidMount() {
+    const { dispatch, pageSize } = this.props;
+    dispatch({
+      type: 'CreateGoods/getGoodsList',
+      payload: {
+        query: {
+          page: 1,
+          limit: 10,
+        },
+      }, 
+    });
+    dispatch({
+      type: 'goodsArea/fetchAreaTags',
+      payload: {
+        query: {
+          page: 1,
+          limit: 99,
+        },
+      }, 
+    });
+    dispatch({
+      type: 'goodsClass/fetchClassTags',
+      payload: { page: 1, limit: 99 }, 
+    });
+    dispatch({
+      type: 'goodsSale/fetchSaleTags',
+      payload: { page: 1, limit: 99 }, 
+    });
+  }
+
   showModal = () => {
     this.setState({
       visible: true,
@@ -147,9 +91,35 @@ class GoodsList extends React.Component {
     });
   }
 
-  onChange = (value) => {
-    console.log('onChange ', value);
-    this.setState({ value });
+  changePage=(current) => {
+    this.setState({
+      current,
+    });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'CreateGoods/getGoodsList',
+      payload: {
+        query: {
+          page: current,
+          limit: 10,
+        },
+      }, 
+    });
+  }
+
+  MainTextOnChange = (e) => {
+    const { current, FilterText } = this.state;
+    const { dispatch } = this.props;
+    this.setState({ FilterText: e.target.value }, () => { this.handleGetListData(); });
+  };
+
+  handleGetListData = () => {
+    const { current, FilterText } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'CreateGoods/getGoodsList',
+      payload: { query: { page: current, limit: 10, keyword: FilterText } }, 
+    });
   };
 
   handleCancel = () => {
@@ -157,65 +127,156 @@ class GoodsList extends React.Component {
   };
 
   render() {
-    const tProps = {
-      treeData,
-      //value: this.state.value,
-      onChange: this.onChange,
-      //treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
-      placeholder: '搜素商品',
-      style: {
-        width: '98%',
-      },
+    const { pageSize, current, tagsCheck } = this.state;
+    const {
+      goodsClassChild, 
+      Goods, GoodsTotal, 
+      goodsClassFather, goodsArea,
+      goodsSale,
+    } = this.props;
+    for (let i = 0; i < goodsClassFather.length; i++) {
+      for (let j = 0; j < goodsClassChild.length; j++) {
+        if (goodsClassFather[i].id === goodsClassChild[j].parent_id) {
+          goodsClassChild[j] = { ...goodsClassChild[j], parent: goodsClassFather[i].title };
+        }
+      }
+    }
+    const paginationProps = {
+      showQuickJumper: false,
+      showTotal: () => `共${GoodsTotal}条`,
+      pageSize,
+      current,
+      total: GoodsTotal,
+      onChange: (current) => this.changePage(current),
     };
     return (
       <div>
-        <TreeSelect
-          {...tProps} 
-          showSearch
-          optionFilterProp="children"
-          allowClear
-          multiple
-          treeDefaultExpandAll
-        />
-        <Table dataSource={data}>
-          <Column title="商品名称" dataIndex="name" key="firstName" />
+        <Input onChange={this.MainTextOnChange} placeholder="请输入该商品关键字" />
+        <Select
+          style={{ width: '85vw', marginTop: 10 }}
+          //defaultOpen
+          placeholder="请选择商品类别"
+        >
+          {
+                goodsClassFather.map((arr) => {
+                  return <OptGroup label={arr.title}>
+                    {(goodsClassChild.filter((tags) => {
+                      return tags.parent_id === arr.id;
+                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
+                  </OptGroup>;
+                })
+              }
+        </Select>
+        <Divider orientation="left" plain>属地标签</Divider>
+        <div className="Goods-Class-Tags-selector">
+          
+          {
+           
+            <Tag.CheckableTag 
+              onClick={() => this.selectitemall()}
+              checked={tagsCheck === 0}
+            >
+              全部
+            </Tag.CheckableTag>
+}
+          {
+           goodsArea.map((arr) => {
+             return <Tag.CheckableTag
+               checked={tagsCheck === arr.id}
+               onChange={(e) => this.selectitem(e, arr)}
+             >
+               {
+           arr.place
+}
+             </Tag.CheckableTag>; 
+           })
+        
+}
+
+        </div>
+        <Divider orientation="left" plain>属性标签</Divider>
+        <div className="Goods-Class-Tags-selector">
+          
+          {
+           
+            <Tag.CheckableTag 
+              onClick={() => this.selectitemall()}
+              checked={tagsCheck === 0}
+            >
+              全部
+            </Tag.CheckableTag>
+}
+          {
+           goodsSale.map((arr) => {
+             return <Tag.CheckableTag
+               checked={tagsCheck === arr.id}
+               onChange={(e) => this.selectitem(e, arr)}
+             >
+               {
+           arr.title
+}
+             </Tag.CheckableTag>; 
+           })
+        
+}
+
+        </div>
+
+        <Table dataSource={Goods} pagination={paginationProps}>
           <Column
-            title="商品售价"
-            dataIndex="price"
-            key="price"
+            title="商品序号"
+            dataIndex="id"
+            key="id"
             defaultSortOrder="descend"
-            sorter={(a, b) => a.price - b.price}
+            sorter={(a, b) => a.id - b.id}
           />
           <Column
-            title="剩余库存"
-            dataIndex="amount"
+            title="商品名称" 
+            dataIndex="name"
+            key="firstName"
+            render={(text, record) => (
+              <div style={{ textAlign: 'left' }}>
+                <img
+                  src={record ? BASE_QINIU_URL + record.cover : null}
+                  alt="img" 
+                  style={{ width: 30, height: 30, marginRight: 20  }}
+                />
+                <span>{text}</span>
+              </div>
+            )}
+          />
+          <Column
+            title="总库存"
+            dataIndex="total"
+            key="total"
+            defaultSortOrder="descend"
+            sorter={(a, b) => a.total - b.total}
+          />
+          <Column
+            title="付款人数"
+            dataIndex="people"
+            key="people"
+            defaultSortOrder="descend"
+            sorter={(a, b) => a.people - b.people}
+          />
+          <Column
+            title="商品月销"
+            dataIndex="month_sale"
             key="amount"
             defaultSortOrder="descend"
             sorter={(a, b) => a.amount - b.amount}
           />
-          <Column title="所在分区" dataIndex="goodsArea" key="address" />
+          
           <Column
-            title="展示属性"
-            dataIndex="tags"
-            key="tags"
-            render={(tags) => (
+            title="更新时间"
+            dataIndex="update_time"
+            key="update_time"
+            render={(updateTime) => (
               <>
-                {tags.map((tag) => (
-                  <Tag color="blue" key={tag}>
-                    {tag}
-                  </Tag>
-                ))}
-              </>
-            )}
-          />
-          <Column
-            title="产品分类"
-            dataIndex="classification"
-            key="classification"
-            render={(classification) => (
-              <>
-                <Tag>{classification.name}</Tag>
+                <span>
+                  {moment(updateTime * 1000)
+                    .format('YYYY-MM-DD HH:mm:ss')}
+                </span>
               </>
             )}
           />
