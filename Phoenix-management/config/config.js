@@ -53,16 +53,16 @@ export default defineConfig({
               component: './DashboardAnalysis',
             },
             {
-              path: '/admin',
+              path: '/settings_controls',
               name: 'admin',
               icon: 'crown',
               authority: ['admin'],
               routes: [
                 {
-                  path: '/admin/sub-page',
+                  path: '/settings_controls/rolling_picture_setting',
                   name: 'sub-page',
                   icon: 'smile',
-                  component: './Admin/Admin',
+                  component: './settings_controls/rolling_picture_setting',
                   authority: ['admin'],
                 }
               ],

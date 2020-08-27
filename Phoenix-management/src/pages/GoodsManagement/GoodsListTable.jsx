@@ -5,8 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MarketMemberRegister from '../MarketMemberRegister';
 import './GoodsListTable.less';
 import GoodsListTables from './GoodsListTables/index';
+
 export default () => (
-  <PageHeaderWrapper content=" 这个页面只有管理员才能查看">
-    <GoodsListTables />
-  </PageHeaderWrapper>
+  <GoodsListTables />
 );

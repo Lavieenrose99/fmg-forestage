@@ -8,7 +8,7 @@ import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
 import moment, { isMoment } from 'moment';
 import { get } from 'lodash';
 import React, {
-  useState, useEffect, useRef, Children 
+  useState, useEffect, useRef,
 } from 'react';
 import FormItem from 'antd/lib/form/FormItem';
 import { connect } from 'umi';

@@ -37,8 +37,10 @@ const GoodsClassModel = {
     },
   
     * setClassTags({ payload }, { call, put }) {
-      const { query, title, pid } = payload;
-      const payloads = { title, pid };
+      const {
+        query, title, pid, picture, 
+      } = payload;
+      const payloads = { title, pid, picture };
       const result = yield call(setGoodsClassTags, payloads);
       yield put({
         type: 'fetchClassTags',
@@ -64,7 +66,7 @@ const GoodsClassModel = {
       });
     },
     * adjClassTags({ payload }, { call, put }) {
-      console.log(payload)
+      console.log(payload);
       const {
         tid, query, title, pid, 
       } = payload;

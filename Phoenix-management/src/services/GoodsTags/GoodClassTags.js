@@ -3,7 +3,11 @@ import request from '@/utils/request';
 export async function setGoodsClassTags(payload) {
   return request('/api.farm/goods/kind_tag', {
     method: 'POST',
-    data: { title: payload.title, parent_id: payload.pid },
+    data: {
+      title: payload.title, 
+      parent_id: payload.pid,
+      picture: payload.picture, 
+    },
   });
 }
 export async function getGoodsClassTags(payload) {
