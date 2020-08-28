@@ -4,9 +4,9 @@ import React, {
 import { HeartTwoTone, SmileTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import {
-  Card, Typography, Alert, Form, 
+  Card, Typography, Alert, Form, Icon,
   Input, Checkbox, Button, Select, 
-  InputNumber, Upload, Modal, Divider, Tag
+  InputNumber, Upload, Modal, Divider, Table, Space
    
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -15,6 +15,7 @@ import { get } from 'lodash';
 import './Admin.less';
 
 const { Option, OptGroup } = Select;
+const { Column, ColumnGroup } = Table;
 
 const layout = {
   labelCol: {
@@ -94,6 +95,15 @@ const RollingPictures = (props) => {
         },
       }, 
     });
+    props.dispatch({
+      type: 'rollingPicture/fetchRollings',
+      payload: {
+        query: {
+          page: 1,
+          limit: 99,
+        },
+      }, 
+    });
   }, []);
   const subRollingPictures = (data) => {
     props.dispatch({
@@ -127,7 +137,9 @@ const RollingPictures = (props) => {
       onOk: () => { subRollingPictures(pRollingInfos); },
     });
   };
-  const { Goods, goodsClassFather, goodsClassChild  } = props;
+  const {
+    Goods, goodsClassFather, goodsClassChild, rollings,  
+  } = props;
   return (
     <PageHeaderWrapper>
       <Divider orientation="left" plain>类别标签</Divider>
@@ -230,6 +242,48 @@ const RollingPictures = (props) => {
           </Button>
         </Form.Item>
       </Form>
+      <Divider orientation="left" plain>轮播列表</Divider>
+      <Table dataSource={rollings}>
+        <Column
+          title="轮播顺序"
+          dataIndex="id"
+          key="id"
+          defaultSortOrder="descend"
+          sorter={(a, b) => a.id - b.id}
+        />
+        <Column
+          title="轮播图片" 
+          dataIndex="name"
+          key="firstName"
+          render={(text, record) => (
+            <div style={{ textAlign: 'left' }}>
+              <img
+                src={record ? BASE_QINIU_URL + record.picture : null}
+                alt="img" 
+                style={{ width: 30, height: 30, marginRight: 20  }}
+              />
+            </div>
+          )}
+        />
+        <Column
+          title="操作"
+          key="id"
+          render={(text, record) => (
+            <Space size="middle">
+              <span>
+                <Icon
+                  type="edit"
+                  style={{ marginLeft: 8 }} 
+                  
+                />
+                <a>修改</a> 
+              </span>
+              <a>删除</a>
+            </Space>
+          )}
+        />
+  
+      </Table>
     </PageHeaderWrapper>
   );
 };
@@ -238,6 +292,7 @@ export default connect(({
   goodsArea, goodsSale, CreateGoods, goodsClass, rollingPicture,
 }) => ({
   rollingPicture,
+  rollings: get(rollingPicture, 'info', []),
   goodsSale: get(goodsSale, 'tags', []),
   goodsArea: get(goodsArea, 'info', []),
   AreaTotal: get(goodsArea, 'total', ''),

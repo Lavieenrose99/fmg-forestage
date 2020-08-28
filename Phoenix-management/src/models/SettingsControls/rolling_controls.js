@@ -1,7 +1,10 @@
 import { message } from 'antd';
 import { get } from 'lodash';
 import {
-  setRollingPictures
+  setRollingPictures,
+  getRollingPictures,
+  mGetRollingPictures
+
 } from '@/services/SettingsControls/rolling_controls';
   
 const RollingPictures = {
@@ -9,8 +12,29 @@ const RollingPictures = {
   state: {
   },
   effects: {
+    * fetchRollings({ payload }, { call, put }) {
+      const response = yield call(getRollingPictures, payload);
+      const { slideshow } = response;
+      const ids = slideshow.map((arr) => {
+        return arr.id;
+      });
+      yield put({
+        type: 'fetchRollingsEntity',
+        payload: ids,
+      });
+      yield put({
+        type: 'saveRollingsTotal',
+        payload: response.total,
+      });
+    },
+    * fetchRollingsEntity({ payload }, { call, put }) {
+      const response = yield call(mGetRollingPictures, payload);
+      yield put({
+        type: 'saveRollings',
+        payload: response,
+      });
+    },
     * createRollingPicture({ payload }, { call, put }) {
-        console.log(payload)
       const result = yield call(setRollingPictures, payload);
       if (result) {
         yield message.success('添加轮播图成功'); 
@@ -21,6 +45,18 @@ const RollingPictures = {
    
   },
   reducers: {
+    saveRollings(state, { payload }) {
+      return {
+        ...state,
+        info: payload,
+      };
+    },
+    saveRollingsTotal(state, { payload }) {
+      return {
+        ...state,
+        total: payload,
+      };
+    },
    
   },
 };
