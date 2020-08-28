@@ -36,9 +36,10 @@ class GoodsList extends React.Component {
   constructor() {
     super();
     this.state = {
+      tagsAreaCheck: 0,
+      tagsSaleCheck: 0,
       visable: false,
       FilterText: '',
-      tagsCheck: 0,
       pageSize: 10,
       current: 1,
     };
@@ -60,7 +61,7 @@ class GoodsList extends React.Component {
       payload: {
         query: {
           page: 1,
-          limit: 99,
+          limit: 10,
         },
       }, 
     });
@@ -87,7 +88,7 @@ class GoodsList extends React.Component {
       content: '确认要删除该商品吗',
       okText: '确认',
       cancelText: '取消',
-      //onOk: () => this.delItem(id),
+      onOk: () => this.handleDelete(id),
     });
   }
 
@@ -107,10 +108,105 @@ class GoodsList extends React.Component {
     });
   }
 
+  selectAreaItemAll = () => {
+    const { dispatch } = this.props;
+    const { current, tagsSaleCheck } = this.state;
+    this.setState({
+      tagsAreaCheck: 0,
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: 0,
+            sale_tag: tagsSaleCheck,
+          },
+        }, 
+      });
+    });
+  }
+
+  selectAreaItem = (checked, item) => {
+    const { dispatch } = this.props;
+    const { current, tagsSaleCheck } = this.state;
+    this.setState({
+      tagsAreaCheck: item.id,
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: item.id,
+            sale_tag: tagsSaleCheck,
+          },
+        }, 
+      }); 
+    });
+  }
+
+  selectSaleItemAll = () => {
+    const { dispatch } = this.props;
+    const { current, tagsAreaCheck } = this.state;
+    this.setState({
+      tagsSaleCheck: 0,
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: tagsAreaCheck,
+            sale_tag: 0,
+          },
+        }, 
+      });
+    });
+  }
+
+  selectSaleItem = (checked, item) => {
+    const { dispatch } = this.props;
+    const { current, tagsAreaCheck } = this.state;
+    this.setState({
+      tagsSaleCheck: item.id,
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: tagsAreaCheck,
+            sale_tag: item.id,
+          },
+        }, 
+      }); 
+    });
+  }
+
   MainTextOnChange = (e) => {
     const { current, FilterText } = this.state;
     const { dispatch } = this.props;
     this.setState({ FilterText: e.target.value }, () => { this.handleGetListData(); });
+  };
+
+  handleDelete = (data) => {
+    const {  current } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'CreateGoods/delGoods',
+      payload: {
+        tid: data.id,
+        query: {
+          page: current,
+          limit: 10,
+        },
+      }, 
+    });
   };
 
   handleGetListData = () => {
@@ -127,7 +223,9 @@ class GoodsList extends React.Component {
   };
 
   render() {
-    const { pageSize, current, tagsCheck } = this.state;
+    const {
+      pageSize, current, tagsSaleCheck, tagsAreaCheck, 
+    } = this.state;
     const {
       goodsClassChild, 
       Goods, GoodsTotal, 
@@ -173,8 +271,8 @@ class GoodsList extends React.Component {
           {
            
             <Tag.CheckableTag 
-              onClick={() => this.selectitemall()}
-              checked={tagsCheck === 0}
+              onClick={() => this.selectAreaItemAll()}
+              checked={tagsAreaCheck === 0}
             >
               全部
             </Tag.CheckableTag>
@@ -182,8 +280,8 @@ class GoodsList extends React.Component {
           {
            goodsArea.map((arr) => {
              return <Tag.CheckableTag
-               checked={tagsCheck === arr.id}
-               onChange={(e) => this.selectitem(e, arr)}
+               checked={tagsAreaCheck === arr.id}
+               onChange={(e) => this.selectAreaItem(e, arr)}
              >
                {
            arr.place
@@ -200,8 +298,8 @@ class GoodsList extends React.Component {
           {
            
             <Tag.CheckableTag 
-              onClick={() => this.selectitemall()}
-              checked={tagsCheck === 0}
+              onClick={() => this.selectSaleItemAll()}
+              checked={tagsSaleCheck === 0}
             >
               全部
             </Tag.CheckableTag>
@@ -209,8 +307,8 @@ class GoodsList extends React.Component {
           {
            goodsSale.map((arr) => {
              return <Tag.CheckableTag
-               checked={tagsCheck === arr.id}
-               onChange={(e) => this.selectitem(e, arr)}
+               checked={tagsSaleCheck === arr.id}
+               onChange={(e) => this.selectSaleItem(e, arr)}
              >
                {
            arr.title
@@ -282,7 +380,7 @@ class GoodsList extends React.Component {
           />
           <Column
             title="操作"
-            key="action"
+            key="id"
             render={(text, record) => (
               <Space size="middle">
                 <span>
@@ -306,7 +404,7 @@ class GoodsList extends React.Component {
                     </Modal>
                   </div>
                 </span>
-                <a onClick={() => this.confirm()}>删除商品</a>
+                <a onClick={() => this.confirm(text)}>删除商品</a>
               </Space>
             )}
           />

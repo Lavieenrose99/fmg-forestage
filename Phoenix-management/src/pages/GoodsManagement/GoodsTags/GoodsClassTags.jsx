@@ -59,7 +59,7 @@ class GoodClassTags extends React.Component {
           <>
             <Space size="large">
               <a>查看种类</a>
-              <a onClick={() => this.handleChange(text, record.title)}>修改</a>
+              <a onClick={() => this.handleChange(text, record)}>修改</a>
               <a onClick={() => this.comfirmDelClassTags(text)}>删除</a>
             </Space>
           </>
@@ -74,6 +74,7 @@ class GoodClassTags extends React.Component {
       page: 1,
       limit: 99,
       qiniuToken: '',
+      setPicture: '',
       fileList: [],
     };
     this.InputGoodsClassTags = this.InputGoodsClassTags.bind(this);
@@ -144,12 +145,15 @@ class GoodClassTags extends React.Component {
    changeClassTags=() => {
      const { dispatch } = this.props;
      const {
-       page, limit, setGoodsClassTags, setClassTagsId, 
+       page, limit, setGoodsClassTags, 
+       setClassTagsId, fileList, setPicture,
      } = this.state;
      if (setGoodsClassTags !== '') {
        dispatch({
          type: 'goodsClass/adjClassTags',
          payload: {
+           picture: fileList[0] 
+             ? fileList[0].response.key : setPicture,
            title: setGoodsClassTags,
            tid: setClassTagsId,
            query: {
@@ -232,11 +236,12 @@ class GoodClassTags extends React.Component {
      });
    };
   
-   handleChange=(id, place) => {
+   handleChange=(id, record) => {
      const {  visible } = this.state;
      this.setState({
        changeVisible: !visible,
-       setGoodsClassTags: place,
+       setGoodsClassTags: record.title,
+       setPicture: record.picture,
        setClassTagsId: id,
      });
    }
@@ -270,7 +275,8 @@ class GoodClassTags extends React.Component {
      } = this.props;
      const {
        visible, changeVisible, 
-       setGoodsClassTags, qiniuToken, fileList
+       setGoodsClassTags, qiniuToken, fileList,
+       setPicture,
      } = this.state;
      const columns = this.columns.map((col) => {
        return col;
@@ -328,6 +334,33 @@ class GoodClassTags extends React.Component {
          >
            <Divider orientation="left" plain>标签名称</Divider>
            <Input value={setGoodsClassTags} onChange={this.ChangeGoodsClassTags} />
+           <Divider orientation="left" plain>标签LOGO</Divider>
+           <span onClick={this.getQiNiuToken}>
+             <Upload
+               action={QINIU_SERVER}
+               data={
+             {
+               token: qiniuToken,
+               key: `icon-${Date.parse(new Date())}`,
+             }
+}
+               listType="picture-card"
+               beforeUpload={this.getQiNiuToken}
+               fileList={fileList}
+               onChange={this.handleChangefile}
+             >
+               {fileList.length >= 1 ? null : <div>
+                 <img
+                   src={BASE_QINIU_URL + setPicture}
+                   alt="pictre"
+                   style={{ width: 50, height: 60  }}
+                 /> 
+                 {' '}
+                 {uploadButton}
+                 {' '}
+               </div>}
+             </Upload>
+           </span>
          </Modal>
          <Table
            rowClassName={() => 'editable-row'}

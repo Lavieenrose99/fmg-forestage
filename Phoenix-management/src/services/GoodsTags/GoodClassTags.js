@@ -27,12 +27,13 @@ export async function delGoodsClassTags(payload) {
     method: 'DELETE',
   });
 }
-export async function adjustGoodsClassTags(id, cname, pid) {
+export async function adjustGoodsClassTags(id, cname, pid, picture) {
   return request(`/api.farm/goods/kind_tag/${id}`, {
     method: 'PUT',
     data: {
       title: cname,
       parent_id: pid,
+      picture,
     },
   });
 }

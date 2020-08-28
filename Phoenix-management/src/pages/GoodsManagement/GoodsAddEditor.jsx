@@ -246,7 +246,7 @@ const GoodsAddEditor = (props) => {
     });
     props.dispatch({
       type: 'goodsClass/fetchClassTags',
-      paload: { page: 1, limit: 99 },
+      payload: { page: 1, limit: 99 },
     });
     props.dispatch({
       type: 'goodsModels/fetchModels',
@@ -296,7 +296,7 @@ const GoodsAddEditor = (props) => {
       sale_point: storeageGoods.sale_point,
       kind_tag: storeageGoods.kind_tag,
       sale_tag: storeageGoods.sale_tag,
-      palce_tag: (storeageGoods.palce_tag ?? []),
+      place_tag: (storeageGoods.place_tag ?? []),
       total: storeageGoods.total,
       price_reduce: (storeageGoods.price_reduce),
       carriage: storeageGoods.carriage,
@@ -360,7 +360,7 @@ const GoodsAddEditor = (props) => {
     const advance_time =  moment(values.advance_time).valueOf();
     const putaway_time = moment(values.putaway_time).valueOf();
     const kind_tag = [values.kind_tag];
-    const palce_tag = [values.palce_tag];
+    const place_tag = [values.place_tag];
     const sale_tag = [values.sale_tag];
     const cover = fileList[0].response.key;
     const view = fileVidoList[0].response.key;
@@ -372,7 +372,7 @@ const GoodsAddEditor = (props) => {
       advance_time,
       putaway_time, 
       kind_tag,
-      palce_tag,
+      place_tag,
       sale_tag, 
       pictures,
       cover,
@@ -430,7 +430,7 @@ const GoodsAddEditor = (props) => {
             />
           </Form.Item>
           <Form.Item
-            name="palce_tag"
+            name="place_tag"
             label="商品分区"
             rules={[
               {

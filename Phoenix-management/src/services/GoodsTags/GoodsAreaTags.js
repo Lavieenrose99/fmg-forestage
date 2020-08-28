@@ -9,7 +9,7 @@ export async function setGoodsAreaTags(place, picture) {
 export async function getGoodsAreaTags(payload) {
   return request('/api.farm/goods/place_tag/list', {
     method: 'GET',
-    params: { ...payload },
+    params: { ...payload.query },
   });
 }
 export async function mGetGoodsAreaTags(payload) {

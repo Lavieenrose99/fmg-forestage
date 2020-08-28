@@ -68,7 +68,7 @@ class GoodsClassList extends PureComponent {
           <>
             <Space size="large">
               <a>查看商品</a>
-              <a onClick={() => this.handleChange(text, record.title)}>修改</a>
+              <a onClick={() => this.handleChange(text, record)}>修改</a>
               <a onClick={() => this.comfirmDelClass(text)}>删除</a>
             </Space>
           </>
@@ -86,6 +86,7 @@ class GoodsClassList extends PureComponent {
       goodsClassFather: [],
       qiniuToken: '',
       fileList: [],
+      setPicture: '',
       page: 1,
       limit: 99,
     };
@@ -167,7 +168,7 @@ class GoodsClassList extends PureComponent {
  changeClass=() => {
    const { dispatch } = this.props;
    const {
-     page, limit, setGoodsClassTags, setClassId, 
+     page, limit, setGoodsClassTags, setClassId, fileList, setPicture,
    } = this.state;
    if (setGoodsClassTags !== '') {
      dispatch({
@@ -175,6 +176,8 @@ class GoodsClassList extends PureComponent {
        payload: {
          title: setGoodsClassTags,
          tid: setClassId,
+         picture: fileList[0] 
+           ? fileList[0].response.key : setPicture,
          query: {
            page,
            limit,
@@ -286,11 +289,12 @@ class GoodsClassList extends PureComponent {
    });
  };
 
- handleChange =(id, classTags) => {
+ handleChange =(id, Tags) => {
    const {  visible } = this.state;
    this.setState({
      changeVisible: !visible,
-     setGoodsClassTags: classTags,
+     setPicture: Tags.picture,
+     setGoodsClassTags: Tags.title,
      setClassId: id,
    });
  }
@@ -324,7 +328,7 @@ render() {
   const {
     visible, changeVisible, setGoodsClassTags,
     tagsCheck, goodsClassFather, SelectedTagsValue,
-    qiniuToken, fileList,
+    qiniuToken, fileList, setPicture,
   } = this.state;
   const { goodsClassChild } = this.props;
   for (let i = 0; i < goodsClassFather.length; i++) {
@@ -437,7 +441,16 @@ render() {
               fileList={fileList}
               onChange={this.handleChangefile}
             >
-              {fileList.length >= 1 ? null : uploadButton}
+              {fileList.length >= 1 ? null : <div>
+                <img
+                  src={BASE_QINIU_URL + setPicture}
+                  alt="pictre"
+                  style={{ width: 50, height: 60  }}
+                /> 
+                {' '}
+                {uploadButton}
+                {' '}
+              </div>}
             </Upload>
           </span>
         </Modal>

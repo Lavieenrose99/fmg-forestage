@@ -20,6 +20,12 @@ export async function MgetGoods(payload) {
   });
 }
 
+export async function delGoodItem(id) {
+  return request(`/api.farm/goods/${id}`, {
+    method: 'DELETE',
+  });
+}
+
 export async function setGoodsSpec(payload) {
   return request(`/api.farm/goods/specification/${payload.pid}`, {
     method: 'POST',

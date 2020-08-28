@@ -66,11 +66,10 @@ const GoodsClassModel = {
       });
     },
     * adjClassTags({ payload }, { call, put }) {
-      console.log(payload);
       const {
-        tid, query, title, pid, 
+        tid, query, title, pid, picture,
       } = payload;
-      const data = yield call(adjustGoodsClassTags, tid, title, pid);
+      const data = yield call(adjustGoodsClassTags, tid, title, pid, picture);
       yield put({
         type: 'fetchClassTags',
         payload: query,

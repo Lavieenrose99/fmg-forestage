@@ -26,7 +26,7 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 8,
+    offset: 3,
     span: 16,
   },
 };
@@ -90,7 +90,7 @@ const RollingPictures = (props) => {
       payload: {
         query: {
           page: 1,
-          limit: 10,
+          limit: 99,
         },
       }, 
     });
@@ -226,7 +226,7 @@ const RollingPictures = (props) => {
         </Form.Item>
         <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit">
-            Submit
+            确认
           </Button>
         </Form.Item>
       </Form>

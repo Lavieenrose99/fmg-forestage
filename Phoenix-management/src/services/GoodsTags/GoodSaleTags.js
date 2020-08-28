@@ -15,7 +15,7 @@ export async function getGoodsSaleTags(payload) {
 export async function mGetGoodsSaleTags(payload) {
   return request('/api.farm/goods/sale_tag/_mget', {
     method: 'POST',
-    params: { ids: payload },
+    data: { ids: payload },
   });
 }
 export async function delGoodsSaleTags(payload) {

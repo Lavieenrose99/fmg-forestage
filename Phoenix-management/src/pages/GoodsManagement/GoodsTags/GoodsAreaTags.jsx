@@ -162,14 +162,15 @@ class GoodAreaTags extends React.Component {
  changeArea=() => {
    const { dispatch } = this.props;
    const {
-     page, limit, setGoodspalce, setPlaceId, fileList,
+     page, limit, setGoodspalce, setPlaceId, fileList, setPicture,
    } = this.state;
    if (setGoodspalce !== '') {
      dispatch({
        type: 'goodsArea/adjAreaTags',
        payload: {
          place: setGoodspalce,
-         picture: fileList[0].response.key,
+         picture: fileList[0] 
+           ? fileList[0].response.key : setPicture,
          tid: setPlaceId,
          query: {
            page,
