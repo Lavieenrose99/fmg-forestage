@@ -2,10 +2,13 @@ import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from 
 import { Alert, Checkbox } from 'antd';
 import React, { useState } from 'react';
 import { Link, connect } from 'umi';
+import { setAuthority } from '@/utils/authority';
 import LoginForm from './components/Login';
 import styles from './style.less';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
+const {
+  Tab, UserName, Password, Mobile, Captcha, Submit, 
+} = LoginForm;
 
 const LoginMessage = ({ content }) => (
   <Alert
@@ -18,18 +21,15 @@ const LoginMessage = ({ content }) => (
   />
 );
 
-const Login = props => {
+const Login = (props) => {
   const { userLogin = {}, submitting } = props;
   const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { dispatch } = props;
-    dispatch({
-      type: 'login/login',
-      payload: { ...values, type },
-    });
+    setAuthority(['admin']);
   };
 
   return (
@@ -47,7 +47,7 @@ const Login = props => {
               {
                 required: true,
                 message: '请输入用户名!',
-              },
+              }
             ]}
           />
           <Password
@@ -57,7 +57,7 @@ const Login = props => {
               {
                 required: true,
                 message: '请输入密码！',
-              },
+              }
             ]}
           />
         </Tab>
@@ -76,7 +76,7 @@ const Login = props => {
               {
                 pattern: /^1\d{10}$/,
                 message: '手机号格式错误！',
-              },
+              }
             ]}
           />
           <Captcha
@@ -89,12 +89,12 @@ const Login = props => {
               {
                 required: true,
                 message: '请输入验证码！',
-              },
+              }
             ]}
           />
         </Tab>
         <div>
-          <Checkbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)}>
+          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
             自动登录
           </Checkbox>
           <a
@@ -105,7 +105,7 @@ const Login = props => {
             忘记密码
           </a>
         </div>
-        <Submit loading={submitting}>登录</Submit>
+        <Submit>登录</Submit>
         <div className={styles.other}>
           其他登录方式
           <AlipayCircleOutlined className={styles.icon} />

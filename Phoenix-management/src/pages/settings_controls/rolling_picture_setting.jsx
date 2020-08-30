@@ -112,6 +112,30 @@ const RollingPictures = (props) => {
 
     });
   };
+ 
+  const handleDeletePictures = (aid) => {
+    const { dispatch } = props;
+    dispatch({
+      type: 'rollingPicture/delRollings',
+      payload: {
+        tid: aid,
+        query: {
+          page: 1,
+          limit: 10,
+        },
+      }, 
+    });
+  };
+  const comfirmDelPicture = (id) => {
+    Modal.confirm({
+      mask: false,
+      title: '凤鸣谷',
+      content: '确认删除该轮播图吗',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => handleDeletePictures(id),
+    });
+  };
   const selectGoodsClass = (e) => {
     props.dispatch({
       type: 'CreateGoods/getGoodsList',
@@ -278,7 +302,7 @@ const RollingPictures = (props) => {
                 />
                 <a>修改</a> 
               </span>
-              <a>删除</a>
+              <a onClick={() => comfirmDelPicture(record.id)}>删除</a>
             </Space>
           )}
         />

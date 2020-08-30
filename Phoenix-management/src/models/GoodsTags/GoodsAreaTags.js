@@ -63,7 +63,9 @@ const GoodsAreaModel = {
       }
     },
     * adjAreaTags({ payload }, { call, put }) {
-      const { tid, query, place, picture } = payload;
+      const {
+        tid, query, place, picture, 
+      } = payload;
       const result = yield call(adjustGoodsAreaTags, tid, place, picture);
       yield put({
         type: 'fetchAreaTags',

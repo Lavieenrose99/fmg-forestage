@@ -18,11 +18,11 @@ export default {
     },
   },
   pre: {
-    '/api/': {
-      target: 'your pre url',
+    '/api.farm/': {
+      target: 'https://api.daosuan.net/',
       changeOrigin: true,
       pathRewrite: {
-        '^': '',
+        '^/api.farm': '',
       },
     },
   },

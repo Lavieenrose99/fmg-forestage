@@ -3,8 +3,8 @@ import { get } from 'lodash';
 import {
   setRollingPictures,
   getRollingPictures,
-  mGetRollingPictures
-
+  mGetRollingPictures,
+  delRollingPictures
 } from '@/services/SettingsControls/rolling_controls';
   
 const RollingPictures = {
@@ -36,10 +36,28 @@ const RollingPictures = {
     },
     * createRollingPicture({ payload }, { call, put }) {
       const result = yield call(setRollingPictures, payload);
+      yield put({
+        type: 'fetchRollings',
+        payload: { limit: 10, page: 1 },
+      });
       if (result) {
         yield message.success('添加轮播图成功'); 
       } else {
         yield message.error('添加失败请稍后重试');
+      }
+    },
+
+    * delRollings({ payload }, { call, put }) {
+      const { tid, query } = payload;
+      const result = yield call(delRollingPictures, tid);
+      yield put({
+        type: 'fetchRollings',
+        payload: query,
+      });
+      if (result) {
+        yield message.success('删除轮播图成功'); 
+      } else {
+        yield message.error('删除失败请稍后重试');
       }
     },
    

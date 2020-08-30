@@ -296,7 +296,7 @@ const GoodsAddEditor = (props) => {
       sale_point: storeageGoods.sale_point,
       kind_tag: storeageGoods.kind_tag,
       sale_tag: storeageGoods.sale_tag,
-      place_tag: (storeageGoods.place_tag ?? []),
+      place_tag: (storeageGoods.place ?? []),
       total: storeageGoods.total,
       price_reduce: (storeageGoods.price_reduce),
       carriage: storeageGoods.carriage,

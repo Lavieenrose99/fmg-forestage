@@ -15,9 +15,9 @@ export default defineConfig({
     antd: true,
     baseNavigator: true,
   },
-  dynamicImport: {
-    loading: '@/components/PageLoading/index',
-  },
+  // dynamicImport: {
+  //   loading: '@/components/PageLoading/index',
+  // },
   targets: {
     ie: 11,
   },
@@ -35,7 +35,7 @@ export default defineConfig({
     },
     {
       path: '/',
-      component: '../layouts/SecurityLayout',
+      //component: '../layouts/SecurityLayout',
       routes: [
         {
           path: '/',
@@ -54,13 +54,13 @@ export default defineConfig({
             },
             {
               path: '/settings_controls',
-              name: 'admin',
+              name: '管理页',
               icon: 'crown',
               authority: ['admin'],
               routes: [
                 {
                   path: '/settings_controls/rolling_picture_setting',
-                  name: 'sub-page',
+                  name: '管理页面',
                   icon: 'smile',
                   component: './settings_controls/rolling_picture_setting',
                   authority: ['admin'],
@@ -111,12 +111,12 @@ export default defineConfig({
                 }
               ],
             },
-            {
-              name: 'list.table-list',
-              icon: 'table',
-              path: '/list',
-              component: './ListTableList',
-            },
+            // {
+            //   name: 'list.table-list',
+            //   icon: 'table',
+            //   path: '/list',
+            //   component: './ListTableList',
+            // },
             {
               component: './404',
             }

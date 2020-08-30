@@ -38,6 +38,7 @@ class GoodsList extends React.Component {
     this.state = {
       tagsAreaCheck: 0,
       tagsSaleCheck: 0,
+      tagsClassCheck: 0, 
       visable: false,
       FilterText: '',
       pageSize: 10,
@@ -188,6 +189,27 @@ class GoodsList extends React.Component {
     });
   }
 
+  selectClassItem = (item) => {
+    const { dispatch } = this.props;
+    const { current, tagsAreaCheck, tagsSaleCheck} = this.state;
+    this.setState({
+      tagsClassCheck: item.id,
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: tagsAreaCheck,
+            sale_tag: tagsSaleCheck,
+            kind_tag: item,
+          },
+        }, 
+      }); 
+    });
+  }
+
   MainTextOnChange = (e) => {
     const { current, FilterText } = this.state;
     const { dispatch } = this.props;
@@ -252,7 +274,7 @@ class GoodsList extends React.Component {
         <Input onChange={this.MainTextOnChange} placeholder="请输入该商品关键字" />
         <Select
           style={{ width: '85vw', marginTop: 10 }}
-          //defaultOpen
+          onChange={this.selectClassItem}
           placeholder="请选择商品类别"
         >
           {
