@@ -155,6 +155,7 @@ const RollingPictures = (props) => {
         number: oriOrder,
       }, 
     });
+    setShowAdj(false);
   };
   const submitChangePicture = () => {
     Modal.confirm({
@@ -414,6 +415,7 @@ const RollingPictures = (props) => {
 }
                       listType="picture-card"
                       beforeUpload={getQiNiuToken}
+                      showUploadList={false}
                       //fileList={oriPicture}
                       onChange={handleChangefile}
                     >
