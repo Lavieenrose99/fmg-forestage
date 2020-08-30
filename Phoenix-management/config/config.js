@@ -13,7 +13,7 @@ export default defineConfig({
   locale: {
     default: 'zh-CN',
     antd: true,
-    baseNavigator: true,
+    //baseNavigator: true,
   },
   // dynamicImport: {
   //   loading: '@/components/PageLoading/index',
@@ -22,17 +22,17 @@ export default defineConfig({
     ie: 11,
   },
   routes: [
-    {
-      path: '/user',
-      component: '../layouts/UserLayout',
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        }
-      ],
-    },
+    // {
+    //   path: '/user',
+    //   component: '../layouts/UserLayout',
+    //   routes: [
+    //     {
+    //       name: 'login',
+    //       path: '/user/login',
+    //       component: './user/login',
+    //     }
+    //   ],
+    // },
     {
       path: '/',
       //component: '../layouts/SecurityLayout',
@@ -40,30 +40,30 @@ export default defineConfig({
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
+          //authority: ['admin', 'user'],
           routes: [
             {
               path: '/',
               redirect: '/index',
             },
-            {
-              name: '首页',
-              icon: 'smile',
-              path: '/index',
-              component: './DashboardAnalysis',
-            },
+            // {
+            //   name: '首页',
+            //   icon: 'smile',
+            //   path: '/index',
+            //   component: './DashboardAnalysis',
+            // },
             {
               path: '/settings_controls',
               name: '管理页',
               icon: 'crown',
-              authority: ['admin'],
+              //authority: ['admin'],
               routes: [
                 {
                   path: '/settings_controls/rolling_picture_setting',
                   name: '管理页面',
                   icon: 'smile',
                   component: './settings_controls/rolling_picture_setting',
-                  authority: ['admin'],
+                  //authority: ['admin'],
                 }
               ],
             },
@@ -71,21 +71,21 @@ export default defineConfig({
               path: '/goods',
               name: '商品管理',
               icon: 'setting',
-              authority: ['admin'],
+              //authority: ['admin'],
               routes: [
                 {
                   path: '/goods/goods-list',
                   name: '商品列表',
                   icon: 'smile',
                   component: './GoodsManagement/GoodsListTable',
-                  authority: ['admin'],
+                  //authority: ['admin'],
                 },
                 {
                   path: '/goods/add-goods',
                   name: '添加商品',
                   icon: 'add',
                   component: './GoodsManagement/GoodsAddEditor',
-                  authority: ['admin'],
+                  // authority: ['admin'],
                 },
              
                 {
@@ -93,21 +93,21 @@ export default defineConfig({
                   name: '商品类别',
                   icon: 'setting',
                   component: './GoodsManagement/GoodsTags/GoodsClassIndex',
-                  authority: ['admin'],
+                  //authority: ['admin'],
                 },
                 {
                   path: '/goods/goods-tags-management',
                   name: '商品标签管理',
                   icon: 'setting',
                   component: './GoodsManagement/GoodsTags/GoodsTagsIndex',
-                  authority: ['admin'],
+                  //authority: ['admin'],
                 },
                 {
                   path: '/goods/goods-models-management',
                   name: '商品模版',
                   icon: 'setting',
                   component: './GoodsManagement/GoodsModels/GoodsModelsList',
-                  authority: ['admin'],
+                  // authority: ['admin'],
                 }
               ],
             },
