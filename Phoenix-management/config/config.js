@@ -44,7 +44,7 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/index',
+              redirect: '/goods/goods-list',
             },
             // {
             //   name: '首页',
