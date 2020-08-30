@@ -29,13 +29,13 @@ export async function delRollingPictures(payload) {
     //params: payload, 
   });
 }
-export async function adjustRollingPictures(id, gid, picture, number) {
-  return request(`/api.farm/goods/slideshow/${id}`, {
+export async function adjustRollingPictures(payload) {
+  return request(`/api.farm/goods/slideshow/${payload.rid}`, {
     method: 'PUT',
     data: {
-      goods_id: gid, 
-      picture,
-      number,
+      goods_id: payload.goods_id, 
+      picture: payload.picture,
+      number: payload.number,
     },
   });
 }

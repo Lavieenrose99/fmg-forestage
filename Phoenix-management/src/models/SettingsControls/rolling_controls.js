@@ -4,7 +4,8 @@ import {
   setRollingPictures,
   getRollingPictures,
   mGetRollingPictures,
-  delRollingPictures
+  delRollingPictures,
+  adjustRollingPictures
 } from '@/services/SettingsControls/rolling_controls';
   
 const RollingPictures = {
@@ -26,6 +27,10 @@ const RollingPictures = {
         type: 'saveRollingsTotal',
         payload: response.total,
       });
+      yield put({
+        type: 'saveRollingsList',
+        payload: slideshow,
+      });
     },
     * fetchRollingsEntity({ payload }, { call, put }) {
       const response = yield call(mGetRollingPictures, payload);
@@ -42,6 +47,18 @@ const RollingPictures = {
       });
       if (result) {
         yield message.success('添加轮播图成功'); 
+      } else {
+        yield message.error('添加失败请稍后重试');
+      }
+    },
+    * adjRollingPicture({ payload }, { call, put }) {
+      const result = yield call(adjustRollingPictures, payload);
+      yield put({
+        type: 'fetchRollings',
+        payload: { limit: 10, page: 1 },
+      });
+      if (result) {
+        yield message.success('修改轮播图成功'); 
       } else {
         yield message.error('添加失败请稍后重试');
       }
@@ -67,6 +84,12 @@ const RollingPictures = {
       return {
         ...state,
         info: payload,
+      };
+    },
+    saveRollingsList(state, { payload }) {
+      return {
+        ...state,
+        List: payload,
       };
     },
     saveRollingsTotal(state, { payload }) {

@@ -38,6 +38,11 @@ const RollingPictures = (props) => {
   const [qiniuToken, setQiniuToken] = useState('');
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const [showAdj, setShowAdj] = useState(false);
+  const [oriOrder, setOriOrder] = useState(0);
+  const [oriId, setOriId] = useState(0);
+  const [oriPicture, setOriPicture] = useState('');
+  const [rid, setRid] = useState(0);
   const [fileList, setFileList] = useState(([]));
   const [rollingInfos, setRollingInfos] = useState({});
   const handlePreview = (file) => {
@@ -59,7 +64,21 @@ const RollingPictures = (props) => {
     };
     setPreviewImage(fileItem.url);
     setFileList([fileItem]);
-    localStorage.setItem('FileList', JSON.stringify(fileItem));
+  };
+  const handleChangefile = ({ file  }) => {
+    const {
+      uid, name, type, thumbUrl, status, response = {},
+    } = file;
+    const fileItem = {
+      uid,
+      name,
+      type,
+      thumbUrl,
+      status,
+      response,
+      url: BASE_QINIU_URL + (response.key || ''),
+    };
+    setOriPicture(fileItem.response.key);
   };
   const getQiNiuToken = () => {
     request('/api.farm/goods/resources/qiniu/upload_token', {
@@ -126,6 +145,40 @@ const RollingPictures = (props) => {
       }, 
     });
   };
+  const confirmChangePicture = () => {
+    props.dispatch({
+      type: 'rollingPicture/adjRollingPicture',
+      payload: {
+        rid,
+        picture: oriPicture,
+        goods_id: oriId,
+        number: oriOrder,
+      }, 
+    });
+  };
+  const submitChangePicture = () => {
+    Modal.confirm({
+      mask: false,
+      title: '凤鸣谷',
+      content: '确认提交轮播图信息吗',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: confirmChangePicture,
+    });
+  };
+  const handelAdjustPicture = (data) => {
+    setShowAdj(true);
+    setOriId(data.goods_id);
+    setOriOrder(data.id);
+    setOriPicture(data.picture);
+    setRid(data.rid);
+  };
+  const handleChangeCancel = () => {
+    setShowAdj(false);
+  };
+  const handleChangeGoodsId = (data) => {
+    setOriId(data);
+  };
   const comfirmDelPicture = (id) => {
     Modal.confirm({
       mask: false,
@@ -155,15 +208,19 @@ const RollingPictures = (props) => {
     Modal.confirm({
       mask: false,
       title: '凤鸣谷',
-      content: '确认提交商品信息吗',
+      content: '确认提交轮播图信息吗',
       okText: '确认',
       cancelText: '取消',
       onOk: () => { subRollingPictures(pRollingInfos); },
     });
   };
   const {
-    Goods, goodsClassFather, goodsClassChild, rollings,  
+    Goods, goodsClassFather, 
+    goodsClassChild, rollings, rollingslist,
   } = props;
+  for (let i = 0; i < rollings.length; i++) {
+    rollings[i] = { ...rollings[i], rid: rollingslist[i] ? rollingslist[i].id : null };
+  }
   return (
     <PageHeaderWrapper>
       <Divider orientation="left" plain>类别标签</Divider>
@@ -300,7 +357,71 @@ const RollingPictures = (props) => {
                   style={{ marginLeft: 8 }} 
                   
                 />
-                <a>修改</a> 
+                <a onClick={() => handelAdjustPicture(record)}>修改</a> 
+                <Modal
+                  mask={false}
+                  title="凤鸣谷"
+                  visible={showAdj}
+                  onOk={submitChangePicture}
+                  onCancel={handleChangeCancel}
+                  okText="提交"
+                  cancelText="取消"
+                >
+                  <Divider orientation="left" plain>类别标签</Divider>
+                  <Select
+                    style={{ width: '10vw', marginTop: 10, marginBottom: 20 }}
+                    onChange={selectGoodsClass}
+                    placeholder="请选择商品类别"
+                  >
+                    {
+                goodsClassFather.map((arr) => {
+                  return <OptGroup label={arr.title}>
+                    {(goodsClassChild.filter((tags) => {
+                      return tags.parent_id === arr.id;
+                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
+                  </OptGroup>;
+                })
+              }
+                  </Select>
+                  <Divider />
+                  <Divider orientation="left" plain>轮播商品</Divider>
+                  <Select
+                    style={{ width: '15vw', marginTop: 10, marginBottom: 20 }}
+                    showSearch
+                    placeholder="请选择添加图片的商品"
+                    optionFilterProp="children"
+                    defaultValue={oriId}
+                    onChange={handleChangeGoodsId}
+                  >
+                    {
+              Goods.map((arr) => {
+                return <Option value={arr.id}>{arr.name}</Option>;
+              })
+            }
+
+                  </Select>
+                  <Divider orientation="left" plain>轮播顺序</Divider>
+                  <InputNumber value={oriOrder}  />
+                  <Divider orientation="left" plain>轮播图片</Divider>
+                  <span onClick={getQiNiuToken}>
+                    <Upload
+                      action={QINIU_SERVER}
+                      data={
+             {
+               token: qiniuToken,
+               key: `icon-${Date.parse(new Date())}`,
+             }
+}
+                      listType="picture-card"
+                      beforeUpload={getQiNiuToken}
+                      //fileList={oriPicture}
+                      onChange={handleChangefile}
+                    >
+                      {oriPicture ?  <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
+                    </Upload>
+                  </span>
+                  <Upload />
+                </Modal>
               </span>
               <a onClick={() => comfirmDelPicture(record.id)}>删除</a>
             </Space>
@@ -317,6 +438,7 @@ export default connect(({
 }) => ({
   rollingPicture,
   rollings: get(rollingPicture, 'info', []),
+  rollingslist: get(rollingPicture, 'List', []),
   goodsSale: get(goodsSale, 'tags', []),
   goodsArea: get(goodsArea, 'info', []),
   AreaTotal: get(goodsArea, 'total', ''),

@@ -60,7 +60,7 @@ export default defineConfig({
               routes: [
                 {
                   path: '/settings_controls/rolling_picture_setting',
-                  name: '管理页面',
+                  name: '轮播图管理',
                   icon: 'smile',
                   component: './settings_controls/rolling_picture_setting',
                   //authority: ['admin'],
