@@ -1,7 +1,7 @@
 export default {
   dev: {
     '/api.farm/': {
-      target: 'https://api.daosuan.net/',
+      target: 'https://api.fmg.net.cn/',
       changeOrigin: true,
       pathRewrite: {
         '^/api.farm': '',
@@ -19,7 +19,7 @@ export default {
   },
   pre: {
     '/api.farm/': {
-      target: 'https://api.daosuan.net/',
+      target: 'https://api.fmg.net.cn/',
       changeOrigin: true,
       pathRewrite: {
         '^/api.farm': '',

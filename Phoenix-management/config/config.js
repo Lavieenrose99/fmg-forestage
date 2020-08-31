@@ -46,12 +46,6 @@ export default defineConfig({
               path: '/',
               redirect: '/goods/goods-list',
             },
-            // {
-            //   name: '首页',
-            //   icon: 'smile',
-            //   path: '/index',
-            //   component: './DashboardAnalysis',
-            // },
             {
               path: '/settings_controls',
               name: '管理页',
@@ -64,6 +58,12 @@ export default defineConfig({
                   icon: 'smile',
                   component: './settings_controls/rolling_picture_setting',
                   //authority: ['admin'],
+                },
+                {
+                  path: '/settings_controls/icon_setting',
+                  name: '图标管理',
+                  icon: 'smile',
+                  component: './settings_controls/icon_setting',
                 }
               ],
             },

@@ -170,9 +170,9 @@ const RollingPictures = (props) => {
   const handelAdjustPicture = (data) => {
     setShowAdj(true);
     setOriId(data.goods_id);
-    setOriOrder(data.id);
+    setOriOrder(data.oid);
     setOriPicture(data.picture);
-    setRid(data.rid);
+    setRid(data.id);
   };
   const handleChangeCancel = () => {
     setShowAdj(false);
@@ -202,6 +202,9 @@ const RollingPictures = (props) => {
       }, 
     });
   };
+  const handleChangeOrder = (data) => {
+    setOriOrder(data);
+  };
   const onFinish = (values) => {
     const picture = fileList[0].response.key;
     const pRollingInfos = Object.assign(values, { picture });
@@ -220,7 +223,7 @@ const RollingPictures = (props) => {
     goodsClassChild, rollings, rollingslist,
   } = props;
   for (let i = 0; i < rollings.length; i++) {
-    rollings[i] = { ...rollings[i], rid: rollingslist[i] ? rollingslist[i].id : null };
+    rollings[i] = { ...rollings[i], oid: i };
   }
   return (
     <PageHeaderWrapper>
@@ -328,10 +331,10 @@ const RollingPictures = (props) => {
       <Table dataSource={rollings}>
         <Column
           title="轮播顺序"
-          dataIndex="id"
-          key="id"
-          defaultSortOrder="descend"
-          sorter={(a, b) => a.id - b.id}
+          dataIndex="oid"
+          key="oid"
+          defaultSortOrder="ascend"
+          sorter={(a, b) => a.oid - b.oid}
         />
         <Column
           title="轮播图片" 
@@ -402,7 +405,11 @@ const RollingPictures = (props) => {
 
                   </Select>
                   <Divider orientation="left" plain>轮播顺序</Divider>
-                  <InputNumber value={oriOrder}  />
+                  <InputNumber
+                    defaultValue={oriOrder} 
+                    onChange={handleChangeOrder}
+                    value={oriOrder}
+                  />
                   <Divider orientation="left" plain>轮播图片</Divider>
                   <span onClick={getQiNiuToken}>
                     <Upload
