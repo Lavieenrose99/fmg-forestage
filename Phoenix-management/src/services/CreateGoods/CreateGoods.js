@@ -19,6 +19,12 @@ export async function MgetGoods(payload) {
     data: { ids: payload },
   });
 }
+export async function adjGoodsItem(payload, id) {
+  return request(`/api.farm/goods/${id}`, {
+    method: 'PUT',
+    data: payload,
+  });
+}
 
 export async function delGoodItem(id) {
   return request(`/api.farm/goods/${id}`, {

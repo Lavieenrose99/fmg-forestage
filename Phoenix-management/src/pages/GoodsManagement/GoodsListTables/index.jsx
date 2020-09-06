@@ -8,7 +8,8 @@ import moment from 'moment';
 import { connect } from 'umi';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import GoodsAddEditor from '../GoodsAddEditor';
+import GoodsAdj from './GoodsAdj';
+import TempalteAdj from './TemplateAdj';
 import styles from './index.less';
 import '../../../style/GoodsTagsIndex.less';
 
@@ -40,9 +41,11 @@ class GoodsList extends React.Component {
       tagsSaleCheck: 0,
       tagsClassCheck: 0, 
       visable: false,
+      visableTem: false,
       FilterText: '',
       pageSize: 10,
       current: 1,
+      record: {},
     };
   }
 
@@ -76,9 +79,16 @@ class GoodsList extends React.Component {
     });
   }
 
-  showModal = () => {
+  showModal = (record) => {
     this.setState({
       visible: true,
+      record,
+    });
+  };
+
+  showModalTem = () => {
+    this.setState({
+      visableTem: true,
     });
   };
 
@@ -191,7 +201,7 @@ class GoodsList extends React.Component {
 
   selectClassItem = (item) => {
     const { dispatch } = this.props;
-    const { current, tagsAreaCheck, tagsSaleCheck} = this.state;
+    const { current, tagsAreaCheck, tagsSaleCheck } = this.state;
     this.setState({
       tagsClassCheck: item.id,
     }, () => {
@@ -231,6 +241,12 @@ class GoodsList extends React.Component {
     });
   };
 
+  closeVisable = () => {
+    this.setState({
+      visible: false,
+    });
+  }
+
   handleGetListData = () => {
     const { current, FilterText } = this.state;
     const { dispatch } = this.props;
@@ -241,7 +257,7 @@ class GoodsList extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, visableTem: false });
   };
 
   render() {
@@ -405,27 +421,38 @@ class GoodsList extends React.Component {
             key="id"
             render={(text, record) => (
               <Space size="middle">
-                <span>
-                  <Icon
-                    type="edit"
-                    style={{ marginLeft: 8 }} 
-                    onClick={() => this.showModal()}
-                  />
-                  <a onClick={() => this.showModal()}>修改</a> 
-                  <div>
-                    <Modal 
-                      mask={false}
-                      width="50vw"
-                      visible={this.state.visible}
-                      title="修改"
-                      onOk={this.handleOk}
-                      onCancel={this.handleCancel}
-                      footer={null}
-                    >
-                      <GoodsAddEditor />
-                    </Modal>
-                  </div>
-                </span>
+                <a onClick={() => this.showModal(text)}>基本信息</a> 
+                <div>
+                  <Modal 
+                    mask={false}
+                    width="70vw"
+                    height="80vh"
+                    visible={this.state.visible}
+                    title="修改"
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={null}
+                    destroyOnClose
+                  >
+                    <GoodsAdj info={this.state.record} closeModel={() => this.closeVisable()} />
+                  </Modal>
+                </div>
+                <a onClick={() => this.showModalTem()}>规格信息</a> 
+                <div>
+                  <Modal 
+                    mask={false}
+                    width="70vw"
+                    height="80vh"
+                    visible={this.state.visableTem}
+                    title="修改"
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={null}
+                    destroyOnClose
+                  >
+                    <TempalteAdj />
+                  </Modal>
+                </div>
                 <a onClick={() => this.confirm(text)}>删除商品</a>
               </Space>
             )}

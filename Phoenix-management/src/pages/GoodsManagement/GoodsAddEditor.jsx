@@ -8,7 +8,7 @@ import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
 import moment, { isMoment } from 'moment';
 import { get } from 'lodash';
 import React, {
-  useState, useEffect, useRef,
+  useState, useEffect, useRef
 } from 'react';
 import FormItem from 'antd/lib/form/FormItem';
 import { connect } from 'umi';
@@ -45,12 +45,12 @@ const tailLayout = {
   },
 };
 
-export const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 3, name: '自取' }];
-export const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上架时间' }, { id: 3, name: '放入仓库暂不上架' }];
+const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 3, name: '自取' }];
+const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上架时间' }, { id: 3, name: '放入仓库暂不上架' }];
 
 const { Step } = Steps;
 
-const GoodsAddEditor = (props) => {
+export const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
