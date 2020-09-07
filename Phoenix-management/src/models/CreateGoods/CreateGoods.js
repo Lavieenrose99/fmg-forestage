@@ -6,7 +6,8 @@ import {
   getGoodsList,
   MgetGoods,
   delGoodItem,
-  adjGoodsItem
+  adjGoodsItem,
+  adjGoodsSpec
 } from '@/services/CreateGoods/CreateGoods';
   
 const GoodsClassModel = {
@@ -59,12 +60,24 @@ const GoodsClassModel = {
         yield message.error('添加失败请稍后重试');
       }
     },
+    * adjustGoodsSpec({ payload }, { call, put }) {
+      const result = yield call(adjGoodsSpec, payload);
+      yield put({
+        type: 'getGoodsList',
+        payload: { query: { limit: 999, page: 1 } },
+      });
+      if (result) {
+        yield message.success('添加商品规格成功'); 
+      } else {
+        yield message.error('添加失败请稍后重试');
+      }
+    },
     * adjGoods({ payload }, { call, put }) {
       const { tid, info } = payload;
       const result = yield call(adjGoodsItem, info, tid);
       yield put({
         type: 'getGoodsList',
-        payload: query,
+        payload: { query: { limit: 999, page: 1 } },
       });
       if (result) {
         yield message.success('删除商品成功'); 

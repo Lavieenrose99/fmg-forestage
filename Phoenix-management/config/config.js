@@ -53,10 +53,10 @@ export default defineConfig({
               //authority: ['admin'],
               routes: [
                 {
-                  path: '/settings_controls/rolling_picture_setting',
+                  path: '/settings_controls/rolling_picture_index',
                   name: '轮播图管理',
                   icon: 'smile',
-                  component: './settings_controls/rolling_picture_setting',
+                  component: './settings_controls/rolling_picture_index',
                   //authority: ['admin'],
                 },
                 {

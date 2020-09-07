@@ -53,7 +53,7 @@ const EditorLayout = {
 };
 
 const GoodsAdj = (props) => {
-  const { info , closeModel} = props;
+  const { info, closeModel } = props;
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const list = info.pictures.map((arr, index) => {

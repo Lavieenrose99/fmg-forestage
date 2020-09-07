@@ -41,3 +41,13 @@ export async function setGoodsSpec(payload) {
     },
   });
 }
+export async function adjGoodsSpec(payload) {
+  console.log(11)
+  return request(`/api.farm/goods/specification/${payload.pid}`, {
+    method: 'PUT',
+    data: {
+      specification: payload.specification,
+      template_id: payload.template_id,
+    },
+  });
+}

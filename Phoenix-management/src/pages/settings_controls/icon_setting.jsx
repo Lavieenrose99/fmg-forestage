@@ -4,22 +4,22 @@ import React, {
 import { HeartTwoTone, SmileTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import {
-  Card, Typography, Alert, Form, Icon,
-  Input, Checkbox, Button, Select, 
-  InputNumber, Upload, Modal, Divider, Table, Space
+  Form, Icon,
+  Input, Button, Select, 
+  Upload, Modal, Divider, Table, Space, Tabs
      
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'umi';
 import { get } from 'lodash';
-import './Admin.less';
   
 const { Option, OptGroup } = Select;
 const { Column, ColumnGroup } = Table;
+const { TabPane } = Tabs;
   
 const layout = {
   labelCol: {
-    span: 3,
+    span: 8,
   },
   wrapperCol: {
     span: 16,
@@ -27,7 +27,7 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 3,
+    offset: 11,
     span: 16,
   },
 };
@@ -183,166 +183,174 @@ const IconUpload = (props) => {
   const { iconsList } = props;
   return (
     <PageHeaderWrapper>
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        form={form}
-      >
-        <Form.Item
-          label="位置"
-          name="title"
-          rules={[
-            {
-              required: true,
-              message: '请输入图标位置',
-            }
-          ]}
-        >
-          <Input style={{ width: '18vw' }} />
-        </Form.Item>
-        <Form.Item
-          label="名称"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: '请输入图标名称',
-            }
-          ]}
-        >
-          <Input style={{ width: '18vw' }} />
-        </Form.Item>
-        <Form.Item
-          label="图标"
-          rules={[
-            {
-              //required: true,
-            }
-          ]}
-        >
-          <>
-            <span onClick={getUploadToken}>
-              <Upload
-                action={QINIU_SERVER}
-                data={{
-                  token: qiniuToken,
-                  key: `picture-${Date.parse(new Date())}`,
-                }}
-                showUploadList={false}
-                listType="picture-card"
-                beforeUpload={getUploadToken}
-                onChange={handleChange}
-              >
-                {fileList[0] ? <img
-                  src={fileList[0] 
-                    ? BASE_QINIU_URL + fileList[0].response.key : null}
-                  alt="avatar"
-                  style={{ width: '100%' }}
-                /> :  uploadButton}
-              </Upload>
-            </span>
-          </>
-             
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            确认
-          </Button>
-        </Form.Item>
-      </Form>
-      <Divider orientation="left" plain>图标列表</Divider>
-      <Table dataSource={iconsList}>
-        <Column
-          title="图标区域"
-          dataIndex="title"
-          key="title"
-        />
-        <Column
-          title="图标名称"
-          dataIndex="name"
-          key="name"
-        />
-        <Column
-          title="图标" 
-          dataIndex="picture"
-          key="picture"
-          render={(text, record) => (
-            <div style={{ textAlign: 'left' }}>
-              <img
-                src={record ? BASE_QINIU_URL + record.picture : null}
-                alt="img" 
-                style={{ width: 30, height: 30, marginRight: 20  }}
-              />
-            </div>
-          )}
-        />
-        <Column
-          title="图标地址" 
-          dataIndex="picture"
-          key="picture_address"
-          render={(text, record) => (
-            <div style={{ textAlign: 'left' }}>
-              {BASE_QINIU_URL + record.picture}
-            </div>
-          )}
-        />
-        <Column
-          title="操作"
-          key="id"
-          render={(text, record) => (
-            <Space size="middle">
-              <span>
-                <Icon
-                  type="edit"
-                  style={{ marginLeft: 8 }}
-                />
-                <a onClick={() => handelAdjustIcons(record)}>修改</a> 
-                <Modal
-                  mask={false}
-                  title="凤鸣谷"
-                  visible={showAdj}
-                  onOk={comfirmAdjustIcons}
-                  onCancel={handleChangeCancel}
-                  okText="提交"
-                  cancelText="取消"
-                >
-                  <Divider orientation="left" plain>区域</Divider>
-                  <Input defaultValue={oriTitle} value={oriTitle} onChange={handleChangeTitle} style={{ width: '18vw' }} />
-                  <Divider orientation="left" plain>名称</Divider>
-                  <Input defaultValue={oriName} value={oriName} onChange={handleChangeName} style={{ width: '18vw' }} />
-                  <Divider orientation="left" plain>图片</Divider>
-                  <span onClick={getQiNiuToken}>
-                    <Upload
-                      action={QINIU_SERVER}
-                      data={
+      <Tabs defaultActiveKey="1" centered>
+        <TabPane tab="图标列表" key="1">
+          <Divider orientation="left" plain>图标列表</Divider>
+          <Table dataSource={iconsList}>
+            <Column
+              title="图标区域"
+              dataIndex="title"
+              key="title"
+            />
+            <Column
+              title="图标名称"
+              dataIndex="name"
+              key="name"
+            />
+            <Column
+              title="图标" 
+              dataIndex="picture"
+              key="picture"
+              render={(text, record) => (
+                <div style={{ textAlign: 'left' }}>
+                  <img
+                    src={record ? BASE_QINIU_URL + record.picture : null}
+                    alt="img" 
+                    style={{ width: 30, height: 30, marginRight: 20  }}
+                  />
+                </div>
+              )}
+            />
+            <Column
+              title="图标地址" 
+              dataIndex="picture"
+              key="picture_address"
+              render={(text, record) => (
+                <div style={{ textAlign: 'left' }}>
+                  {BASE_QINIU_URL + record.picture}
+                </div>
+              )}
+            />
+            <Column
+              title="操作"
+              key="id"
+              render={(text, record) => (
+                <Space size="middle">
+                  <span>
+                    <Icon
+                      type="edit"
+                      style={{ marginLeft: 8 }}
+                    />
+                    <a onClick={() => handelAdjustIcons(record)}>修改</a> 
+                    <Modal
+                      mask={false}
+                      title="凤鸣谷"
+                      visible={showAdj}
+                      onOk={comfirmAdjustIcons}
+                      onCancel={handleChangeCancel}
+                      okText="提交"
+                      cancelText="取消"
+                    >
+                      <Divider orientation="left" plain>区域</Divider>
+                      <Input defaultValue={oriTitle} value={oriTitle} onChange={handleChangeTitle} style={{ width: '18vw' }} />
+                      <Divider orientation="left" plain>名称</Divider>
+                      <Input defaultValue={oriName} value={oriName} onChange={handleChangeName} style={{ width: '18vw' }} />
+                      <Divider orientation="left" plain>图片</Divider>
+                      <span onClick={getQiNiuToken}>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={
                {
                  token: qiniuToken,
                  key: `icon-${Date.parse(new Date())}`,
                }
   }
-                      listType="picture-card"
-                      beforeUpload={getQiNiuToken}
-                      showUploadList={false}
+                          listType="picture-card"
+                          beforeUpload={getQiNiuToken}
+                          showUploadList={false}
                         //fileList={oriPicture}
-                      onChange={handleChangefile}
-                    >
-                      {oriPicture  
-                        ? <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
-                    </Upload>
+                          onChange={handleChangefile}
+                        >
+                          {oriPicture  
+                            ? <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
+                        </Upload>
+                      </span>
+                      <Upload />
+                    </Modal>
                   </span>
-                  <Upload />
-                </Modal>
-              </span>
-              <a onClick={() => comfirmDelIcon(record.id)}>删除</a>
-            </Space>
-          )}
-        />
+                  <a onClick={() => comfirmDelIcon(record.id)}>删除</a>
+                </Space>
+              )}
+            />
     
-      </Table>
+          </Table>
+        </TabPane>
+        <TabPane tab="添加图标" key="2">
+          <Form
+            style={{ marginTop: 50 }}
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            form={form}
+          >
+            <Form.Item
+              label="位置"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入图标位置',
+                }
+              ]}
+            >
+              <Input style={{ width: '18vw' }} />
+            </Form.Item>
+            <Form.Item
+              label="名称"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入图标名称',
+                }
+              ]}
+            >
+              <Input style={{ width: '18vw' }} />
+            </Form.Item>
+            <Form.Item
+              label="图标"
+              rules={[
+                {
+                  //required: true,
+                }
+              ]}
+            >
+              <>
+                <span onClick={getUploadToken}>
+                  <Upload
+                    action={QINIU_SERVER}
+                    data={{
+                      token: qiniuToken,
+                      key: `picture-${Date.parse(new Date())}`,
+                    }}
+                    showUploadList={false}
+                    listType="picture-card"
+                    beforeUpload={getUploadToken}
+                    onChange={handleChange}
+                  >
+                    {fileList[0] ? <img
+                      src={fileList[0] 
+                        ? BASE_QINIU_URL + fileList[0].response.key : null}
+                      alt="avatar"
+                      style={{ width: '100%' }}
+                    /> :  uploadButton}
+                  </Upload>
+                </span>
+              </>
+             
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit">
+                确认
+              </Button>
+            </Form.Item>
+          </Form>
+        </TabPane>
+        
+      </Tabs>
     </PageHeaderWrapper>
   );
 };

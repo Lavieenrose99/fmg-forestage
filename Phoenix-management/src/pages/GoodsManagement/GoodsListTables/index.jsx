@@ -39,8 +39,12 @@ class GoodsList extends React.Component {
     this.state = {
       tagsAreaCheck: 0,
       tagsSaleCheck: 0,
-      tagsClassCheck: 0, 
+      tagsClassCheck: 0,
+      specification: {},
+      template: [],
+      template_id: 0, 
       visable: false,
+      gid: 0,
       visableTem: false,
       FilterText: '',
       pageSize: 10,
@@ -86,14 +90,18 @@ class GoodsList extends React.Component {
     });
   };
 
-  showModalTem = () => {
+  showModalTem = (data, tid, templateData, id) => {
     this.setState({
+      specification: data,
+      gid: tid,
+      template: templateData,
+      template_id: id,
       visableTem: true,
     });
   };
 
   confirm(id) {
-    Modal.warning({
+    Modal.confirm({
       mask: false,
       title: '凤鸣谷',
       content: '确认要删除该商品吗',
@@ -226,6 +234,22 @@ class GoodsList extends React.Component {
     this.setState({ FilterText: e.target.value }, () => { this.handleGetListData(); });
   };
 
+  closeVisable = () => {
+    this.setState({
+      visible: false,
+      visableTem: false,
+    });
+  }
+
+  handleGetListData = () => {
+    const { current, FilterText } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'CreateGoods/getGoodsList',
+      payload: { query: { page: current, limit: 10, keyword: FilterText } }, 
+    });
+  };
+
   handleDelete = (data) => {
     const {  current } = this.state;
     const { dispatch } = this.props;
@@ -238,21 +262,6 @@ class GoodsList extends React.Component {
           limit: 10,
         },
       }, 
-    });
-  };
-
-  closeVisable = () => {
-    this.setState({
-      visible: false,
-    });
-  }
-
-  handleGetListData = () => {
-    const { current, FilterText } = this.state;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'CreateGoods/getGoodsList',
-      payload: { query: { page: current, limit: 10, keyword: FilterText } }, 
     });
   };
 
@@ -428,7 +437,7 @@ class GoodsList extends React.Component {
                     width="70vw"
                     height="80vh"
                     visible={this.state.visible}
-                    title="修改"
+                    title="基本信息"
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={null}
@@ -437,7 +446,15 @@ class GoodsList extends React.Component {
                     <GoodsAdj info={this.state.record} closeModel={() => this.closeVisable()} />
                   </Modal>
                 </div>
-                <a onClick={() => this.showModalTem()}>规格信息</a> 
+                <a onClick={() => this.showModalTem(
+                  text.specification,
+                  text.id,
+                  text.template,
+                  text.template_id
+                )}
+                >
+                  规格信息
+                </a> 
                 <div>
                   <Modal 
                     mask={false}
@@ -450,7 +467,13 @@ class GoodsList extends React.Component {
                     footer={null}
                     destroyOnClose
                   >
-                    <TempalteAdj />
+                    <TempalteAdj
+                      template={this.state.template} 
+                      info={this.state.specification} 
+                      id={this.state.template_id}
+                      gid={this.state.gid}
+                      closeModel={() => this.closeVisable()}
+                    />
                   </Modal>
                 </div>
                 <a onClick={() => this.confirm(text)}>删除商品</a>

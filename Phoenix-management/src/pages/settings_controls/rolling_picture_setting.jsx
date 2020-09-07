@@ -1,21 +1,20 @@
 import React, {
   useState, useEffect, useRef
 }  from 'react';
-import { HeartTwoTone, SmileTwoTone, UploadOutlined } from '@ant-design/icons';
+import { PlusSquareTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import {
-  Card, Typography, Alert, Form, Icon,
-  Input, Checkbox, Button, Select, 
-  InputNumber, Upload, Modal, Divider, Table, Space
+  Form, Icon,
+  Button, Select, 
+  InputNumber, Upload, Modal, Divider, Table, Space, Tabs, Row, Col
    
 } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { connect } from 'umi';
+import { connect, Link } from 'umi';
 import { get } from 'lodash';
-import './Admin.less';
 
 const { Option, OptGroup } = Select;
 const { Column, ColumnGroup } = Table;
+const { TabPane } = Tabs;
 
 const layout = {
   labelCol: {
@@ -27,7 +26,7 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 3,
+    offset: 12,
     span: 16,
   },
 };
@@ -226,219 +225,236 @@ const RollingPictures = (props) => {
     rollings[i] = { ...rollings[i], oid: i };
   }
   return (
-    <PageHeaderWrapper>
-      <Divider orientation="left" plain>类别标签</Divider>
-      <Select
-        style={{ width: '85vw', marginTop: 10, marginBottom: 20 }}
-        onChange={selectGoodsClass}
-        placeholder="请选择商品类别"
-      >
-        {
-                goodsClassFather.map((arr) => {
-                  return <OptGroup label={arr.title}>
-                    {(goodsClassChild.filter((tags) => {
-                      return tags.parent_id === arr.id;
-                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
-                  </OptGroup>;
-                })
-              }
-      </Select>
-      <Divider />
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-      >
-        <Form.Item
-          label="轮播商品"
-          name="goods_id"
-          rules={[
-            {
-              required: true,
-              message: '请选择轮播商品',
-            }
-          ]}
-        >
-          <Select
-            showSearch
-            placeholder="请选择添加图片的商品"
-            optionFilterProp="children"
-          >
-            {
-              Goods.map((arr) => {
-                return <Option value={arr.id}>{arr.name}</Option>;
-              })
-            }
-
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          label="轮播序号"
-          name="number"
-          rules={[
-            {
-              required: true,
-              message: '请输入轮播图序号',
-            }
-          ]}
-        >
-          <InputNumber  />
-        </Form.Item>
-        <Form.Item
-          label="商品视图"
-          rules={[
-            {
-              //required: true,
-            }
-          ]}
-        >
-          <>
-            <span onClick={getUploadToken}>
-              <Upload
-                action={QINIU_SERVER}
-                data={{
-                  token: qiniuToken,
-                  key: `picture-${Date.parse(new Date())}`,
-                }}
-                showUploadList={false}
-                listType="picture-card"
-                beforeUpload={getUploadToken}
-                onPreview={handlePreview}
-                onChange={handleChange}
-              >
-                {fileList[0] ? <img
-                  src={fileList[0] 
-                    ? BASE_QINIU_URL + fileList[0].response.key : null}
-                  alt="avatar"
-                  style={{ width: '100%' }}
-                /> :  uploadButton}
-              </Upload>
-            </span>
-          </>
-           
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            确认
-          </Button>
-        </Form.Item>
-      </Form>
-      <Divider orientation="left" plain>轮播列表</Divider>
-      <Table dataSource={rollings}>
-        <Column
-          title="轮播顺序"
-          dataIndex="oid"
-          key="oid"
-          defaultSortOrder="ascend"
-          sorter={(a, b) => a.oid - b.oid}
-        />
-        <Column
-          title="轮播图片" 
-          dataIndex="name"
-          key="firstName"
-          render={(text, record) => (
-            <div style={{ textAlign: 'left' }}>
-              <img
-                src={record ? BASE_QINIU_URL + record.picture : null}
-                alt="img" 
-                style={{ width: 30, height: 30, marginRight: 20  }}
-              />
-            </div>
-          )}
-        />
-        <Column
-          title="操作"
-          key="id"
-          render={(text, record) => (
-            <Space size="middle">
-              <span>
-                <Icon
-                  type="edit"
-                  style={{ marginLeft: 8 }} 
-                  
-                />
-                <a onClick={() => handelAdjustPicture(record)}>修改</a> 
-                <Modal
-                  mask={false}
-                  title="凤鸣谷"
-                  visible={showAdj}
-                  onOk={submitChangePicture}
-                  onCancel={handleChangeCancel}
-                  okText="提交"
-                  cancelText="取消"
-                >
-                  <Divider orientation="left" plain>类别标签</Divider>
-                  <Select
-                    style={{ width: '10vw', marginTop: 10, marginBottom: 20 }}
-                    onChange={selectGoodsClass}
-                    placeholder="请选择商品类别"
-                  >
-                    {
-                goodsClassFather.map((arr) => {
-                  return <OptGroup label={arr.title}>
-                    {(goodsClassChild.filter((tags) => {
-                      return tags.parent_id === arr.id;
-                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
-                  </OptGroup>;
-                })
-              }
-                  </Select>
-                  <Divider />
-                  <Divider orientation="left" plain>轮播商品</Divider>
-                  <Select
-                    style={{ width: '15vw', marginTop: 10, marginBottom: 20 }}
-                    showSearch
-                    placeholder="请选择添加图片的商品"
-                    optionFilterProp="children"
-                    defaultValue={oriId}
-                    onChange={handleChangeGoodsId}
-                  >
-                    {
-              Goods.map((arr) => {
-                return <Option value={arr.id}>{arr.name}</Option>;
-              })
-            }
-
-                  </Select>
-                  <Divider orientation="left" plain>轮播顺序</Divider>
-                  <InputNumber
-                    defaultValue={oriOrder} 
-                    onChange={handleChangeOrder}
-                    value={oriOrder}
+    <>
+      <Tabs defaultActiveKey="1" centered>
+       
+        <TabPane tab="轮播图列表" key="1">
+          <Divider orientation="left" plain>轮播列表</Divider>
+          <Table dataSource={rollings}>
+            <Column
+              title="轮播顺序"
+              dataIndex="oid"
+              key="oid"
+              defaultSortOrder="ascend"
+              sorter={(a, b) => a.oid - b.oid}
+            />
+            <Column
+              title="轮播图片" 
+              dataIndex="name"
+              key="firstName"
+              render={(text, record) => (
+                <div style={{ textAlign: 'left' }}>
+                  <img
+                    src={record ? BASE_QINIU_URL + record.picture : null}
+                    alt="img" 
+                    style={{ width: 30, height: 30, marginRight: 20  }}
                   />
-                  <Divider orientation="left" plain>轮播图片</Divider>
-                  <span onClick={getQiNiuToken}>
-                    <Upload
-                      action={QINIU_SERVER}
-                      data={
+                </div>
+              )}
+            />
+            <Column
+              title="操作"
+              key="id"
+              render={(text, record) => (
+                <Space size="middle">
+                  <span>
+                    <Icon
+                      type="edit"
+                      style={{ marginLeft: 8 }}
+                    />
+                    <a onClick={() => handelAdjustPicture(record)}>修改</a> 
+                    <Modal
+                      mask={false}
+                      title="凤鸣谷"
+                      visible={showAdj}
+                      onOk={submitChangePicture}
+                      onCancel={handleChangeCancel}
+                      okText="提交"
+                      cancelText="取消"
+                    >
+                      <Divider orientation="left" plain>类别标签</Divider>
+                      <Select
+                        style={{ width: '10vw', marginTop: 10, marginBottom: 20 }}
+                        onChange={selectGoodsClass}
+                        placeholder="请选择商品类别"
+                      >
+                        {
+                goodsClassFather.map((arr) => {
+                  return <OptGroup label={arr.title}>
+                    {(goodsClassChild.filter((tags) => {
+                      return tags.parent_id === arr.id;
+                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
+                  </OptGroup>;
+                })
+              }
+                      </Select>
+                      <PlusSquareTwoTone />
+                      <Divider />
+                      <Divider orientation="left" plain>轮播商品</Divider>
+                      <Select
+                        style={{ width: '15vw', marginTop: 10, marginBottom: 20 }}
+                        showSearch
+                        placeholder="请选择添加图片的商品"
+                        optionFilterProp="children"
+                        defaultValue={oriId}
+                        onChange={handleChangeGoodsId}
+                      >
+                        {
+              Goods.map((arr) => {
+                return <Option value={arr.id}>{arr.name}</Option>;
+              })
+            }
+
+                      </Select>
+                      <Divider orientation="left" plain>轮播顺序</Divider>
+                      <InputNumber
+                        defaultValue={oriOrder} 
+                        onChange={handleChangeOrder}
+                        value={oriOrder}
+                      />
+                      <Divider orientation="left" plain>轮播图片</Divider>
+                      <span onClick={getQiNiuToken}>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={
              {
                token: qiniuToken,
                key: `icon-${Date.parse(new Date())}`,
              }
 }
-                      listType="picture-card"
-                      beforeUpload={getQiNiuToken}
-                      showUploadList={false}
+                          listType="picture-card"
+                          beforeUpload={getQiNiuToken}
+                          showUploadList={false}
                       //fileList={oriPicture}
-                      onChange={handleChangefile}
-                    >
-                      {oriPicture ?  <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
-                    </Upload>
+                          onChange={handleChangefile}
+                        >
+                          {oriPicture ?  <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
+                        </Upload>
+                      </span>
+                      <Upload />
+                    </Modal>
                   </span>
-                  <Upload />
-                </Modal>
-              </span>
-              <a onClick={() => comfirmDelPicture(record.id)}>删除</a>
-            </Space>
-          )}
-        />
+                  <a onClick={() => comfirmDelPicture(record.id)}>删除</a>
+                </Space>
+              )}
+            />
   
-      </Table>
-    </PageHeaderWrapper>
+          </Table>
+        </TabPane>
+        <TabPane tab="添加轮播" key="2">
+          <Divider>类别标签</Divider>
+          <Col offset="3">
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Select
+                style={{
+                  width: '57vw', marginTop: 10, marginBottom: 20, marginRight: 10, 
+                }}
+                onChange={selectGoodsClass}
+                placeholder="请选择商品类别"
+              >
+                {
+                goodsClassFather.map((arr) => {
+                  return <OptGroup label={arr.title}>
+                    {(goodsClassChild.filter((tags) => {
+                      return tags.parent_id === arr.id;
+                    })).map((tag) => { return <Option value={tag.id}>{tag.title}</Option>; })}
+                  </OptGroup>;
+                })
+              }
+              </Select>
+              <Link to="/goods/add-goods">
+                <PlusSquareTwoTone style={{ fontSize: 30,  marginTop: 10, marginRight: 250 }} />
+              </Link>
+            </div>
+          </Col>
+          <Divider />
+          <Form
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+          >
+            <Form.Item
+              label="轮播商品"
+              name="goods_id"
+              rules={[
+                {
+                  required: true,
+                  message: '请选择轮播商品',
+                }
+              ]}
+            >
+              <Select
+                showSearch
+                placeholder="请选择添加图片的商品"
+                optionFilterProp="children"
+              >
+                {
+              Goods.map((arr) => {
+                return <Option value={arr.id}>{arr.name}</Option>;
+              })
+            }
+
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="轮播序号"
+              name="number"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入轮播图序号',
+                }
+              ]}
+            >
+              <InputNumber  />
+            </Form.Item>
+            <Form.Item
+              label="商品视图"
+              rules={[
+                {
+                  //required: true,
+                }
+              ]}
+            >
+              <>
+                <span onClick={getUploadToken}>
+                  <Upload
+                    action={QINIU_SERVER}
+                    data={{
+                      token: qiniuToken,
+                      key: `picture-${Date.parse(new Date())}`,
+                    }}
+                    showUploadList={false}
+                    listType="picture-card"
+                    beforeUpload={getUploadToken}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                  >
+                    {fileList[0] ? <img
+                      src={fileList[0] 
+                        ? BASE_QINIU_URL + fileList[0].response.key : null}
+                      alt="avatar"
+                      style={{ width: '100%' }}
+                    /> :  uploadButton}
+                  </Upload>
+                </span>
+              </>
+           
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Button type="primary" htmlType="submit">
+                确认
+              </Button>
+            </Form.Item>
+          </Form>
+        </TabPane>
+      </Tabs>
+    </>
+    
   );
 };
 

@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 import {
   Form, Input, Button, Select,
-  Checkbox, InputNumber, DatePicker,
+  InputNumber, DatePicker,
   Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result
 } from 'antd';
-import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
-import moment, { isMoment } from 'moment';
+import { UploadOutlined, SmileOutlined } from '@ant-design/icons';
+import moment  from 'moment';
 import { get } from 'lodash';
 import React, {
   useState, useEffect, useRef
@@ -973,7 +973,7 @@ export const GoodsAddEditor = (props) => {
                 name="reduced_price"
                 rules={[
                   {
-                    required: true,
+                    //required: true,
                   }
                 ]}
                 noStyle
