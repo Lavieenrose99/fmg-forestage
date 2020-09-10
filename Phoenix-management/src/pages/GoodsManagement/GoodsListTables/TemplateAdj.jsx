@@ -8,20 +8,20 @@ import {
   Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
+import { StopTwoTone, UploadOutlined, PlusCircleTwoTone  } from '@ant-design/icons';
 import moment from 'moment';
 import { connect } from 'umi';
-import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
 import PropTypes from 'prop-types';
 import React, {
   useState, useEffect, useRef
 } from 'react';
 import { get } from 'lodash';
+import  './index.less';
 
 const ModelListlayout = {
   labelCol: {
-    offset: 8,
+    //offset: 1,
   },
 };
 const uploadButton = (
@@ -53,6 +53,7 @@ const TemplateAdj = (props) => {
     return {
       title: arr,
       dataIndex: 'specification',
+      key: arr,
       render: (text, record) => (
         <span>
           {
@@ -64,18 +65,22 @@ const TemplateAdj = (props) => {
   });
   const detailsName = [{
     title: '规格',
+    key: '规格',
     children: ModelsColums, 
-  }, { title: '库存', dataIndex: 'total' },
-  { title: '重量', dataIndex: 'weight' }, { title: '价格', dataIndex: 'price' },
-  { title: '成本价', dataIndex: 'cost_price' }];
+  }, { title: '库存', dataIndex: 'total', key: '库存' },
+  { title: '重量', dataIndex: 'weight', key: '重量' }, 
+  { title: '价格', dataIndex: 'price', key: '价格' },
+  { title: '成本价', dataIndex: 'cost_price', key: '成本价' }];
+  const onReset = () => {
+    fromSpec.resetFields();
+    fromSpec.setFieldsValue({
+      specification: [''],
+    });
+  };
   const comfirmDelItem = (index) => {
-    if (index === 0) {
-      const data = [];
-      setAdjTem(data);
-    } else {
-      const data = adjTem.splice(index, 1);
-      setAdjTem(data);
-    }
+    const data = adjTem;
+    data.splice(index, 1);
+    setAdjTem([...data]);
   };
   const delItem = (index) => {
     Modal.confirm({
@@ -173,7 +178,7 @@ const TemplateAdj = (props) => {
   };
   return (
     <>
-      <div style={{ textAlign: 'center', backgroundColor: 'white' }}>
+      <div className="specification-adj-form-container">
         <Form
           onFinish={addSpecification}
           form={fromSpec}
@@ -181,28 +186,35 @@ const TemplateAdj = (props) => {
           <Form.List name="specification">
             {(fields) => {
               return (
-                <div style={{ textAlign: 'center', backgroundColor: 'white' }}>
+                <div className="specification-adj-template">
                   {fields.map((field) => (
                     <>
                       <div>
                         {
             template.map((tem) => {
-              return <FormItem
-                {...field}
-                name={[field.name, `${tem}`]}
-                fieldKey={[[field.fieldKey, `${tem}`]]}
-                rules={[
-                  {
-                  //required: true,
-                  }
-                ]}
-                noStyle
-              >
-                <Input
-                  addonBefore={['', tem]} 
-                  style={{ width: '14vw', marginBottom: 10, marginRight: 10 }}
-                />
-              </FormItem>;
+              return <span>
+                <span>
+                  {tem}
+                  :
+                  {' '}
+                </span>
+                <Form.Item
+                  {...field}
+                  name={[field.name, `${tem}`]}
+                  fieldKey={[[field.fieldKey, `${tem}`]]}
+                  rules={[
+                    {
+                      //required: true,
+                    }
+                  ]}
+                  noStyle
+                >
+              
+                  <Input
+                    style={{ width: '10vw', marginRight: 15, marginLeft: 10 }}
+                  />
+                </Form.Item>
+              </span>;
             })
           }
                       </div>
@@ -213,8 +225,7 @@ const TemplateAdj = (props) => {
               );
             }}
           </Form.List>
-          <Divider plain orientation="left" className="goods-models-normal-settings">常规设置</Divider>
-          <Space size="large" style={{ marginBottom: 20 }}>
+          <Space size="large" style={{ marginBottom: 15 }}>
             <span>
               <span>库存: </span>
               <FormItem
@@ -228,24 +239,9 @@ const TemplateAdj = (props) => {
                 noStyle
               >
               
-                <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
+                <InputNumber className="specification-adj-normal" />
               </FormItem>
             </span> 
-            <span>
-              <span>价格: </span>
-              <FormItem
-                name="price"
-                rules={[
-                  {
-                    required: true,
-                  }
-                ]}
-                noStyle
-              >
-             
-                <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
-              </FormItem>
-            </span>
             <span>
               <span>重量: </span>
               <FormItem
@@ -259,7 +255,25 @@ const TemplateAdj = (props) => {
                 noStyle
               >
               
-                <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
+                <InputNumber className="specification-adj-normal" />
+              </FormItem>
+            </span>
+            <span>
+              <span>价格: </span>
+              <FormItem
+                name="price"
+                rules={[
+                  {
+                    required: true,
+                  }
+                ]}
+                noStyle
+              >
+             
+                <InputNumber
+                  className="specification-adj-normal" 
+                  formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                />
               </FormItem>
             </span>
             <span>
@@ -274,33 +288,45 @@ const TemplateAdj = (props) => {
                 noStyle
               >
               
-                <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
+                <InputNumber
+                  className="specification-adj-normal"
+                  formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                />
               </FormItem>
             </span>
               
           </Space>
-          <div style={{ textAlign: 'center' }}>
-            <span>是否优惠: </span>
-            <Switch
-              checkedChildren="是"
-              unCheckedChildren="否"
-              checked={checkUse} 
-              onChange={() => { setCheckUse(!checkUse); }}
-              style={{ marginRight: 10 }}
-            />
-            <span>优惠幅度: </span>
-            <FormItem
-              name="reduced_price"
-              rules={[
-                {
+          <div>
+            <div className="goods-sale-seetings">
+              <span>是否优惠: </span>
+              <Switch
+                checkedChildren="是"
+                unCheckedChildren="否"
+                checked={checkUse} 
+                onChange={() => { setCheckUse(!checkUse); }}
+                style={{ marginRight: 10 }}
+              />
+              <span>优惠幅度: </span>
+              <FormItem
+                name="reduced_price"
+                rules={[
+                  {
                   //required: true,
-                }
-              ]}
-              noStyle
-            >
+                  }
+                ]}
+                noStyle
+              >
               
-              <InputNumber disabled={!checkUse} style={{ width: '12vw', marginBottom: 10 }} />
-            </FormItem>
+                <InputNumber
+                  disabled={!checkUse}
+                  style={{
+                    width: '8vw', 
+                    marginBottom: 10,
+                    marginLeft: 10, 
+                  }}
+                />
+              </FormItem>
+            </div>
             <Form.Item
               label="规格例图"
               rules={[
@@ -321,7 +347,6 @@ const TemplateAdj = (props) => {
                     listType="picture-card"
                     beforeUpload={getUploadToken}
                     fileList={fileList}
-              //showUploadList={false}
                     onChange={handleChange}
                   >
                     {uploadButton}
@@ -331,10 +356,24 @@ const TemplateAdj = (props) => {
        
             </Form.Item>
           </div>
-          
-          <Divider />
-           
-          <Button style={{ marginBottom: 10 }} htmlType="submit">添加</Button>
+          <Button
+            htmlType="submit"
+            style={{
+              margin: 20,
+            }}
+            icon={<PlusCircleTwoTone />}
+          >
+            添加规格
+          </Button>
+          <Button
+            onClick={onReset}
+            style={{
+              margin: 20,
+            }}
+            icon={<StopTwoTone />}
+          >
+            重置
+          </Button>
         </Form>
       </div>
       <Divider>规格列表</Divider>
@@ -344,7 +383,15 @@ const TemplateAdj = (props) => {
         style={{ paddingLeft: 20, paddingRight: 20 }}
       />
       <div style={{ textAlign: 'center', marginTop: 10 }}>
-        <Button onClick={submitSpc} type="primary">提交</Button>
+        <Button
+          type="primary"
+          onClick={submitSpc}
+          style={{
+            margin: 20,
+          }}
+        >
+          提交
+        </Button>
       </div>
        
     </>

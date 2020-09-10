@@ -4,7 +4,9 @@ import {
   InputNumber, DatePicker,
   Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result
 } from 'antd';
-import { UploadOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
+} from '@ant-design/icons';
 import moment  from 'moment';
 import { get } from 'lodash';
 import React, {
@@ -29,7 +31,7 @@ const layout = {
 };
 const ModelListlayout = {
   labelCol: {
-    offset: 10,
+    offset: 0,
   },
 };
 const EditorLayout = {
@@ -192,6 +194,7 @@ export const GoodsAddEditor = (props) => {
       thumbUrl,
       status,
       response,
+      index: fileListAlot.length,
       judege: (response.key || ''),
       url: BASE_QINIU_URL + (response.key),
     };
@@ -317,6 +320,10 @@ export const GoodsAddEditor = (props) => {
     setFileList([]);
     setCurrent(current + 1);
   };
+  const onFileListAlot = (values) => {
+    fileListAlot.splice(values.uid, 1);
+    return false;
+  };
   const addSpecification = (data) => {
     const spciArr = Object.values(data);
     const specification = spciArr[0][0];
@@ -336,6 +343,13 @@ export const GoodsAddEditor = (props) => {
       cancelText: '取消',
       onOk: () => { subGoodsSpec(); },
     });
+  };
+  const onReset = () => {
+    fromSpec.resetFields();
+    fromSpec.setFieldsValue({
+      specification: [''],
+    });
+    setFileList([]);
   };
   const subGoodsInfos = (subValues) => {
     localStorage.removeItem('storage');
@@ -405,7 +419,7 @@ export const GoodsAddEditor = (props) => {
   (() => {
     if (current === 0) {
       return (<>
-        <Divider orientation="left">商品基本信息</Divider>
+        <Divider>商品基本信息</Divider>
         <Form
           onValuesChange={subscriptions}
           {...layout}
@@ -559,57 +573,6 @@ export const GoodsAddEditor = (props) => {
             />
           </Form.Item>
           <Form.Item
-            label="商品数量设定"
-            colon={false}
-          >
-            <Space size="large" style={{ marginLeft: 10 }}>
-              <span>
-                <span>限购数量: </span>
-                <FormItem
-                  name="limit_total"
-                  noStyle
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <InputNumber  />
-                </FormItem>
-              </span>
-              <span>
-                <span>起售数量: </span>
-                <FormItem
-                  name="min_sale"
-                  noStyle
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <InputNumber  />
-                </FormItem>
-
-              </span>
-              <span>
-                <span>库存数量: </span>
-                <FormItem
-                  name="total"
-                  noStyle
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <InputNumber  />
-                </FormItem>
-              </span>
-            </Space>
-          </Form.Item>
-
-          <Form.Item
             name="advance_time"
             label="预售时间"
             rules={[
@@ -656,7 +619,6 @@ export const GoodsAddEditor = (props) => {
                   showUploadList={false}
                   listType="picture-card"
                   beforeUpload={getUploadToken}
-                  onPreview={handlePreview}
                   onChange={handleChange}
                 >
                   {fileList[0] ? <img
@@ -690,6 +652,7 @@ export const GoodsAddEditor = (props) => {
                   listType="picture-card"
                   beforeUpload={getUploadToken}
                   fileList={fileListAlot}
+                  onRemove={onFileListAlot}
                   onPreview={handlePreview}
                   onChange={handleChangeAlot}
                 >
@@ -736,11 +699,59 @@ export const GoodsAddEditor = (props) => {
               </span>
             </>
           </Form.Item>
-          <Divider orientation="left">编辑商品详情</Divider>
+          <Divider>商品数量设置</Divider>
+          <div style={{ marginBottom: 30, marginLeft: 200 }}>
+            <Space size="large" style={{ marginLeft: 10 }}>
+              <span>
+                <span>限购数量: </span>
+                <FormItem
+                  name="limit_total"
+                  noStyle
+                  rules={[
+                    {
+                      required: true,
+                    }
+                  ]}
+                >
+                  <InputNumber  />
+                </FormItem>
+              </span>
+              <span>
+                <span>起售数量: </span>
+                <FormItem
+                  name="min_sale"
+                  noStyle
+                  rules={[
+                    {
+                      required: true,
+                    }
+                  ]}
+                >
+                  <InputNumber  />
+                </FormItem>
+
+              </span>
+              <span>
+                <span>库存数量: </span>
+                <FormItem
+                  name="total"
+                  noStyle
+                  rules={[
+                    {
+                      required: true,
+                    }
+                  ]}
+                >
+                  <InputNumber  />
+                </FormItem>
+              </span>
+            </Space>
+          </div>
+          <Divider>编辑商品详情</Divider>
           <Form.Item {...EditorLayout}>
             <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
           </Form.Item>
-          <Divider orientation="left">其他属性</Divider>
+          <Divider>其他属性</Divider>
           <Form.Item label=" " colon={false} className="goods-create-swtich-contianer">
             <Space size="middle">
               <span className="goods-create-swtich-item">
@@ -838,205 +849,235 @@ export const GoodsAddEditor = (props) => {
       </>);
     } if (current === 1) {
       return (<>
-        <div style={{ textAlign: 'center', backgroundColor: 'white' }}>
-          <Divider>{(goodsModel[0] || []).title}</Divider>
-          <Divider plain orientation="left">规格</Divider>
-          <Select
-            style={{ marginBottom: 20 }}
-            onChange={selectTemplate}
-            placeholder="选择规格模版"
-            allowClear
-          >
-            {goodsModelsList.map((arr) => {
-              return  <Option value={arr.id} key={arr.id}>{arr.title}</Option>;
-            })}
-
-          </Select>
-          <Form
-            onFinish={addSpecification}
-            form={fromSpec}
-          >
-            <Form.List name="specification">
-              {(fields) => {
-                return (
-                  <div style={{ textAlign: 'center', backgroundColor: 'white' }}>
-                    {fields.map((field) => (
-                      <>
-                        <div>
-                          {
+        <div style={{ backgroundColor: 'white', padding: 20 }}> 
+          <div className="specification-adj-form-container">
+            <div style={{ textAlign: 'center' }}>
+              <Select
+                onChange={selectTemplate}
+                placeholder="选择规格模版"
+                allowClear
+                style={{ width: '8vw' }}
+              >
+                {(goodsModelsList || []).map((arr) => {
+                  return  <Option value={arr.id} key={arr.id}>{arr.title}</Option>;
+                })}
+              </Select>
+            </div>
+            
+            <Form
+              onFinish={addSpecification}
+              form={fromSpec}
+            >
+              <Form.List name="specification">
+                {(fields) => {
+                  return (
+                    <div className="specification-adj-template">
+                      {fields.map((field) => (
+                        <>
+                          <div>
+                            {
             (((goodsModel[0] || []).template || []).filter((arr) => {
               return arr.use !== false;
             }) || []).map((tem) => {
-              return <FormItem
-                {...field}
-                name={[field.name, `${tem.name}`]}
-                fieldKey={[[field.fieldKey, `${tem.name}`]]}
-                rules={[
-                  {
-                  //required: true,
-                  }
-                ]}
-                noStyle
-              >
-                <Input
-                  addonBefore={['', tem.name]} 
-                  style={{ width: '14vw', marginBottom: 10, marginRight: 10 }}
-                />
-              </FormItem>;
+              return <span>
+                <span>
+                  {tem.name}
+                  :
+                  {' '}
+                </span>
+                <FormItem
+                  {...field}
+                  name={[field.name, `${tem.name}`]}
+                  fieldKey={[[field.fieldKey, `${tem.name}`]]}
+                  rules={[
+                    {
+                      //required: true,
+                    }
+                  ]}
+                  noStyle
+                >
+                  <Input
+                    style={{ width: '10vw', marginRight: 15, marginLeft: 10 }}
+                  />
+                </FormItem>
+              </span>;
             })
           }
-                        </div>
-                      </>
-                    ))}
-                  </div>
+                          </div>
+                        </>
+                      ))}
+                    </div>
                 
-                );
-              }}
-            </Form.List>
-            <Divider plain orientation="left" className="goods-models-normal-settings">常规设置</Divider>
-            <Space size="large" style={{ marginBottom: 20 }}>
-              <span>
-                <span>库存: </span>
-                <FormItem
-                  name="total"
+                  );
+                }}
+              </Form.List>
+              <Space size="large" style={{ marginBottom: 20 }}>
+                <span>
+                  <span>库存: </span>
+                  <FormItem
+                    name="total"
               //label="库存"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                  noStyle
-                >
-              
-                  <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
-                </FormItem>
-              </span> 
-              <span>
-                <span>价格: </span>
-                <FormItem
-                  name="price"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                  noStyle
-                >
-             
-                  <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
-                </FormItem>
-              </span>
-              <span>
-                <span>重量: </span>
-                <FormItem
-                  name="weight"
-              
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                  noStyle
-                >
-              
-                  <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
-                </FormItem>
-              </span>
-              <span>
-                <span>成本: </span>
-                <FormItem
-                  name="cost_price"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                  noStyle
-                >
-              
-                  <InputNumber style={{ width: '10vw', marginBottom: 10 }} />
-                </FormItem>
-              </span>
-              
-            </Space>
-            <div style={{ textAlign: 'center' }}>
-              <span>是否优惠: </span>
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-                checked={checkUse} 
-                onChange={() => { setCheckUse(!checkUse); }}
-                style={{ marginRight: 10 }}
-              />
-              <span>优惠幅度: </span>
-              <FormItem
-                name="reduced_price"
-                rules={[
-                  {
-                    //required: true,
-                  }
-                ]}
-                noStyle
-              >
-              
-                <InputNumber disabled={!checkUse} style={{ width: '12vw', marginBottom: 10 }} />
-              </FormItem>
-              <Form.Item
-                //name="main_goods_video"
-                label="规格例图"
-                rules={[
-                  {
-                    //required: true,
-                  }
-                ]}
-                {...ModelListlayout}
-              >
-                <>
-                  <span onClick={getUploadToken}>
-                    <Upload
-                      action={QINIU_SERVER}
-                      data={{
-                        token: qiniuToken,
-                        key: `spec-${Date.parse(new Date())}`,
-                      }}
-                      listType="picture-card"
-                      beforeUpload={getUploadToken}
-                      showUploadList={false}
-                      onPreview={handlePreview}
-                      onChange={handleChange}
-                    >
-                      {fileList[0] ? <img 
-                        src={BASE_QINIU_URL + fileList[0].response.key}
-                        alt="pictures"
-                        style={{ width: '100%' }}
-                      /> :  uploadButton}
-                    </Upload>
-                  </span>
-                  <Modal
-                    visible={previewVisible}
-                    footer={null}
-                    onCancel={() => setPreviewVisible(!previewVisible)}
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
                   >
-                    <img style={{ width: '100%' }} src={previewImage} alt="previewImg" />
-                  </Modal>
-                </>
-              </Form.Item>
-            </div>
-          
-            <Divider />
-           
-            <Button style={{ marginBottom: 10 }} htmlType="submit">添加</Button>
-          </Form>
+              
+                    <InputNumber className="specification-adj-normal" />
+                  </FormItem>
+                </span> 
+                <span>
+                  <span>价格: </span>
+                  <FormItem
+                    name="price"
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+             
+                    <InputNumber className="specification-adj-normal" />
+                  </FormItem>
+                </span>
+                <span>
+                  <span>重量: </span>
+                  <FormItem
+                    name="weight"
+              
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber className="specification-adj-normal" />
+                  </FormItem>
+                </span>
+                <span>
+                  <span>成本: </span>
+                  <FormItem
+                    name="cost_price"
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber className="specification-adj-normal" />
+                  </FormItem>
+                </span>
+              
+              </Space>
+              <div>
+                <div className="goods-sale-seetings">
+                  <span>是否优惠: </span>
+                  <Switch
+                    checkedChildren="是"
+                    unCheckedChildren="否"
+                    checked={checkUse} 
+                    onChange={() => { setCheckUse(!checkUse); }}
+                    style={{ marginRight: 10 }}
+                  />
+                  <span>优惠幅度: </span>
+                  <FormItem
+                    name="reduced_price"
+                    rules={[
+                      {
+                      //required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber
+                      disabled={!checkUse}
+                      style={{
+                        width: '8vw', 
+                        marginBottom: 10,
+                        marginLeft: 10, 
+                      }}
+                    />
+                  </FormItem>
+                </div>
+                <Form.Item
+                //name="main_goods_video"
+                  label="规格例图"
+                  rules={[
+                    {
+                    //required: true,
+                    }
+                  ]}
+                  {...ModelListlayout}
+                >
+                  <>
+                    <span onClick={getUploadToken}>
+                      <Upload
+                        action={QINIU_SERVER}
+                        data={{
+                          token: qiniuToken,
+                          key: `spec-${Date.parse(new Date())}`,
+                        }}
+                        listType="picture-card"
+                        beforeUpload={getUploadToken}
+                        showUploadList={false}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                      >
+                        {fileList[0] ? <img 
+                          src={BASE_QINIU_URL + fileList[0].response.key}
+                          alt="pictures"
+                          style={{ width: '100%' }}
+                        /> :  uploadButton}
+                      </Upload>
+                    </span>
+                    <Modal
+                      visible={previewVisible}
+                      footer={null}
+                      onCancel={() => setPreviewVisible(!previewVisible)}
+                    >
+                      <img style={{ width: '100%' }} src={previewImage} alt="previewImg" />
+                    </Modal>
+                  </>
+                </Form.Item>
+              </div>          
+              <Button
+                htmlType="submit"
+                style={{
+                  margin: 20,
+                }}
+                icon={<PlusCircleTwoTone />}
+              >
+                添加规格
+              </Button>
+              <Button
+                onClick={onReset}
+                style={{
+                  margin: 20,
+                }}
+                icon={<StopTwoTone />}
+              >
+                重置
+              </Button>
+            </Form>
+          </div>
           <Divider>规格列表</Divider>
           <Table
             columns={goodsColumns}
             dataSource={goodsDetails}
             style={{ paddingLeft: 20, paddingRight: 20 }}
           />
-       
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 10 }}>
-          <Button onClick={submitSpc} type="primary">提交</Button>
+
+          <div style={{ textAlign: 'center', marginTop: 10 }}>
+            <Button onClick={submitSpc} type="primary">提交</Button>
+          </div>
         </div>
       </>
       );

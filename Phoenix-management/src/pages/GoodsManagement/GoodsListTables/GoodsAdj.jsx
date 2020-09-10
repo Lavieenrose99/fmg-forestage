@@ -150,7 +150,6 @@ const GoodsAdj = (props) => {
     } else if (fileItem.status !== 'error') {
       fileListAlot.push(fileItem);
     }
-    localStorage.setItem('FileListAlot', JSON.stringify(fileListAlot));
     setFileListAlot([...fileListAlot]);
   };
   useEffect(() => {
@@ -232,13 +231,19 @@ const GoodsAdj = (props) => {
       onOk: () => { adjGoodsInfos(subValues); },
     });
   };
-  
+  const onFileList = () => {
+    setFileList([]);
+    return false;
+  };
+  const onFileVidio = () => {
+    setfileVidoList([]);
+    return false;
+  };
   const onFileListAlot = (values) => {
     fileListAlot.splice(values.uid, 1);
     return false;
   };
  
-  //console.log(fileVidoList[0])
   return (<>
     <Divider orientation="left">商品基本信息</Divider>
     <Form
@@ -249,8 +254,9 @@ const GoodsAdj = (props) => {
       onFinish={onFinish}
       labelAlign="left"
     >
-      <Form.Item
+      <FormItem
         name="name"
+        key={info.name}
         label="商品名称"
         rules={[
           {
@@ -262,9 +268,10 @@ const GoodsAdj = (props) => {
           placeholder="请输入商品名称"
 
         />
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="place_tag"
+        key={info.place_tag[0]}
         label="商品分区"
         rules={[
           {
@@ -281,9 +288,10 @@ const GoodsAdj = (props) => {
           })}
 
         </Select>
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="kind_tag"
+        key={info.kind_tag[0]}
         label="单品类别"
         rules={[
           {
@@ -305,10 +313,11 @@ const GoodsAdj = (props) => {
             })
           }
         </Select>
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="sale_point"
         label="商品卖点"
+        key={info.sale_point}
         rules={[
           {
             required: true,
@@ -319,10 +328,11 @@ const GoodsAdj = (props) => {
           placeholder="简单描述商品"
 
         />
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="sale_tag"
         label="单品属性"
+        key={info.sale_tag}
         rules={[
           {
             required: true,
@@ -340,10 +350,11 @@ const GoodsAdj = (props) => {
             })
           }
         </Radio.Group>
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="putaway"
         label="上架方式"
+        key={info.putaway}
         rules={[
           {
             required: true,
@@ -357,10 +368,11 @@ const GoodsAdj = (props) => {
             })
           }
         </Radio.Group>
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         name="get_way"
         label="配送方式"
+        key={info.get_way}
         rules={[
           {
             required: true,
@@ -374,10 +386,11 @@ const GoodsAdj = (props) => {
             })
           }
         </Radio.Group>
-      </Form.Item>
-      <Form.Item
+      </FormItem>
+      <FormItem
         label="商品运费"
         name="carriage"
+        key={info.carriage}
         rules={[
           {
             required: true,
@@ -391,16 +404,126 @@ const GoodsAdj = (props) => {
           min={0}
           step={0.01}
         />
-      </Form.Item>
-      <Form.Item
-        label="商品数量设定"
-        colon={false}
+      </FormItem>
+
+      <FormItem
+        name="advance_time"
+        label="预售时间"
+        rules={[
+          {
+            required: true,
+          }
+        ]}
       >
+        <DatePicker
+          showTime
+
+        />
+      </FormItem>
+      <FormItem
+        name="putaway_time"
+        label="上架时间"
+        rules={[
+          {
+            required: true,
+          }
+        ]}
+      >
+        <DatePicker
+          showTime
+        />
+      </FormItem>
+      <FormItem
+        label="商品主视图"
+        rules={[
+          {
+            //required: true,
+          }
+        ]}
+      >
+        <>
+          <span onClick={getUploadToken}>
+            <Upload
+              action={QINIU_SERVER}
+              data={{
+                token: qiniuToken,
+                key: `picture-${Date.parse(new Date())}`,
+              }}
+              listType="picture-card"
+              beforeUpload={getUploadToken}
+              fileList={fileList}
+              onRemove={onFileList}
+              onChange={handleChange}
+            >
+              {uploadButton}
+            </Upload>
+          </span>
+        </>
+       
+      </FormItem>
+      <FormItem
+        label="商品轮播图"
+        rules={[
+          {
+            //required: true,
+          }
+        ]}
+      >
+        <>
+          <span onClick={getUploadToken}>
+            <Upload
+              action={QINIU_SERVER}
+              data={{
+                token: qiniuToken,
+                key: `picture-${Date.parse(new Date())}`,
+              }}
+              listType="picture-card"
+              beforeUpload={getUploadToken}
+              fileList={fileListAlot}
+              onChange={handleChangeAlot}
+              onRemove={onFileListAlot}
+            >
+              {fileListAlot.length >= 5 ? null : uploadButton}
+            </Upload>
+          </span>
+        </>
+      </FormItem>
+      <FormItem
+
+        label="产品介绍视频"
+        rules={[
+          {
+            //required: true,
+          }
+        ]}
+      >
+        <>
+          <span onClick={getUploadToken}>
+            <Upload
+              action={QINIU_SERVER}
+              data={{
+                token: qiniuToken,
+                key: `picture-${Date.parse(new Date())}`,
+              }}
+              listType="picture-card"
+              beforeUpload={getUploadToken}
+              fileList={fileVidoList}
+              onRemove={onFileVidio}
+              onChange={handleVidoChange}
+            >
+              {uploadButton}
+            </Upload>
+          </span>
+        </>
+      </FormItem>
+      <Divider orientation="left">商品数量设置</Divider>
+      <div style={{ marginBottom: 30 }}>
         <Space size="large" style={{ marginLeft: 10 }}>
           <span>
             <span>限购数量: </span>
             <FormItem
               name="limit_total"
+              key={info.limit_total}
               noStyle
               rules={[
                 {
@@ -441,129 +564,18 @@ const GoodsAdj = (props) => {
             </FormItem>
           </span>
         </Space>
-      </Form.Item>
-
-      <Form.Item
-        name="advance_time"
-        label="预售时间"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <DatePicker
-          showTime
-
-        />
-      </Form.Item>
-      <Form.Item
-        name="putaway_time"
-        label="上架时间"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <DatePicker
-          showTime
-        />
-      </Form.Item>
-      <Form.Item
-        label="商品主视图"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileList}
-              //showUploadList={false}
-              onChange={handleChange}
-            >
-              {uploadButton}
-            </Upload>
-          </span>
-        </>
-       
-      </Form.Item>
-      <Form.Item
-        label="商品轮播图"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileListAlot}
-              onChange={handleChangeAlot}
-              onRemove={onFileListAlot}
-            >
-              {fileListAlot.length >= 5 ? null : uploadButton}
-            </Upload>
-          </span>
-        </>
-      </Form.Item>
-      <Form.Item
-
-        label="产品介绍视频"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileVidoList}
-              //showUploadList={false}
-              onChange={handleVidoChange}
-            >
-              {uploadButton}
-            </Upload>
-          </span>
-        </>
-      </Form.Item>
+      </div>
       <Divider orientation="left">编辑商品详情</Divider>
-      <Form.Item {...EditorLayout}>
+      <FormItem {...EditorLayout}>
         <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
-      </Form.Item>
+      </FormItem>
       <Divider orientation="left">其他属性</Divider>
-      <Form.Item label=" " colon={false} className="goods-create-swtich-contianer">
+      <FormItem label=" " colon={false} className="goods-create-swtich-contianer">
         <Space size="middle">
           <span className="goods-create-swtich-item">
 
             <span>是否付款减库存：</span>
-            <Form.Item
+            <FormItem
               noStyle
               name="paid_and_remove"
               
@@ -572,56 +584,56 @@ const GoodsAdj = (props) => {
                 checkedChildren="是"
                 unCheckedChildren="否"
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否显示库存：</span>
-            <Form.Item noStyle name="show_total">
+            <FormItem noStyle name="show_total">
               <Switch
                 checkedChildren="是"
                 unCheckedChildren="否"
 
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否支持换货：</span>
-            <Form.Item noStyle name="exchange">
+            <FormItem noStyle name="exchange">
               <Switch
                 checkedChildren="是"
                 unCheckedChildren="否"
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否支持七天无理由退货：</span>
-            <Form.Item noStyle name="sale_return">
+            <FormItem noStyle name="sale_return">
               <Switch
                 checkedChildren="是"
                 unCheckedChildren="否"
 
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否预售：</span>
-            <Form.Item noStyle name="advance">
+            <FormItem noStyle name="advance">
               <Switch
                 checkedChildren="是"
                 unCheckedChildren="否"
 
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否上架：</span>
-            <Form.Item noStyle name="on_sale">
+            <FormItem noStyle name="on_sale">
               <Switch
                 checkedChildren="是"
                 unCheckedChildren="否"
 
               />
-            </Form.Item>
+            </FormItem>
           </span>
           <span className="goods-create-swtich-item">
             <span>是否使用优惠价：</span>
@@ -640,7 +652,7 @@ const GoodsAdj = (props) => {
             </Form.Item>
           </span>
         </Space>
-      </Form.Item>
+      </FormItem>
       <FormItem {...tailLayout}>
         <Button
           type="primary"
@@ -665,7 +677,6 @@ export default connect(({
     .filter((arr) => { return arr.parent_id === 0; }),
   goodsClassChild: get(goodsClass, 'tags', [])
     .filter((arr) => { return arr.parent_id !== 0; }),
-  goodsModelsList: get(goodsModels, 'infos', ''),
   goodsModel: get(goodsModels, 'info', {}),
   goodId: CreateGoods.goodId,
   GoodsAreaTags: goodsArea.GoodsAreaTags,

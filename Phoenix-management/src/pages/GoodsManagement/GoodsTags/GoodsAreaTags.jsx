@@ -83,7 +83,6 @@ class GoodAreaTags extends React.Component {
   componentDidMount() {
     //初始化拉取表格数据
     this.handleGetListData();
-    console.log(this.props.text)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -297,7 +296,6 @@ class GoodAreaTags extends React.Component {
    const columns = this.columns.map((col) => {
      return col;
    });
-   console.log(this.props.info)
    const paginationProps = {
      showQuickJumper: false,
      showTotal: () => `共${AreaTotal}条`,

@@ -1,22 +1,21 @@
 import React from 'react';
 import {
   Table, Tag, Space, TreeSelect, 
-  Modal, Icon, Input, Divider, Select
+  Modal, Input, Divider, Select, Button
 } from 'antd';
 import request from '@/utils/request';
 import moment from 'moment';
-import { connect } from 'umi';
+import { connect, Link } from 'umi';
 import { get } from 'lodash';
+import { PlusCircleTwoTone, RedoOutlined } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import PropTypes from 'prop-types';
 import GoodsAdj from './GoodsAdj';
 import TempalteAdj from './TemplateAdj';
-import styles from './index.less';
-import '../../../style/GoodsTagsIndex.less';
+import  './index.less';
 
 const { Column, ColumnGroup } = Table;
 const { Option, OptGroup } = Select;
-const { SHOW_PARENT } = TreeSelect;
-const treeData = [];
 const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 @connect(({
   goodsArea, goodsSale, CreateGoods, goodsClass, 
@@ -47,7 +46,7 @@ class GoodsList extends React.Component {
       gid: 0,
       visableTem: false,
       FilterText: '',
-      pageSize: 10,
+      pageSize: 5,
       current: 1,
       record: {},
     };
@@ -60,7 +59,7 @@ class GoodsList extends React.Component {
       payload: {
         query: {
           page: 1,
-          limit: 10,
+          limit: 5,
         },
       }, 
     });
@@ -83,10 +82,32 @@ class GoodsList extends React.Component {
     });
   }
 
-  showModal = (record) => {
+  reloadSelector = () => {
+    const { dispatch } = this.props;
+    const { current } = this.state;
+    this.setState({
+      tagsAreaCheck: 0,
+      tagsSaleCheck: 0,
+      FilterText: '',
+    }, () => {
+      dispatch({
+        type: 'CreateGoods/getGoodsList',
+        payload: {
+          query: {
+            page: current,
+            limit: 10,
+            place_tag: 0,
+            sale_tag: 0,
+          },
+        }, 
+      }); 
+    });
+  }
+
+  showModal = (text) => {
     this.setState({
       visible: true,
-      record,
+      record: text,
     });
   };
 
@@ -121,17 +142,17 @@ class GoodsList extends React.Component {
       payload: {
         query: {
           page: current,
-          limit: 10,
+          limit: 5,
         },
       }, 
     });
   }
 
-  selectAreaItemAll = () => {
+  selectAreaItem = (item) => {
     const { dispatch } = this.props;
     const { current, tagsSaleCheck } = this.state;
     this.setState({
-      tagsAreaCheck: 0,
+      tagsAreaCheck: item,
     }, () => {
       dispatch({
         type: 'CreateGoods/getGoodsList',
@@ -139,27 +160,7 @@ class GoodsList extends React.Component {
           query: {
             page: current,
             limit: 10,
-            place_tag: 0,
-            sale_tag: tagsSaleCheck,
-          },
-        }, 
-      });
-    });
-  }
-
-  selectAreaItem = (checked, item) => {
-    const { dispatch } = this.props;
-    const { current, tagsSaleCheck } = this.state;
-    this.setState({
-      tagsAreaCheck: item.id,
-    }, () => {
-      dispatch({
-        type: 'CreateGoods/getGoodsList',
-        payload: {
-          query: {
-            page: current,
-            limit: 10,
-            place_tag: item.id,
+            place_tag: item,
             sale_tag: tagsSaleCheck,
           },
         }, 
@@ -279,6 +280,9 @@ class GoodsList extends React.Component {
       goodsClassFather, goodsArea,
       goodsSale,
     } = this.props;
+    const GoodsInfos = Goods.map((arr, index) => {
+      return { key: index, ...arr };
+    });
     for (let i = 0; i < goodsClassFather.length; i++) {
       for (let j = 0; j < goodsClassChild.length; j++) {
         if (goodsClassFather[i].id === goodsClassChild[j].parent_id) {
@@ -286,6 +290,7 @@ class GoodsList extends React.Component {
         }
       }
     }
+    const goodsAreaList = [{ place: '全部', id: 0 }, ...goodsArea];
     const paginationProps = {
       showQuickJumper: false,
       showTotal: () => `共${GoodsTotal}条`,
@@ -295,14 +300,41 @@ class GoodsList extends React.Component {
       onChange: (current) => this.changePage(current),
     };
     return (
-      <div>
-        <Input onChange={this.MainTextOnChange} placeholder="请输入该商品关键字" />
-        <Select
-          style={{ width: '85vw', marginTop: 10 }}
-          onChange={this.selectClassItem}
-          placeholder="请选择商品类别"
-        >
-          {
+      <PageHeaderWrapper>
+        <div className="goods-list-container">
+          <Link to="/goods/add-goods">
+            <Button
+              type="primary"
+              style={{
+                margin: 20,
+              }}
+              icon={<PlusCircleTwoTone />}
+            >
+              添加商品
+            </Button>
+          </Link>
+          <div className="goods-list-selector">
+            <Space size="large">
+              <span className="good-selector-items">
+                <span>
+                  商品名称: 
+                </span>
+                <Input
+                  className="goods-selector-name" 
+                  onChange={this.MainTextOnChange}
+                  placeholder="请输入该商品名称"
+                />
+              </span>
+              <span className="good-selector-items">
+                <span>
+                  种类名称: 
+                </span>
+                <Select
+                  className="goods-selector-class"
+                  onChange={this.selectClassItem}
+                  placeholder="请选择商品类别"
+                >
+                  {
                 goodsClassFather.map((arr) => {
                   return <OptGroup label={arr.title}>
                     {(goodsClassChild.filter((tags) => {
@@ -311,47 +343,47 @@ class GoodsList extends React.Component {
                   </OptGroup>;
                 })
               }
-        </Select>
-        <Divider orientation="left" plain>属地标签</Divider>
-        <div className="Goods-Class-Tags-selector">
+                </Select>
+              </span>
+              <span className="good-selector-items">
+                <span>
+                  属地标签: 
+                </span>
+                <Select
+                  className="goods-selector-area"
+                  onChange={this.selectAreaItem}
+                  placeholder="请选择属地标签"
+                  defaultValue={0}
+                >
+                  {
+                goodsAreaList.map((arr) => {
+                  return <Option value={arr.id}>{arr.place}</Option>;
+                })
+              }
+                </Select>
+              </span>
+              <Button
+                type="primary"
+                onClick={this.reloadSelector}
+                icon={<RedoOutlined />}
+              >
+                全部
+              </Button>
+            </Space>
+          </div>
+          {/* <Divider orientation="left" plain>属性标签</Divider> */}
+          <div className="Goods-Class-Tags-selector">
           
-          {
+            {
            
-            <Tag.CheckableTag 
-              onClick={() => this.selectAreaItemAll()}
-              checked={tagsAreaCheck === 0}
-            >
-              全部
-            </Tag.CheckableTag>
+              <Tag.CheckableTag 
+                onClick={() => this.selectSaleItemAll()}
+                checked={tagsSaleCheck === 0}
+              >
+                全部
+              </Tag.CheckableTag>
 }
-          {
-           goodsArea.map((arr) => {
-             return <Tag.CheckableTag
-               checked={tagsAreaCheck === arr.id}
-               onChange={(e) => this.selectAreaItem(e, arr)}
-             >
-               {
-           arr.place
-}
-             </Tag.CheckableTag>; 
-           })
-        
-}
-
-        </div>
-        <Divider orientation="left" plain>属性标签</Divider>
-        <div className="Goods-Class-Tags-selector">
-          
-          {
-           
-            <Tag.CheckableTag 
-              onClick={() => this.selectSaleItemAll()}
-              checked={tagsSaleCheck === 0}
-            >
-              全部
-            </Tag.CheckableTag>
-}
-          {
+            {
            goodsSale.map((arr) => {
              return <Tag.CheckableTag
                checked={tagsSaleCheck === arr.id}
@@ -364,130 +396,136 @@ class GoodsList extends React.Component {
            })
         
 }
+         
+          </div>
 
-        </div>
-
-        <Table dataSource={Goods} pagination={paginationProps}>
-          <Column
-            title="商品序号"
-            dataIndex="id"
-            key="id"
-            defaultSortOrder="descend"
-            sorter={(a, b) => a.id - b.id}
-          />
-          <Column
-            title="商品名称" 
-            dataIndex="name"
-            key="firstName"
-            render={(text, record) => (
-              <div style={{ textAlign: 'left' }}>
-                <img
-                  src={record ? BASE_QINIU_URL + record.cover : null}
-                  alt="img" 
-                  style={{ width: 30, height: 30, marginRight: 20  }}
-                />
-                <span>{text}</span>
-              </div>
-            )}
-          />
-          <Column
-            title="总库存"
-            dataIndex="total"
-            key="total"
-            defaultSortOrder="descend"
-            sorter={(a, b) => a.total - b.total}
-          />
-          <Column
-            title="付款人数"
-            dataIndex="people"
-            key="people"
-            defaultSortOrder="descend"
-            sorter={(a, b) => a.people - b.people}
-          />
-          <Column
-            title="商品月销"
-            dataIndex="month_sale"
-            key="amount"
-            defaultSortOrder="descend"
-            sorter={(a, b) => a.amount - b.amount}
-          />
+          <Table dataSource={GoodsInfos} pagination={paginationProps}>
+            <Column
+              title="商品序号"
+              dataIndex="id"
+              key="id"
+              defaultSortOrder="descend"
+              sorter={(a, b) => a.id - b.id}
+            />
+            <Column
+              title="商品名称" 
+              dataIndex="name"
+              key="firstName"
+              render={(text, record) => (
+                <div style={{ textAlign: 'left' }}>
+                  <img
+                    src={record ? BASE_QINIU_URL + record.cover : null}
+                    alt="img" 
+                    style={{ width: 30, height: 30, marginRight: 20  }}
+                  />
+                  <span>{text}</span>
+                </div>
+              )}
+            />
+            <Column
+              title="总库存"
+              dataIndex="total"
+              key="total"
+              defaultSortOrder="descend"
+              sorter={(a, b) => a.total - b.total}
+            />
+            <Column
+              title="付款人数"
+              dataIndex="people"
+              key="people"
+              defaultSortOrder="descend"
+              sorter={(a, b) => a.people - b.people}
+            />
+            <Column
+              title="商品月销"
+              dataIndex="month_sale"
+              key="amount"
+              defaultSortOrder="descend"
+              sorter={(a, b) => a.amount - b.amount}
+            />
           
-          <Column
-            title="更新时间"
-            dataIndex="update_time"
-            key="update_time"
-            render={(updateTime) => (
-              <>
-                <span>
-                  {moment(updateTime * 1000)
-                    .format('YYYY-MM-DD HH:mm:ss')}
-                </span>
-              </>
-            )}
-          />
-          <Column
-            title="操作"
-            key="id"
-            render={(text, record) => (
-              <Space size="middle">
-                <a onClick={() => this.showModal(text)}>基本信息</a> 
-                <div>
-                  <Modal 
-                    mask={false}
-                    width="70vw"
-                    height="80vh"
-                    visible={this.state.visible}
-                    title="基本信息"
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    footer={null}
-                    destroyOnClose
+            <Column
+              title="更新时间"
+              dataIndex="update_time"
+              key="update_time"
+              render={(updateTime) => (
+                <>
+                  <span>
+                    {moment(updateTime * 1000)
+                      .format('YYYY-MM-DD HH:mm:ss')}
+                  </span>
+                </>
+              )}
+            />
+            <Column
+              title="操作"
+              key="id"
+              render={(text, record, index) => (
+                <Space size="middle" key={index}>
+                  <a onClick={() => this.showModal(text)} key={text}>基本信息</a> 
+                  <div key={index}>
+                    <Modal 
+                      key={index}
+                      mask={false}
+                      width="70vw"
+                      height="80vh"
+                      visible={this.state.visible}
+                      title="基本信息"
+                      onOk={this.handleOk}
+                      onCancel={this.handleCancel}
+                      footer={null}
+                      destroyOnClose
+                    >
+                      <GoodsAdj
+                        key={index}
+                        info={this.state.record} 
+                        closeModel={() => this.closeVisable()}
+                      />
+                    </Modal>
+                  </div>
+                  <a onClick={() => this.showModalTem(
+                    text.specification,
+                    text.id,
+                    text.template,
+                    text.template_id
+                  )}
                   >
-                    <GoodsAdj info={this.state.record} closeModel={() => this.closeVisable()} />
-                  </Modal>
-                </div>
-                <a onClick={() => this.showModalTem(
-                  text.specification,
-                  text.id,
-                  text.template,
-                  text.template_id
-                )}
-                >
-                  规格信息
-                </a> 
-                <div>
-                  <Modal 
-                    mask={false}
-                    width="70vw"
-                    height="80vh"
-                    visible={this.state.visableTem}
-                    title="修改"
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    footer={null}
-                    destroyOnClose
-                  >
-                    <TempalteAdj
-                      template={this.state.template} 
-                      info={this.state.specification} 
-                      id={this.state.template_id}
-                      gid={this.state.gid}
-                      closeModel={() => this.closeVisable()}
-                    />
-                  </Modal>
-                </div>
-                <a onClick={() => this.confirm(text)}>删除商品</a>
-              </Space>
-            )}
-          />
-        </Table>
-      </div>
+                    规格信息
+                  </a> 
+                  <div>
+                    <Modal 
+                      mask={false}
+                      width="70vw"
+                      height="80vh"
+                      visible={this.state.visableTem}
+                      title="修改"
+                      onOk={this.handleOk}
+                      onCancel={this.handleCancel}
+                      footer={null}
+                      destroyOnClose
+                    >
+                      <TempalteAdj
+                        template={this.state.template} 
+                        info={this.state.specification} 
+                        id={this.state.template_id}
+                        gid={this.state.gid}
+                        closeModel={() => this.closeVisable()}
+                      />
+                    </Modal>
+                  </div>
+                  <a onClick={() => this.confirm(text)}>删除商品</a>
+                </Space>
+              )}
+            />
+          </Table>
+        </div>
+      </PageHeaderWrapper>
     );
   }
 }
 
 export default () => (
-  <div className={styles.container}>
+  <div>
     <div id="components-table-demo-reset-filter">
       <GoodsList />
     </div>
