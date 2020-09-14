@@ -305,7 +305,7 @@ class GoodAreaTags extends React.Component {
      onChange: (current) => this.changePage(current),
    };
    return (
-     <div className="fmg-goods-area-list-tags">
+     <div className="fmg-goods-area-list-tags" style={{ marginTop: 20 }}>
        <Button
          onClick={this.handleAdd}
          type="primary"

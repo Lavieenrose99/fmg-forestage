@@ -18,6 +18,7 @@ import React, {
 } from 'react';
 import { get } from 'lodash';
 import RichTextEditor from '@/utils/RichTextEditor';
+import  './index.less';
 
 const { Option, OptGroup } = Select;
 const uploadButton = (
@@ -33,7 +34,7 @@ const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上�
 
 const layout = {
   labelCol: {
-    span: 3,
+    span: 4,
   },
   wrapperCol: {
     span: 16,
@@ -41,7 +42,7 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 3,
+    offset: 10,
     span: 16,
   },
 };
@@ -153,35 +154,36 @@ const GoodsAdj = (props) => {
     setFileListAlot([...fileListAlot]);
   };
   useEffect(() => {
+    console.log((info.sale));
     formRef.current.setFieldsValue({
       name: (info.name ?? ''),
       price: info.price,
       template_id: info.template_id,
-      paid_and_remove: (info.paid_and_remove ?? false),
-      show_total: (info.show_total ?? false),
-      exchange: (info.exchange ?? false),
-      sale_return: (info.sale_return ?? false),
-      advance: (info.advance ?? false),
+      paid_and_remove: (info.paid_and_remove),
+      show_total: (info.show_total),
+      exchange: (info.exchange),
+      sale_return: (info.sale_return),
+      advance: (info.advance),
       advance_time: moment(moment(info.advance_time)
         .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
-      on_sale: (info.on_sale || false),
-      sale: (info.sale ?? true),
+      on_sale: (info.on_sale),
+      sale: (info.sale),
       get_way: info.get_way,
-      limit: (info.limit || false),
+      limit: (info.limit),
       putaway: info.putaway,
       putaway_time: moment(moment(info.putaway_time)
         .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
       sale_point: info.sale_point,
       kind_tag: info.kind_tag[0],
       sale_tag: info.sale_tag[0],
-      place_tag: (info.place_tag[0] ?? []),
+      place_tag: (info.place_tag[0]),
       total: info.total,
       price_reduce: (info.price_reduce),
       carriage: info.carriage,
       min_sale: info.min_sale,
       limit_total: info.limit_total,
     });
-  }, []);
+  }, [info]);
   const {
     goodsArea, goodsSale,
     goodsClassChild, goodsClassFather,
@@ -245,65 +247,64 @@ const GoodsAdj = (props) => {
   };
  
   return (<>
-    <Divider orientation="left">商品基本信息</Divider>
-    <Form
-      {...layout}
-      form={form}
-      ref={formRef}
-      name="control-hooks"
-      onFinish={onFinish}
-      labelAlign="left"
-    >
-      <FormItem
-        name="name"
-        key={info.name}
-        label="商品名称"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
+    <div className="goods-info-adj-containter">
+      <Divider>商品基本信息</Divider>
+      <Form
+        {...layout}
+        form={form}
+        ref={formRef}
+        name="control-hooks"
+        onFinish={onFinish}
+        labelAlign="left"
       >
-        <Input
-          placeholder="请输入商品名称"
-
-        />
-      </FormItem>
-      <FormItem
-        name="place_tag"
-        key={info.place_tag[0]}
-        label="商品分区"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <Select
-          placeholder="选择商品分区"
-          allowClear
+        <FormItem
+          name="name"
+          key={info.name}
+          label="商品名称"
+          rules={[
+            {
+              required: true,
+            }
+          ]}
         >
-          {goodsArea.map((arr) => {
-            return  <Option value={arr.id} key={arr.id}>{arr.place}</Option>;
-          })}
-
-        </Select>
-      </FormItem>
-      <FormItem
-        name="kind_tag"
-        key={info.kind_tag[0]}
-        label="单品类别"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <Select
-          style={{ width: '40vw' }}
-          placeholder="请选择商品类别"
+          <Input
+            placeholder="请输入商品名称"
+          />
+        </FormItem>
+        <FormItem
+          name="place_tag"
+          key={info.place_tag[0]}
+          label="商品分区"
+          rules={[
+            {
+              required: true,
+            }
+          ]}
         >
-          {
+          <Select
+            placeholder="选择商品分区"
+            allowClear
+          >
+            {goodsArea.map((arr) => {
+              return  <Option value={arr.id} key={arr.id}>{arr.place}</Option>;
+            })}
+
+          </Select>
+        </FormItem>
+        <FormItem
+          name="kind_tag"
+          key={info.kind_tag[0]}
+          label="单品类别"
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <Select
+            placeholder="请选择商品类别"
+          >
+            {
             goodsClassFather.map((arr) => {
               return <OptGroup label={arr.title}>
                 {(goodsClassChild.filter((tags) => {
@@ -312,35 +313,34 @@ const GoodsAdj = (props) => {
               </OptGroup>;
             })
           }
-        </Select>
-      </FormItem>
-      <FormItem
-        name="sale_point"
-        label="商品卖点"
-        key={info.sale_point}
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <TextArea
-          placeholder="简单描述商品"
-
-        />
-      </FormItem>
-      <FormItem
-        name="sale_tag"
-        label="单品属性"
-        key={info.sale_tag}
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <Radio.Group>
-          {
+          </Select>
+        </FormItem>
+        <FormItem
+          name="sale_point"
+          label="商品卖点"
+          key={info.sale_point}
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <TextArea
+            placeholder="简单描述商品"
+          />
+        </FormItem>
+        <FormItem
+          name="sale_tag"
+          label="单品属性"
+          key={info.sale_tag}
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <Radio.Group>
+            {
             goodsSale.map((positions) => {
               return <Radio
                 value={positions.id}
@@ -349,321 +349,328 @@ const GoodsAdj = (props) => {
               </Radio>;
             })
           }
-        </Radio.Group>
-      </FormItem>
-      <FormItem
-        name="putaway"
-        label="上架方式"
-        key={info.putaway}
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <Radio.Group>
-          {
+          </Radio.Group>
+        </FormItem>
+        <FormItem
+          name="putaway"
+          label="上架方式"
+          key={info.putaway}
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <Radio.Group>
+            {
             putaways.map((ways) => {
               return <Radio value={ways.id}>{ways.name}</Radio>;
             })
           }
-        </Radio.Group>
-      </FormItem>
-      <FormItem
-        name="get_way"
-        label="配送方式"
-        key={info.get_way}
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <Radio.Group>
-          {
+          </Radio.Group>
+        </FormItem>
+        <FormItem
+          name="get_way"
+          label="配送方式"
+          key={info.get_way}
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <Radio.Group>
+            {
             getaways.map((ways) => {
               return <Radio value={ways.id}>{ways.name}</Radio>;
             })
           }
-        </Radio.Group>
-      </FormItem>
-      <FormItem
-        label="商品运费"
-        name="carriage"
-        key={info.carriage}
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <InputNumber
-          style={{ minWidth: '10vw' }}
-          formatter={(Goodvalues) => `¥ ${Goodvalues}`}
-          parser={(Goodvalues) => Goodvalues.replace(/¥ \s?|(,*)/g, '')}
-          min={0}
-          step={0.01}
-        />
-      </FormItem>
-
-      <FormItem
-        name="advance_time"
-        label="预售时间"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <DatePicker
-          showTime
-
-        />
-      </FormItem>
-      <FormItem
-        name="putaway_time"
-        label="上架时间"
-        rules={[
-          {
-            required: true,
-          }
-        ]}
-      >
-        <DatePicker
-          showTime
-        />
-      </FormItem>
-      <FormItem
-        label="商品主视图"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileList}
-              onRemove={onFileList}
-              onChange={handleChange}
-            >
-              {uploadButton}
-            </Upload>
-          </span>
-        </>
-       
-      </FormItem>
-      <FormItem
-        label="商品轮播图"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileListAlot}
-              onChange={handleChangeAlot}
-              onRemove={onFileListAlot}
-            >
-              {fileListAlot.length >= 5 ? null : uploadButton}
-            </Upload>
-          </span>
-        </>
-      </FormItem>
-      <FormItem
-
-        label="产品介绍视频"
-        rules={[
-          {
-            //required: true,
-          }
-        ]}
-      >
-        <>
-          <span onClick={getUploadToken}>
-            <Upload
-              action={QINIU_SERVER}
-              data={{
-                token: qiniuToken,
-                key: `picture-${Date.parse(new Date())}`,
-              }}
-              listType="picture-card"
-              beforeUpload={getUploadToken}
-              fileList={fileVidoList}
-              onRemove={onFileVidio}
-              onChange={handleVidoChange}
-            >
-              {uploadButton}
-            </Upload>
-          </span>
-        </>
-      </FormItem>
-      <Divider orientation="left">商品数量设置</Divider>
-      <div style={{ marginBottom: 30 }}>
-        <Space size="large" style={{ marginLeft: 10 }}>
-          <span>
-            <span>限购数量: </span>
-            <FormItem
-              name="limit_total"
-              key={info.limit_total}
-              noStyle
-              rules={[
-                {
-                  required: true,
-                }
-              ]}
-            >
-              <InputNumber  />
-            </FormItem>
-          </span>
-          <span>
-            <span>起售数量: </span>
-            <FormItem
-              name="min_sale"
-              noStyle
-              rules={[
-                {
-                  required: true,
-                }
-              ]}
-            >
-              <InputNumber  />
-            </FormItem>
-
-          </span>
-          <span>
-            <span>库存数量: </span>
-            <FormItem
-              name="total"
-              noStyle
-              rules={[
-                {
-                  required: true,
-                }
-              ]}
-            >
-              <InputNumber  />
-            </FormItem>
-          </span>
-        </Space>
-      </div>
-      <Divider orientation="left">编辑商品详情</Divider>
-      <FormItem {...EditorLayout}>
-        <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
-      </FormItem>
-      <Divider orientation="left">其他属性</Divider>
-      <FormItem label=" " colon={false} className="goods-create-swtich-contianer">
-        <Space size="middle">
-          <span className="goods-create-swtich-item">
-
-            <span>是否付款减库存：</span>
-            <FormItem
-              noStyle
-              name="paid_and_remove"
-              
-            >
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否显示库存：</span>
-            <FormItem noStyle name="show_total">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否支持换货：</span>
-            <FormItem noStyle name="exchange">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否支持七天无理由退货：</span>
-            <FormItem noStyle name="sale_return">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否预售：</span>
-            <FormItem noStyle name="advance">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否上架：</span>
-            <FormItem noStyle name="on_sale">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-
-              />
-            </FormItem>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否使用优惠价：</span>
-            <Form.Item noStyle name="sale">
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否" 
-                defaultChecked
-              />
-            </Form.Item>
-          </span>
-          <span className="goods-create-swtich-item">
-            <span>是否限购：</span>
-            <Form.Item noStyle name="limit">
-              <Switch checkedChildren="是" unCheckedChildren="否"  />
-            </Form.Item>
-          </span>
-        </Space>
-      </FormItem>
-      <FormItem {...tailLayout}>
-        <Button
-          type="primary"
-          htmlType="submit"
+          </Radio.Group>
+        </FormItem>
+        <FormItem
+          label="商品运费"
+          name="carriage"
+          key={info.carriage}
+          rules={[
+            {
+              required: true,
+            }
+          ]}
         >
-          提交
-        </Button>
+          <InputNumber
+            style={{ minWidth: '10vw' }}
+            formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+            parser={(Goodvalues) => Goodvalues.replace(/¥ \s?|(,*)/g, '')}
+            min={0}
+            step={0.01}
+          />
+        </FormItem>
 
-      </FormItem>
-    </Form>
-  </>);
+        <FormItem
+          name="advance_time"
+          label="预售时间"
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <DatePicker
+            showTime
+          />
+        </FormItem>
+        <FormItem
+          name="putaway_time"
+          label="上架时间"
+          rules={[
+            {
+              required: true,
+            }
+          ]}
+        >
+          <DatePicker
+            showTime
+          />
+        </FormItem>
+        <FormItem
+          label="商品主视图"
+          rules={[
+            {
+            //required: true,
+            }
+          ]}
+        >
+          <>
+            <span onClick={getUploadToken}>
+              <Upload
+                action={QINIU_SERVER}
+                data={{
+                  token: qiniuToken,
+                  key: `picture-${Date.parse(new Date())}`,
+                }}
+                listType="picture-card"
+                beforeUpload={getUploadToken}
+                fileList={fileList}
+                onRemove={onFileList}
+                onChange={handleChange}
+              >
+                {uploadButton}
+              </Upload>
+            </span>
+          </>
+       
+        </FormItem>
+        <FormItem
+          label="商品轮播图"
+          rules={[
+            {
+            //required: true,
+            }
+          ]}
+        >
+          <>
+            <span onClick={getUploadToken}>
+              <Upload
+                action={QINIU_SERVER}
+                data={{
+                  token: qiniuToken,
+                  key: `picture-${Date.parse(new Date())}`,
+                }}
+                listType="picture-card"
+                beforeUpload={getUploadToken}
+                fileList={fileListAlot}
+                onChange={handleChangeAlot}
+                onRemove={onFileListAlot}
+              >
+                {fileListAlot.length >= 5 ? null : uploadButton}
+              </Upload>
+            </span>
+          </>
+        </FormItem>
+        <FormItem
+
+          label="产品介绍视频"
+          rules={[
+            {
+            //required: true,
+            }
+          ]}
+        >
+          <>
+            <span onClick={getUploadToken}>
+              <Upload
+                action={QINIU_SERVER}
+                data={{
+                  token: qiniuToken,
+                  key: `picture-${Date.parse(new Date())}`,
+                }}
+                listType="picture-card"
+                beforeUpload={getUploadToken}
+                fileList={fileVidoList}
+                onRemove={onFileVidio}
+                onChange={handleVidoChange}
+              >
+                {uploadButton}
+              </Upload>
+            </span>
+          </>
+        </FormItem>
+        <Divider>商品数量设置</Divider>
+        <div style={{ marginBottom: 30 }}>
+          <Space size="large" style={{ marginLeft: 10 }}>
+            <span>
+              <span>限购数量: </span>
+              <FormItem
+                name="limit_total"
+                key={info.limit_total}
+                noStyle
+                rules={[
+                  {
+                    required: true,
+                  }
+                ]}
+              >
+                <InputNumber  />
+              </FormItem>
+            </span>
+            <span>
+              <span>起售数量: </span>
+              <FormItem
+                name="min_sale"
+                noStyle
+                rules={[
+                  {
+                    required: true,
+                  }
+                ]}
+              >
+                <InputNumber  />
+              </FormItem>
+
+            </span>
+            <span>
+              <span>库存数量: </span>
+              <FormItem
+                name="total"
+                noStyle
+                rules={[
+                  {
+                    required: true,
+                  }
+                ]}
+              >
+                <InputNumber  />
+              </FormItem>
+            </span>
+          </Space>
+        </div>
+        <Divider>编辑商品详情</Divider>
+        <FormItem {...EditorLayout}>
+          <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
+        </FormItem>
+        <Divider className="others-containter">其他属性</Divider>
+        <FormItem label=" " colon={false} className="goods-adj-swtich-contianer">
+          <Space size="middle">
+            <span className="goods-create-swtich-item">
+
+              <span>是否付款减库存：</span>
+              <FormItem
+                noStyle
+                name="paid_and_remove"
+              >
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.paid_and_remove}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否显示库存：</span>
+              <FormItem noStyle name="show_total">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.show_total}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否支持换货：</span>
+              <FormItem noStyle name="exchange">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.exchange}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否支持七天无理由退货：</span>
+              <FormItem noStyle name="sale_return">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.sale_return}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否预售：</span>
+              <FormItem noStyle name="advance">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.advance}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否上架：</span>
+              <FormItem noStyle name="on_sale">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.on_sale}
+                />
+              </FormItem>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否使用优惠价：</span>
+              <Form.Item noStyle name="sale">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否" 
+                  defaultChecked={info.sale}
+                />
+              </Form.Item>
+            </span>
+            <span className="goods-create-swtich-item">
+              <span>是否限购：</span>
+              <Form.Item noStyle name="limit">
+                <Switch
+                  checkedChildren="是"
+                  unCheckedChildren="否"
+                  defaultChecked={info.limit}
+                />
+              </Form.Item>
+            </span>
+          </Space>
+        </FormItem>
+        <FormItem {...tailLayout}>
+          <Button
+            className="adj-goods-basic-button"
+            type="primary"
+            htmlType="submit"
+          >
+            修改
+          </Button>
+
+        </FormItem>
+      </Form>
+    </div>
+  </>
+  );
 };
 
 export default connect(({

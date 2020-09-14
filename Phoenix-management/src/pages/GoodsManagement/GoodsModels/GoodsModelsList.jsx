@@ -8,6 +8,7 @@ import { connect } from 'umi';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { PlusCircleTwoTone, DeleteTwoTone } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 @connect(({ goodsModels }) => ({
   goodsModels,
@@ -359,6 +360,7 @@ class GoodsModelsList extends React.PureComponent {
      onChange: (current) => this.changePage(current),
    };
    return (
+     <PageHeaderWrapper>
      <div className="fmg-goods-area-list-tags">
        <Button
          onClick={this.handleAdd}
@@ -500,6 +502,7 @@ class GoodsModelsList extends React.PureComponent {
          pagination={paginationProps}
        />
      </div>
+     </PageHeaderWrapper>
    );
  }
 }

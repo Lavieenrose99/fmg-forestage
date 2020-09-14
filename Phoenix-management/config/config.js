@@ -53,6 +53,19 @@ export default defineConfig({
               //authority: ['admin'],
               routes: [
                 {
+                  path: '/settings_controls/goods-class-tags-management',
+                  name: '类别管理',
+                  icon: 'setting',
+                  component: './GoodsManagement/GoodsTags/GoodsClassIndex',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/settings_controls/goods-tags-management',
+                  name: '标签管理',
+                  icon: 'setting',
+                  component: './GoodsManagement/GoodsTags/GoodsTagsIndex',
+                },
+                {
                   path: '/settings_controls/rolling_picture_index',
                   name: '轮播图管理',
                   icon: 'smile',
@@ -64,7 +77,8 @@ export default defineConfig({
                   name: '图标管理',
                   icon: 'smile',
                   component: './settings_controls/icon_setting',
-                }
+                },
+             
               ],
             },
             {
@@ -87,21 +101,7 @@ export default defineConfig({
                   component: './GoodsManagement/GoodsAddEditor',
                   // authority: ['admin'],
                 },
-             
-                {
-                  path: '/goods/goods-class-tags-management',
-                  name: '商品类别',
-                  icon: 'setting',
-                  component: './GoodsManagement/GoodsTags/GoodsClassIndex',
-                  //authority: ['admin'],
-                },
-                {
-                  path: '/goods/goods-tags-management',
-                  name: '商品标签管理',
-                  icon: 'setting',
-                  component: './GoodsManagement/GoodsTags/GoodsTagsIndex',
-                  //authority: ['admin'],
-                },
+               
                 {
                   path: '/goods/goods-models-management',
                   name: '商品模版',

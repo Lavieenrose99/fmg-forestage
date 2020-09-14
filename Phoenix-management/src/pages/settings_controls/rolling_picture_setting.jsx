@@ -226,7 +226,7 @@ const RollingPictures = (props) => {
   }
   return (
     <>
-      <Tabs defaultActiveKey="1" centered>
+      <Tabs defaultActiveKey="1">
        
         <TabPane tab="轮播图列表" key="1">
           <Divider orientation="left" plain>轮播列表</Divider>

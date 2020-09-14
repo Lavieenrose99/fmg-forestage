@@ -23,7 +23,7 @@ const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   goodsSale: get(goodsSale, 'tags', []),
   goodsArea: get(goodsArea, 'info', []),
   AreaTotal: get(goodsArea, 'total', ''),
-  Goods: get(CreateGoods, 'info', []),
+  Goods: (get(CreateGoods, 'info', []) ?? []),
   goodsClassFather: get(goodsClass, 'tags', [])
     .filter((arr) => { return arr.parent_id === 0; }),
   goodsClassChild: get(goodsClass, 'tags', [])
@@ -43,6 +43,7 @@ class GoodsList extends React.Component {
       template: [],
       template_id: 0, 
       visable: false,
+      sale: true,
       gid: 0,
       visableTem: false,
       FilterText: '',
@@ -111,12 +112,13 @@ class GoodsList extends React.Component {
     });
   };
 
-  showModalTem = (data, tid, templateData, id) => {
+  showModalTem = (data, tid, templateData, id, sale) => {
     this.setState({
       specification: data,
       gid: tid,
       template: templateData,
       template_id: id,
+      sale,
       visableTem: true,
     });
   };
@@ -280,7 +282,7 @@ class GoodsList extends React.Component {
       goodsClassFather, goodsArea,
       goodsSale,
     } = this.props;
-    const GoodsInfos = Goods.map((arr, index) => {
+    const GoodsInfos = (Goods).map((arr, index) => {
       return { key: index, ...arr };
     });
     for (let i = 0; i < goodsClassFather.length; i++) {
@@ -487,7 +489,8 @@ class GoodsList extends React.Component {
                     text.specification,
                     text.id,
                     text.template,
-                    text.template_id
+                    text.template_id,
+                    text.sale
                   )}
                   >
                     规格信息
@@ -509,6 +512,7 @@ class GoodsList extends React.Component {
                         info={this.state.specification} 
                         id={this.state.template_id}
                         gid={this.state.gid}
+                        ifSale={this.state.sale}
                         closeModel={() => this.closeVisable()}
                       />
                     </Modal>

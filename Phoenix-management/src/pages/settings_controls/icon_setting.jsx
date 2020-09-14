@@ -5,7 +5,7 @@ import { HeartTwoTone, SmileTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import {
   Form, Icon,
-  Input, Button, Select, 
+  Input, Button, Select, PageHeader,
   Upload, Modal, Divider, Table, Space, Tabs
      
 } from 'antd';
@@ -27,7 +27,7 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 11,
+    offset: 8,
     span: 16,
   },
 };
@@ -182,10 +182,12 @@ const IconUpload = (props) => {
   };
   const { iconsList } = props;
   return (
-    <PageHeaderWrapper>
-      <Tabs defaultActiveKey="1" centered>
-        <TabPane tab="图标列表" key="1">
-          <Divider orientation="left" plain>图标列表</Divider>
+    <PageHeader 
+      title="图标管理"
+      subTitle="url是图标到七牛地址"
+      style={{ backgroundColor: 'white' }}
+      footer={<Tabs defaultActiveKey="1">
+        <TabPane tab="图标列表" key="1" style={{ marginTop: 20 }}>
           <Table dataSource={iconsList}>
             <Column
               title="图标区域"
@@ -250,15 +252,15 @@ const IconUpload = (props) => {
                         <Upload
                           action={QINIU_SERVER}
                           data={
-               {
-                 token: qiniuToken,
-                 key: `icon-${Date.parse(new Date())}`,
-               }
-  }
+           {
+             token: qiniuToken,
+             key: `icon-${Date.parse(new Date())}`,
+           }
+}
                           listType="picture-card"
                           beforeUpload={getQiNiuToken}
                           showUploadList={false}
-                        //fileList={oriPicture}
+                    //fileList={oriPicture}
                           onChange={handleChangefile}
                         >
                           {oriPicture  
@@ -272,7 +274,7 @@ const IconUpload = (props) => {
                 </Space>
               )}
             />
-    
+
           </Table>
         </TabPane>
         <TabPane tab="添加图标" key="2">
@@ -340,7 +342,7 @@ const IconUpload = (props) => {
                   </Upload>
                 </span>
               </>
-             
+         
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
@@ -349,9 +351,9 @@ const IconUpload = (props) => {
             </Form.Item>
           </Form>
         </TabPane>
-        
-      </Tabs>
-    </PageHeaderWrapper>
+    
+      </Tabs>}
+    />
   );
 };
   

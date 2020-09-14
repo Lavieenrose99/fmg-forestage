@@ -35,7 +35,7 @@ const uploadButton = (
 
 const TemplateAdj = (props) => {
   const {
-    info, template, id, gid, 
+    info, template, id, gid, ifSale,
   } = props;
   const [fromSpec] = Form.useForm();
   const [checkUse, setCheckUse] = useState(false);
@@ -70,7 +70,17 @@ const TemplateAdj = (props) => {
   }, { title: '库存', dataIndex: 'total', key: '库存' },
   { title: '重量', dataIndex: 'weight', key: '重量' }, 
   { title: '价格', dataIndex: 'price', key: '价格' },
-  { title: '成本价', dataIndex: 'cost_price', key: '成本价' }];
+  { title: '成本价', dataIndex: 'cost_price', key: '成本价' },
+  { title: '优惠幅度', dataIndex: 'reduced_price', key: '优惠幅度' }];
+  const detailsNameOut = [{
+    title: '规格',
+    key: '规格',
+    children: ModelsColums, 
+  }, { title: '库存', dataIndex: 'total', key: '库存' },
+  { title: '重量', dataIndex: 'weight', key: '重量' }, 
+  { title: '价格', dataIndex: 'price', key: '价格' },
+  { title: '成本价', dataIndex: 'cost_price', key: '成本价' }
+  ];
   const onReset = () => {
     fromSpec.resetFields();
     fromSpec.setFieldsValue({
@@ -116,14 +126,18 @@ const TemplateAdj = (props) => {
       </div>
     ),
   };
-  const goodsColumns = [...detailsName, IconColums, settingGoods];
+  const goodsColumns = ifSale 
+    ? [...detailsName, IconColums, settingGoods] : [...detailsNameOut, IconColums, settingGoods];
   const addSpecification = (data) => {
     const spciArr = Object.values(data);
     const specification = spciArr[0][0];
     const picture = fileList[0].name;
     const specific = { specification, picture };
     const Finaldata = Object.assign(data, specific);
-   
+    fromSpec.resetFields();
+    fromSpec.setFieldsValue({
+      specification: [''],
+    });
     setFileList([]);
     setAdjTem([...adjTem, Finaldata]);
   };
@@ -296,37 +310,26 @@ const TemplateAdj = (props) => {
             </span>
               
           </Space>
-          <div>
-            <div className="goods-sale-seetings">
-              <span>是否优惠: </span>
-              <Switch
-                checkedChildren="是"
-                unCheckedChildren="否"
-                checked={checkUse} 
-                onChange={() => { setCheckUse(!checkUse); }}
-                style={{ marginRight: 10 }}
-              />
-              <span>优惠幅度: </span>
-              <FormItem
-                name="reduced_price"
-                rules={[
-                  {
-                  //required: true,
-                  }
-                ]}
-                noStyle
-              >
               
-                <InputNumber
-                  disabled={!checkUse}
-                  style={{
-                    width: '8vw', 
-                    marginBottom: 10,
-                    marginLeft: 10, 
-                  }}
-                />
-              </FormItem>
-            </div>
+          <FormItem>
+            <span>优惠幅度: </span>
+            <FormItem
+              name="reduced_price"
+              noStyle
+            >
+              
+              <InputNumber
+                disabled={!ifSale}
+                formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                style={{
+                  width: '8vw', 
+                  marginBottom: 10,
+                  marginLeft: 10, 
+                }}
+              />
+            </FormItem>
+          </FormItem>
+          <div>
             <Form.Item
               label="规格例图"
               rules={[

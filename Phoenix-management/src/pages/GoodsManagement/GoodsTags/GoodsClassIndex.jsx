@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Tag, Divider, Tabs } from 'antd';
+import { PageHeader, Tabs } from 'antd';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import GoodsClassList from './GoodsClassList';
 import GoodsTagsList from './GoodsClassTags';
 
@@ -16,14 +17,19 @@ class GoodsClassIndex extends PureComponent {
   render() {
     return (
       <>
-        <Tabs defaultActiveKey="1" centered>
-          <TabPane tab="商品类别列表" key="1">
-            <GoodsClassList />
-          </TabPane>
-          <TabPane tab="类别标签管理" key="2">
-            <GoodsTagsList />
-          </TabPane>
-        </Tabs>
+        <PageHeader 
+          title="商品类别管理"
+          style={{ backgroundColor: 'white' }}
+          footer={<Tabs defaultActiveKey="1">
+            <TabPane tab="商品类别列表" key="1">
+              <GoodsClassList />
+            </TabPane>
+            <TabPane tab="类别标签管理" key="2">
+              <GoodsTagsList />
+            </TabPane>
+          </Tabs>}
+        />
+        
       </>
     );
   }

@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import {
   Form, Input, Button, Select,
-  InputNumber, DatePicker,
-  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result
+  InputNumber, DatePicker, notification,
+  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result, PageHeader
 } from 'antd';
 import {
   UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
@@ -13,12 +13,27 @@ import React, {
   useState, useEffect, useRef
 } from 'react';
 import FormItem from 'antd/lib/form/FormItem';
-import { connect } from 'umi';
+import { connect, Link, history  } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
 import PropTypes from 'prop-types';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import '../../style/GoodsAddEditor.less';
+
+const routes = [
+  {
+    path: '/',
+    breadcrumbName: '首页',
+  },
+  {
+    path: '/goods',
+    breadcrumbName: '商品管理',
+  },
+  {
+    path: '/goods/add-goods',
+    breadcrumbName: '添加商品',
+  }
+];
 
 const { Option, OptGroup } = Select;
 const layout = {
@@ -42,7 +57,7 @@ const EditorLayout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 8,
+    offset: 9,
     span: 16,
   },
 };
@@ -75,7 +90,7 @@ export const GoodsAddEditor = (props) => {
   const [rubbish, setRubbish] = useState([]);
   const [check, setCheck] = useState(false);
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
-  const [submitGoods, setSubmitGoods] = useState([]);
+  const [submitGoods, setSubmitGoods] = useState({});
   const [goodsModels, setgoodsModels] = useState([]);
   const [templateId, setTemplateId] = useState(0);
   const [goodID, setGoodsId] = useState(0);
@@ -102,10 +117,22 @@ export const GoodsAddEditor = (props) => {
   
   const detailsName = [{
     title: '规格',
+    key: '规格',
     children: ModelsColums, 
-  }, { title: '库存', dataIndex: 'total' },
-  { title: '重量', dataIndex: 'weight' }, { title: '价格', dataIndex: 'price' },
-  { title: '成本价', dataIndex: 'cost_price' }];
+  }, { title: '库存', dataIndex: 'total', key: '库存' },
+  { title: '重量', dataIndex: 'weight', key: '重量' }, 
+  { title: '价格', dataIndex: 'price', key: '价格' },
+  { title: '成本价', dataIndex: 'cost_price', key: '成本价' },
+  { title: '优惠幅度', dataIndex: 'reduced_price', key: '优惠幅度' }];
+  const detailsNameOut = [{
+    title: '规格',
+    key: '规格',
+    children: ModelsColums, 
+  }, { title: '库存', dataIndex: 'total', key: '库存' },
+  { title: '重量', dataIndex: 'weight', key: '重量' }, 
+  { title: '价格', dataIndex: 'price', key: '价格' },
+  { title: '成本价', dataIndex: 'cost_price', key: '成本价' }
+  ];
   const settingGoods = {
     title: '操作',
     dataIndex: goodsColumns,
@@ -131,10 +158,26 @@ export const GoodsAddEditor = (props) => {
       </div>
     ),
   };
-  const goodsColumns = [...detailsName, IconColums, settingGoods];
+  const goodsColumns = submitGoods.sale 
+    ? [...detailsName, IconColums, settingGoods] : [...detailsNameOut, IconColums, settingGoods];
   const handlePreview = (file) => {
     setPreviewImage(file.url || file.thumbUrl);
     setPreviewVisible(true);
+  };
+  const onResetInfo = () => {
+    localStorage.removeItem('FileList');
+    localStorage.removeItem('storage');
+    localStorage.removeItem('RichText'); 
+    localStorage.removeItem('FileListAlot');
+    localStorage.removeItem('fileVidoList');
+    localStorage.removeItem('FileList');
+    setFileList([]);
+    setFileListAlot([]);
+    setfileVidoList([]);
+    setGoodsDetails('');
+    form.resetFields();
+    // eslint-disable-next-line no-restricted-globals
+    location.reload(true);
   };
   const getQiNiuToken = () => {
     request('/api.farm/goods/resources/qiniu/upload_token', {
@@ -394,31 +437,47 @@ export const GoodsAddEditor = (props) => {
       detail,
     };
     const subValues = Object.assign(values, timestap);
-    Modal.confirm({
-      mask: false,
-      title: '凤鸣谷',
-      content: '确认提交商品信息吗',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => { subGoodsInfos(subValues); },
-    });
+    if (advance_time < putaway_time) {
+      Modal.confirm({
+        mask: false,
+        title: '凤鸣谷',
+        content: '确认提交商品信息吗',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => { subGoodsInfos(subValues); },
+      });
+    } else {
+      notification.warning({
+        message: '错误',
+        description:
+          '请检查预售时间与上架时间是否有冲突！',
+        icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      });
+    }
   };
   return (
     <>
-      <Steps
-        type="navigation"
-        current={current}
-        className="site-navigation-steps"
-      >
-        <Step title="填写商品基本信息" />
-        <Step title="完善商品规格信息" />
-        <Step title="成功提交" />
-      </Steps>
+      <PageHeader
+        style={{ backgroundColor: 'white', marginBottom: 30 }}
+        className="goods-publish-all-pages"
+        breadcrumb={{ routes }}
+        title="添加商品"
+        footer={<Steps
+          //type="navigation"
+          current={current}
+          className="site-navigation-steps"
+        >
+          <Step title="基本信息" description="完善商品基础信息" />
+          <Step title="规格信息" description="完善商品规格" />
+          <Step title="成功提交" description="发布商品成功" />
+        </Steps>}
+      /> 
+       
       <div className="steps-content">
         {
   (() => {
     if (current === 0) {
-      return (<>
+      return (<div className="goods-basic-publish-contianer">
         <Divider>商品基本信息</Divider>
         <Form
           onValuesChange={subscriptions}
@@ -472,7 +531,6 @@ export const GoodsAddEditor = (props) => {
             ]}
           >
             <Select
-              style={{ width: '40vw' }}
               placeholder="请选择商品类别"
             >
               {
@@ -700,13 +758,12 @@ export const GoodsAddEditor = (props) => {
             </>
           </Form.Item>
           <Divider>商品数量设置</Divider>
-          <div style={{ marginBottom: 30, marginLeft: 200 }}>
+          <div style={{ marginBottom: 20, marginLeft: 250, marginTop: 20 }}>
             <Space size="large" style={{ marginLeft: 10 }}>
               <span>
-                <span>限购数量: </span>
                 <FormItem
                   name="limit_total"
-                  noStyle
+                  label="限购数量"
                   rules={[
                     {
                       required: true,
@@ -717,10 +774,9 @@ export const GoodsAddEditor = (props) => {
                 </FormItem>
               </span>
               <span>
-                <span>起售数量: </span>
                 <FormItem
                   name="min_sale"
-                  noStyle
+                  label="起售数量"
                   rules={[
                     {
                       required: true,
@@ -732,10 +788,9 @@ export const GoodsAddEditor = (props) => {
 
               </span>
               <span>
-                <span>库存数量: </span>
                 <FormItem
                   name="total"
-                  noStyle
+                  label="库存数量"
                   rules={[
                     {
                       required: true,
@@ -765,6 +820,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
+                    defaultChecked={storeageGoods.paid_and_remove}
                   />
                 </Form.Item>
               </span>
@@ -774,6 +830,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
+                    defaultChecked={storeageGoods.show_total}
 
                   />
                 </Form.Item>
@@ -784,6 +841,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
+                    defaultChecked={storeageGoods.exchange}
                   />
                 </Form.Item>
               </span>
@@ -793,7 +851,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
-
+                    defaultChecked={storeageGoods.sale_return}
                   />
                 </Form.Item>
               </span>
@@ -803,6 +861,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
+                    defaultChecked={storeageGoods.advance}
 
                   />
                 </Form.Item>
@@ -813,7 +872,7 @@ export const GoodsAddEditor = (props) => {
                   <Switch
                     checkedChildren="是"
                     unCheckedChildren="否"
-
+                    defaultChecked={storeageGoods.on_sale}
                   />
                 </Form.Item>
               </span>
@@ -830,7 +889,11 @@ export const GoodsAddEditor = (props) => {
               <span className="goods-create-swtich-item">
                 <span>是否限购：</span>
                 <Form.Item noStyle name="limit">
-                  <Switch checkedChildren="是" unCheckedChildren="否"  />
+                  <Switch
+                    checkedChildren="是"
+                    unCheckedChildren="否" 
+                    defaultChecked={storeageGoods.limit}
+                  />
                 </Form.Item>
               </span>
             </Space>
@@ -838,15 +901,27 @@ export const GoodsAddEditor = (props) => {
          
           <FormItem {...tailLayout}>
             <Button
-              type="primary"
               htmlType="submit"
+              style={{
+                margin: 20,
+              }}
+              icon={<PlusCircleTwoTone />}
             >
               下一步
+            </Button>
+            <Button
+              onClick={onResetInfo}
+              style={{
+                margin: 20,
+              }}
+              icon={<StopTwoTone />}
+            >
+              重置
             </Button>
 
           </FormItem>
         </Form>
-      </>);
+      </div>);
     } if (current === 1) {
       return (<>
         <div style={{ backgroundColor: 'white', padding: 20 }}> 
@@ -916,7 +991,6 @@ export const GoodsAddEditor = (props) => {
                   <span>库存: </span>
                   <FormItem
                     name="total"
-              //label="库存"
                     rules={[
                       {
                         required: true,
@@ -925,24 +999,11 @@ export const GoodsAddEditor = (props) => {
                     noStyle
                   >
               
-                    <InputNumber className="specification-adj-normal" />
+                    <InputNumber
+                      className="specification-adj-normal"
+                    />
                   </FormItem>
                 </span> 
-                <span>
-                  <span>价格: </span>
-                  <FormItem
-                    name="price"
-                    rules={[
-                      {
-                        required: true,
-                      }
-                    ]}
-                    noStyle
-                  >
-             
-                    <InputNumber className="specification-adj-normal" />
-                  </FormItem>
-                </span>
                 <span>
                   <span>重量: </span>
                   <FormItem
@@ -971,42 +1032,51 @@ export const GoodsAddEditor = (props) => {
                     noStyle
                   >
               
-                    <InputNumber className="specification-adj-normal" />
+                    <InputNumber
+                      className="specification-adj-normal"
+                      formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    />
                   </FormItem>
                 </span>
-              
-              </Space>
-              <div>
-                <div className="goods-sale-seetings">
-                  <span>是否优惠: </span>
-                  <Switch
-                    checkedChildren="是"
-                    unCheckedChildren="否"
-                    checked={checkUse} 
-                    onChange={() => { setCheckUse(!checkUse); }}
-                    style={{ marginRight: 10 }}
-                  />
-                  <span>优惠幅度: </span>
+                <span>
+                  <span>价格: </span>
                   <FormItem
-                    name="reduced_price"
+                    name="price"
                     rules={[
                       {
-                      //required: true,
+                        required: true,
                       }
                     ]}
                     noStyle
                   >
-              
+             
                     <InputNumber
-                      disabled={!checkUse}
-                      style={{
-                        width: '8vw', 
-                        marginBottom: 10,
-                        marginLeft: 10, 
-                      }}
+                      className="specification-adj-normal"
+                      formatter={(Goodvalues) => `¥ ${Goodvalues}`}
                     />
                   </FormItem>
-                </div>
+                </span>
+              
+              </Space>
+              <FormItem>
+                <span>优惠幅度: </span>
+                <FormItem
+                  name="reduced_price"
+                  noStyle
+                >
+              
+                  <InputNumber
+                    disabled={!submitGoods.sale}
+                    formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    style={{
+                      width: '8vw', 
+                      marginBottom: 10,
+                      marginLeft: 10, 
+                    }}
+                  />
+                </FormItem>
+              </FormItem>
+              <div>
                 <Form.Item
                 //name="main_goods_video"
                   label="规格例图"
@@ -1096,6 +1166,7 @@ export const GoodsAddEditor = (props) => {
       </div>
 
     </>
+  
   );
 };
 GoodsAddEditor.propTypes = {

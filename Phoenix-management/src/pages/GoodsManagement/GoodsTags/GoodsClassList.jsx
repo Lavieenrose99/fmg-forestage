@@ -340,7 +340,7 @@ render() {
   }
   return (
     <>
-      <div className="fmg-goods-class-list-tags">
+      <div className="fmg-goods-class-list-tags" style={{ marginTop: 20 }}>
         <Button
           onClick={this.handleAdd}
           type="primary"

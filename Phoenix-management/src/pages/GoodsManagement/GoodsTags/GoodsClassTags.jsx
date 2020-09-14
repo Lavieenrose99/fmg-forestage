@@ -282,7 +282,7 @@ class GoodClassTags extends React.Component {
        return col;
      });
      return (
-       <div className="fmg-goods-area-list-tags">
+       <div className="fmg-goods-area-list-tags" style={{ marginTop: 20 }}>
          <Button
            onClick={this.handleAdd}
            type="primary"
