@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import {
   Form, Input, Button, Select,
-  InputNumber, DatePicker, notification,
+  InputNumber, DatePicker, notification, Alert,
   Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result, PageHeader
 } from 'antd';
 import {
@@ -70,6 +70,7 @@ const { Step } = Steps;
 export const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
+  const [formAdj]  = Form.useForm();
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -83,11 +84,15 @@ export const GoodsAddEditor = (props) => {
     goodsModelsList, goodsModel,
   } = props;
   const formRef = useRef(null);
+  const formAdjRef = useRef(null);
   const [checkUse, setCheckUse] = useState(false);
   const [goodsDetails, setGoodsDetails] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
+  const [adjSpec, setAdjSpec] = useState({});
   const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
   const [rubbish, setRubbish] = useState([]);
+  const [adjVisible, setAdjVisible] = useState(false);
+  const [AdjSpecName, setAdjSpecName] = useState([]);
   const [check, setCheck] = useState(false);
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [submitGoods, setSubmitGoods] = useState({});
@@ -95,6 +100,8 @@ export const GoodsAddEditor = (props) => {
   const [templateId, setTemplateId] = useState(0);
   const [goodID, setGoodsId] = useState(0);
   const [submitValues, setSumitvalues] = useState({});
+  const [adjFileList, setAdjFileList] = useState(adjSpec.picture);
+  const [adjIndex, setAdjIndex] = useState(-1);
   const [current, setCurrent] = useState(0);
   const ModelsName = (((goodsModel[0] || []).template || []).filter((arr) => {
     return arr.use !== false;
@@ -133,14 +140,51 @@ export const GoodsAddEditor = (props) => {
   { title: '价格', dataIndex: 'price', key: '价格' },
   { title: '成本价', dataIndex: 'cost_price', key: '成本价' }
   ];
+  const comfirmDelItem = (index) => {
+    const data = goodsDetails;
+    data.splice(index, 1);
+    setGoodsDetails([...data]);
+  };
+  const delItem = (index) => {
+    Modal.confirm({
+      mask: false,
+      title: '凤鸣谷',
+      content: '确认删除该规格吗',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => { comfirmDelItem(index); },
+    });
+  };
+  const setAdjVis = () => {
+    setAdjVisible(false);
+    formAdj.setFieldsValue({
+      specification: [''],
+    });
+    formAdj.resetFields();
+  };
+  const adjItem = (record, index) => {
+    formAdj.setFieldsValue({
+      specification: [''],
+    });
+    setAdjSpec(record);
+    setAdjVisible(true);
+    const array = (((goodsModel[0] || []).template || []).filter((arr) => {
+      return arr.use !== false;
+    }) || []).map((item) => {
+      return item.name;
+    });
+    setAdjSpecName(array);
+    setAdjFileList(record.picture);
+    setAdjIndex(index);
+  };
   const settingGoods = {
     title: '操作',
-    dataIndex: goodsColumns,
-    render: (text, record) => (
+    //dataIndex: goodsColumns,
+    render: (_, record, index) => (
       <>
         <Space size="large">
-          <a onClick={() => this.handleChange()}>修改</a>
-          <a onClick={() => this.comfirmDelArea()}>删除</a>
+          <a onClick={() => adjItem(record, index)}>修改</a>
+          <a onClick={() => delItem(index)}>删除</a>
         </Space>
       </>
     ),
@@ -149,7 +193,7 @@ export const GoodsAddEditor = (props) => {
     title: '图标',
     dataIndex: 'picture',
     render: (pictures) => (
-      <div style={{ textAlign: 'center' }}>
+      <div>
         <img
           src={pictures ? BASE_QINIU_URL + pictures : null}
           alt={pictures} 
@@ -164,6 +208,7 @@ export const GoodsAddEditor = (props) => {
     setPreviewImage(file.url || file.thumbUrl);
     setPreviewVisible(true);
   };
+  
   const onResetInfo = () => {
     localStorage.removeItem('FileList');
     localStorage.removeItem('storage');
@@ -207,6 +252,22 @@ export const GoodsAddEditor = (props) => {
     setPreviewImage(fileItem.url);
     setFileList([fileItem]);
     localStorage.setItem('FileList', JSON.stringify(fileItem));
+  };
+  const handleChangeAdj = ({ file  }) => {
+    const {
+      uid, name, type, thumbUrl, status, response = {},
+    } = file;
+    const fileItem = {
+      uid,
+      name,
+      type,
+      thumbUrl,
+      status,
+      response,
+      url: (response.key || ''),
+    };
+    setPreviewImage(fileItem.url);
+    setAdjFileList(fileItem.url);
   };
   const handleVidoChange = ({ file  }) => {
     const {
@@ -367,15 +428,49 @@ export const GoodsAddEditor = (props) => {
     fileListAlot.splice(values.uid, 1);
     return false;
   };
+  const onReset = () => {
+    fromSpec.resetFields();
+    fromSpec.setFieldsValue({
+      specification: [''],
+    });
+    localStorage.removeItem('FileList');
+    setFileList([]);
+  };
   const addSpecification = (data) => {
     const spciArr = Object.values(data);
+    if (spciArr[0][0].length === 0) {
+      notification.warning({
+        message: '错误',
+        description:
+          '请先选择规格模版',
+        icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      });
+    } else {
+      const specification = spciArr[0][0];
+      const picture = fileList[0].response.key;
+      const specific = { specification, picture };
+      const Finaldata = Object.assign(data, specific);
+      setGoodsDetails([...goodsDetails, Finaldata]);
+      setFileList([]);
+      onReset();
+      setPreviewImage('');
+    }
+  };
+  const adjSpecification = (adj) => {
+    const spciArr = Object.values(adj);
     const specification = spciArr[0][0];
-    const picture = fileList[0].response.key;
+    const picture = adjFileList;
     const specific = { specification, picture };
-    const Finaldata = Object.assign(data, specific);
-    setFileList([]);
-    setPreviewImage('');
-    setGoodsDetails([...goodsDetails, Finaldata]);
+    const Finaldata = Object.assign(adj, specific);
+    const data = goodsDetails;
+    data.splice(adjIndex, 1);
+    data.push(Finaldata);
+    setGoodsDetails([...data]);
+    setAdjVisible(false);
+    formAdj.setFieldsValue({
+      specification: [''],
+    });
+    formAdj.resetFields();
   };
   const submitSpc = () => {
     Modal.confirm({
@@ -387,13 +482,7 @@ export const GoodsAddEditor = (props) => {
       onOk: () => { subGoodsSpec(); },
     });
   };
-  const onReset = () => {
-    fromSpec.resetFields();
-    fromSpec.setFieldsValue({
-      specification: [''],
-    });
-    setFileList([]);
-  };
+  
   const subGoodsInfos = (subValues) => {
     localStorage.removeItem('storage');
     localStorage.removeItem('FileList');
@@ -926,7 +1015,7 @@ export const GoodsAddEditor = (props) => {
       return (<>
         <div style={{ backgroundColor: 'white', padding: 20 }}> 
           <div className="specification-adj-form-container">
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ marginLeft: 45, marginTop: 10, marginBottom: 20  }}>
               <Select
                 onChange={selectTemplate}
                 placeholder="选择规格模版"
@@ -1138,8 +1227,218 @@ export const GoodsAddEditor = (props) => {
               </Button>
             </Form>
           </div>
+          <Modal
+            title="修改"
+            visible={adjVisible}
+            onOk={setAdjVis}
+            onCancel={setAdjVis}
+            width="50vw"
+            footer={null}
+            destroyOnClose
+          >
+            <Form
+              onFinish={adjSpecification}
+              form={formAdj}
+              ref={formAdjRef}
+            >
+              <Form.List name="specification">
+                {(fields) => {
+                  return (
+                    <div className="specification-adj-template">
+                      {fields.map((field) => (
+                        <>
+                          <div>
+                            {
+           AdjSpecName.map((tem, index) => {
+             return <span>
+               <span>
+                 {tem}
+                 :
+                 {' '}
+               </span>
+               <FormItem
+                 {...field}
+                 initialValue={Object.values(adjSpec.specification)[index]}
+                 name={[field.name, `${tem}`]}
+                 fieldKey={[[field.fieldKey, `${tem}`]]}
+                 rules={[
+                   {
+                     //required: true,
+                   }
+                 ]}
+                 noStyle
+               >
+                 <Input
+                   style={{
+                     width: '10vw', marginRight: 15, marginLeft: 10, marginBottom: 20, 
+                   }}
+                 />
+               </FormItem>
+             </span>;
+           })
+          }
+                          </div>
+                        </>
+                      ))}
+                    </div>
+                
+                  );
+                }}
+              </Form.List>
+              <Space size="large" style={{ marginBottom: 20 }}>
+                <span>
+                  <span>库存: </span>
+                  <FormItem
+                    name="total"
+                    initialValue={adjSpec.total}
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber
+                      className="specification-adj-normal"
+                    />
+                  </FormItem>
+                </span> 
+                <span>
+                  <span>重量: </span>
+                  <FormItem
+                    name="weight"
+                    initialValue={adjSpec.weight}
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber className="specification-adj-normal" />
+                  </FormItem>
+                </span>
+                <span>
+                  <span>成本: </span>
+                  <FormItem
+                    name="cost_price"
+                    initialValue={adjSpec.cost_price}
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+              
+                    <InputNumber
+                      className="specification-adj-normal"
+                      formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    />
+                  </FormItem>
+                </span>
+                <span>
+                  <span>价格: </span>
+                  <FormItem
+                    name="price"
+                    initialValue={adjSpec.price}
+                    rules={[
+                      {
+                        required: true,
+                      }
+                    ]}
+                    noStyle
+                  >
+             
+                    <InputNumber
+                      className="specification-adj-normal"
+                      formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    />
+                  </FormItem>
+                </span>
+              
+              </Space>
+              <FormItem>
+                <span>优惠幅度: </span>
+                <FormItem
+                  name="reduced_price"
+                  initialValue={adjSpec.reduced_price}
+                  noStyle
+                >
+              
+                  <InputNumber
+                    disabled={!submitGoods.sale}
+                    formatter={(Goodvalues) => `¥ ${Goodvalues}`}
+                    style={{
+                      width: '8vw', 
+                      marginBottom: 10,
+                      marginLeft: 10, 
+                    }}
+                  />
+                </FormItem>
+              </FormItem>
+              <div>
+                <Form.Item
+                //name="main_goods_video"
+                  label="规格例图"
+                  rules={[
+                    {
+                      //required: true,
+                    }
+                  ]}
+                  {...ModelListlayout}
+                >
+                  <>
+                    <span onClick={getUploadToken}>
+                      <Upload
+                        action={QINIU_SERVER}
+                        data={{
+                          token: qiniuToken,
+                          key: `spec-${Date.parse(new Date())}`,
+                        }}
+                        listType="picture-card"
+                        beforeUpload={getUploadToken}
+                        showUploadList={false}
+                        onPreview={handlePreview}
+                        onChange={handleChangeAdj}
+                      >
+                        {adjFileList ? <img 
+                          src={BASE_QINIU_URL + adjFileList}
+                          alt="pictures"
+                          style={{ width: '100%' }}
+                        /> :  uploadButton}
+                      </Upload>
+                    </span>
+                    <Modal
+                      visible={previewVisible}
+                      footer={null}
+                      onCancel={() => setPreviewVisible(!previewVisible)}
+                    >
+                      <img style={{ width: '100%' }} src={previewImage} alt="previewImg" />
+                    </Modal>
+                  </>
+                </Form.Item>
+              </div>          
+              <Button
+                htmlType="submit"
+                type="primary"
+                style={{
+                  margin: 20,
+                  marginLeft: 30,
+                }}
+                icon={<PlusCircleTwoTone />}
+              >
+                修改
+              </Button>
+            </Form>
+          
+          </Modal>
+          ;
           <Divider>规格列表</Divider>
           <Table
+            bordered
             columns={goodsColumns}
             dataSource={goodsDetails}
             style={{ paddingLeft: 20, paddingRight: 20 }}

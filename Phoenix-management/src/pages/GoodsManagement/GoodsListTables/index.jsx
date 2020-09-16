@@ -401,7 +401,7 @@ class GoodsList extends React.Component {
          
           </div>
 
-          <Table dataSource={GoodsInfos} pagination={paginationProps}>
+          <Table dataSource={GoodsInfos} pagination={paginationProps} bordered>
             <Column
               title="商品序号"
               dataIndex="id"

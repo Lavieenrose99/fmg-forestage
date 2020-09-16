@@ -117,7 +117,7 @@ const TemplateAdj = (props) => {
     title: '图标',
     dataIndex: 'picture',
     render: (pictures) => (
-      <div style={{ textAlign: 'center' }}>
+      <div>
         <img
           src={pictures ? BASE_QINIU_URL + pictures : null}
           alt={pictures} 
