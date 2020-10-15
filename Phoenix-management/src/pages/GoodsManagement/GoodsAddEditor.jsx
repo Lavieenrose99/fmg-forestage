@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import {
   Form, Input, Button, Select,
-  InputNumber, DatePicker, notification, Alert,
-  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result, PageHeader
+  InputNumber, DatePicker, notification,
+  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result, PageHeader, Checkbox
 } from 'antd';
 import {
   UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
@@ -13,9 +13,12 @@ import React, {
   useState, useEffect, useRef
 } from 'react';
 import FormItem from 'antd/lib/form/FormItem';
-import { connect, Link, history  } from 'umi';
+import { connect } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
+import {
+  dataGoodsName, dataGoodsNameOut, getaways, putaways 
+} from '@/utils/DataStore/data_goods';
 import PropTypes from 'prop-types';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import '../../style/GoodsAddEditor.less';
@@ -36,6 +39,7 @@ const routes = [
 ];
 
 const { Option, OptGroup } = Select;
+const CheckboxGroup = Checkbox.Group;
 const layout = {
   labelCol: {
     offset: 4,
@@ -62,9 +66,6 @@ const tailLayout = {
   },
 };
 
-const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 3, name: '自取' }];
-const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上架时间' }, { id: 3, name: '放入仓库暂不上架' }];
-
 const { Step } = Steps;
 
 export const GoodsAddEditor = (props) => {
@@ -85,21 +86,17 @@ export const GoodsAddEditor = (props) => {
   } = props;
   const formRef = useRef(null);
   const formAdjRef = useRef(null);
-  const [checkUse, setCheckUse] = useState(false);
   const [goodsDetails, setGoodsDetails] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
   const [adjSpec, setAdjSpec] = useState({});
   const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
-  const [rubbish, setRubbish] = useState([]);
   const [adjVisible, setAdjVisible] = useState(false);
   const [AdjSpecName, setAdjSpecName] = useState([]);
-  const [check, setCheck] = useState(false);
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [submitGoods, setSubmitGoods] = useState({});
   const [goodsModels, setgoodsModels] = useState([]);
   const [templateId, setTemplateId] = useState(0);
   const [goodID, setGoodsId] = useState(0);
-  const [submitValues, setSumitvalues] = useState({});
   const [adjFileList, setAdjFileList] = useState(adjSpec.picture);
   const [adjIndex, setAdjIndex] = useState(-1);
   const [current, setCurrent] = useState(0);
@@ -125,20 +122,15 @@ export const GoodsAddEditor = (props) => {
   const detailsName = [{
     title: '规格',
     key: '规格',
-    children: ModelsColums, 
-  }, { title: '库存', dataIndex: 'total', key: '库存' },
-  { title: '重量', dataIndex: 'weight', key: '重量' }, 
-  { title: '价格', dataIndex: 'price', key: '价格' },
-  { title: '成本价', dataIndex: 'cost_price', key: '成本价' },
-  { title: '优惠幅度', dataIndex: 'reduced_price', key: '优惠幅度' }];
+    children: ModelsColums,
+    ...dataGoodsName,
+  }];
   const detailsNameOut = [{
     title: '规格',
     key: '规格',
-    children: ModelsColums, 
-  }, { title: '库存', dataIndex: 'total', key: '库存' },
-  { title: '重量', dataIndex: 'weight', key: '重量' }, 
-  { title: '价格', dataIndex: 'price', key: '价格' },
-  { title: '成本价', dataIndex: 'cost_price', key: '成本价' }
+    children: ModelsColums,
+    ...dataGoodsNameOut,   
+  } 
   ];
   const comfirmDelItem = (index) => {
     const data = goodsDetails;
@@ -503,6 +495,26 @@ export const GoodsAddEditor = (props) => {
     setCurrent(current + 1);
   };
   const onFinish = (values) => {
+    let get_way = 0;
+    for (let i = 0; i < values.get_way.length; i++) {
+      get_way += values.get_way[i];
+    }
+    if (get_way === 1) {
+      get_way = 1;
+    } else if (get_way === 2) {
+      get_way = 2;
+    } else if (get_way === 3) {
+      get_way = 3;
+    } else if (get_way === 4) {
+      get_way = 4;
+    } else if (get_way === 5) {
+      get_way = 5;
+    } else if (get_way === 6) {
+      get_way = 6;
+    } else if (get_way === 7) {
+      get_way = 7;
+    }
+    const carriage = values.carriage*100;
     const advance_time =  moment(values.advance_time).valueOf();
     const putaway_time = moment(values.putaway_time).valueOf();
     const kind_tag = [values.kind_tag];
@@ -515,6 +527,7 @@ export const GoodsAddEditor = (props) => {
       return { picture: arrFiles.judege, order: index };
     });
     const timestap = {
+      carriage,
       advance_time,
       putaway_time, 
       kind_tag,
@@ -523,6 +536,7 @@ export const GoodsAddEditor = (props) => {
       pictures,
       cover,
       view,
+      get_way,
       detail,
     };
     const subValues = Object.assign(values, timestap);
@@ -694,13 +708,13 @@ export const GoodsAddEditor = (props) => {
               }
             ]}
           >
-            <Radio.Group>
+            <CheckboxGroup>
               {
                 getaways.map((ways) => {
-                  return <Radio value={ways.id}>{ways.name}</Radio>;
+                  return <Checkbox value={ways.id}>{ways.name}</Checkbox>;
                 })
-              }
-            </Radio.Group>
+}
+            </CheckboxGroup>
           </Form.Item>
           <Form.Item
             label="商品运费"
@@ -1167,7 +1181,6 @@ export const GoodsAddEditor = (props) => {
               </FormItem>
               <div>
                 <Form.Item
-                //name="main_goods_video"
                   label="规格例图"
                   rules={[
                     {

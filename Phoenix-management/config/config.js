@@ -111,6 +111,35 @@ export default defineConfig({
                 }
               ],
             },
+            {
+              path: '/goodspayment',
+              name: '订单管理',
+              icon: 'setting',
+              //authority: ['admin'],
+              routes: [
+                {
+                  path: '/goodspayment/list',
+                  name: '订单列表',
+                  icon: 'smile',
+                  component: './Bill/bills_list',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/goodspayment/express_list',
+                  name: '快递查询',
+                  icon: 'smile',
+                  component: './Bill/express_list',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/goodspayment/test_list',
+                  name: '测试表格',
+                  icon: 'smile',
+                  component: './Bill/test_list',
+                  //authority: ['admin'],
+                }
+              ],
+            },
             // {
             //   name: 'list.table-list',
             //   icon: 'table',

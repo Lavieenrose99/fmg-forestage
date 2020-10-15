@@ -1,9 +1,8 @@
 import React from 'react';
 import {
-  Table, Tag, Space, TreeSelect, 
-  Modal, Input, Divider, Select, Button
+  Table, Tag, Space,
+  Modal, Input, Select, Button
 } from 'antd';
-import request from '@/utils/request';
 import moment from 'moment';
 import { connect, Link } from 'umi';
 import { get } from 'lodash';
@@ -14,7 +13,7 @@ import GoodsAdj from './GoodsAdj';
 import TempalteAdj from './TemplateAdj';
 import  './index.less';
 
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 const { Option, OptGroup } = Select;
 const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 @connect(({
@@ -38,11 +37,10 @@ class GoodsList extends React.Component {
     this.state = {
       tagsAreaCheck: 0,
       tagsSaleCheck: 0,
-      tagsClassCheck: 0,
       specification: {},
       template: [],
-      template_id: 0, 
-      visable: false,
+      templateId: 0, 
+      visible: false,
       sale: true,
       gid: 0,
       visableTem: false,
@@ -71,7 +69,7 @@ class GoodsList extends React.Component {
           page: 1,
           limit: 10,
         },
-      }, 
+      },  
     });
     dispatch({
       type: 'goodsClass/fetchClassTags',
@@ -117,7 +115,7 @@ class GoodsList extends React.Component {
       specification: data,
       gid: tid,
       template: templateData,
-      template_id: id,
+      templateId: id,
       sale,
       visableTem: true,
     });
@@ -232,8 +230,6 @@ class GoodsList extends React.Component {
   }
 
   MainTextOnChange = (e) => {
-    const { current, FilterText } = this.state;
-    const { dispatch } = this.props;
     this.setState({ FilterText: e.target.value }, () => { this.handleGetListData(); });
   };
 
@@ -274,7 +270,9 @@ class GoodsList extends React.Component {
 
   render() {
     const {
-      pageSize, current, tagsSaleCheck, tagsAreaCheck, 
+      pageSize, current,
+      tagsSaleCheck, visible, visableTem, template, specification, gid, 
+      sale, templateId,
     } = this.state;
     const {
       goodsClassChild, 
@@ -301,6 +299,7 @@ class GoodsList extends React.Component {
       total: GoodsTotal,
       onChange: (current) => this.changePage(current),
     };
+
     return (
       <PageHeaderWrapper>
         <div className="goods-list-container">
@@ -461,30 +460,11 @@ class GoodsList extends React.Component {
             />
             <Column
               title="操作"
-              key="id"
-              render={(text, record, index) => (
+              key="index"
+              render={(_, text, index) => (
                 <Space size="middle" key={index}>
                   <a onClick={() => this.showModal(text)} key={text}>基本信息</a> 
-                  <div key={index}>
-                    <Modal 
-                      key={index}
-                      mask={false}
-                      width="70vw"
-                      height="80vh"
-                      visible={this.state.visible}
-                      title="基本信息"
-                      onOk={this.handleOk}
-                      onCancel={this.handleCancel}
-                      footer={null}
-                      destroyOnClose
-                    >
-                      <GoodsAdj
-                        key={index}
-                        info={this.state.record} 
-                        closeModel={() => this.closeVisable()}
-                      />
-                    </Modal>
-                  </div>
+                  
                   <a onClick={() => this.showModalTem(
                     text.specification,
                     text.id,
@@ -495,38 +475,74 @@ class GoodsList extends React.Component {
                   >
                     规格信息
                   </a> 
-                  <div>
-                    <Modal 
-                      mask={false}
-                      width="70vw"
-                      height="80vh"
-                      visible={this.state.visableTem}
-                      title="修改"
-                      onOk={this.handleOk}
-                      onCancel={this.handleCancel}
-                      footer={null}
-                      destroyOnClose
-                    >
-                      <TempalteAdj
-                        template={this.state.template} 
-                        info={this.state.specification} 
-                        id={this.state.template_id}
-                        gid={this.state.gid}
-                        ifSale={this.state.sale}
-                        closeModel={() => this.closeVisable()}
-                      />
-                    </Modal>
-                  </div>
                   <a onClick={() => this.confirm(text)}>删除商品</a>
                 </Space>
               )}
             />
           </Table>
+          <div>
+            <Modal 
+              mask={false}
+              width="70vw"
+              height="80vh"
+              visible={visible}
+              title="基本信息"
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+              footer={null}
+              destroyOnClose
+            >
+                      
+              <GoodsAdj
+                info={this.state.record} 
+                closeModel={() => this.closeVisable()}
+              />
+            </Modal>
+          </div>
+          <div>
+            <Modal 
+              mask={false}
+              width="70vw"
+              height="80vh"
+              visible={visableTem}
+              title="修改"
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+              footer={null}
+              destroyOnClose
+            >
+              <TempalteAdj
+                template={template} 
+                info={specification} 
+                id={templateId}
+                gid={gid}
+                ifSale={sale}
+                closeModel={() => this.closeVisable()}
+              />
+            </Modal>
+          </div>
         </div>
       </PageHeaderWrapper>
     );
   }
 }
+
+GoodsList.propTypes = {
+  goodsClassChild: PropTypes.arrayOf({}),
+  Goods: PropTypes.arrayOf({}),
+  GoodsTotal: PropTypes.number, 
+  goodsClassFather: PropTypes.arrayOf({}),
+  goodsArea: PropTypes.arrayOf({}),
+  goodsSale: PropTypes.arrayOf({}),
+};
+GoodsList.defaultProps = {
+  goodsArea: [],
+  goodsSale: [],
+  goodsClassFather: [],
+  Goods: [],
+  goodsClassChild: [],
+  GoodsTotal: [],
+};
 
 export default () => (
   <div>

@@ -361,60 +361,60 @@ class GoodsModelsList extends React.PureComponent {
    };
    return (
      <PageHeaderWrapper>
-     <div className="fmg-goods-area-list-tags">
-       <Button
-         onClick={this.handleAdd}
-         type="primary"
-         style={{
-           marginBottom: 16,
-         }}
-         icon={<PlusCircleTwoTone />}
-       >
-         添加模版
-       </Button>
-       <Modal
-         mask={false}
-         title="凤鸣谷"
-         visible={visible}
-         onOk={this.comfirmSubmitModels}
-         onCancel={this.handleCancel}
-         okText="提交"
-         cancelText="取消"
-       >
-         <Divider orientation="left" plain>模版名称</Divider>
-         <Input placeholder="请输入模版名称" onChange={this.InputTemplateTitle} />
-         <Divider orientation="left" plain>模版规格</Divider>
-         <Input
-           placeholder="输入规格"
-           value={specificationAtom}
-           onChange={(e) => this.InputModelsAtoms(e)}
+       <div className="fmg-goods-area-list-tags">
+         <Button
+           onClick={this.handleAdd}
+           type="primary"
            style={{
-             width: '10vw ', 
-             marginRight: 10, 
+             marginBottom: 16,
            }}
-         />
-         <Switch
-           checkedChildren="启用"
-           unCheckedChildren="暂不启用"
-           checked={checkedUse}
-           onChange={this.handleSwitchChoose}
-           defaultChecked
-           style={{
-             marginRight: 10, 
-           }}
-         />
-         <div>
-           <Button
-             onClick={() => { this.submitAtoms(); }}
+           icon={<PlusCircleTwoTone />}
+         >
+           添加模版
+         </Button>
+         <Modal
+           mask={false}
+           title="凤鸣谷"
+           visible={visible}
+           onOk={this.comfirmSubmitModels}
+           onCancel={this.handleCancel}
+           okText="提交"
+           cancelText="取消"
+         >
+           <Divider orientation="left" plain>模版名称</Divider>
+           <Input placeholder="请输入模版名称" onChange={this.InputTemplateTitle} />
+           <Divider orientation="left" plain>模版规格</Divider>
+           <Input
+             placeholder="输入规格"
+             value={specificationAtom}
+             onChange={(e) => this.InputModelsAtoms(e)}
              style={{
-               marginTop: 10, 
+               width: '10vw ', 
+               marginRight: 10, 
              }}
-           >
-             确认
-           </Button>
-         </div>
-         <Divider orientation="left" plain>规格列表</Divider>
-         { 
+           />
+           <Switch
+             checkedChildren="启用"
+             unCheckedChildren="暂不启用"
+             checked={checkedUse}
+             onChange={this.handleSwitchChoose}
+             defaultChecked
+             style={{
+               marginRight: 10, 
+             }}
+           />
+           <div>
+             <Button
+               onClick={() => { this.submitAtoms(); }}
+               style={{
+                 marginTop: 10, 
+               }}
+             >
+               确认
+             </Button>
+           </div>
+           <Divider orientation="left" plain>规格列表</Divider>
+           { 
          specifications.map((arr) => {
            return <div style={{
              marginBottom: 20, 
@@ -448,60 +448,60 @@ class GoodsModelsList extends React.PureComponent {
            </div>; 
          })
 }
-       </Modal>
-       <Modal
-         mask={false}
-         title="凤鸣谷"
-         visible={changeVisible}
-         onOk={this.comfirmSubmitChangeModel}
-         onCancel={this.handleChangeCancel}
-         okText="提交"
-         cancelText="取消"
-       >
-         <Divider orientation="left" plain>模版名称</Divider>
-         <Input value={setTemplateTitle} onChange={this.ChangeTemplateTitle} />
-         <Divider orientation="left" plain>规格列表</Divider>
-         {setSpecification.map((arr) => {
-           return <div style={{
-             marginBottom: 20, 
-           }}
-           >
-             <Tag
-               style={{
-                 marginLeft: 10, 
-               }}
+         </Modal>
+         <Modal
+           mask={false}
+           title="凤鸣谷"
+           visible={changeVisible}
+           onOk={this.comfirmSubmitChangeModel}
+           onCancel={this.handleChangeCancel}
+           okText="提交"
+           cancelText="取消"
+         >
+           <Divider orientation="left" plain>模版名称</Divider>
+           <Input value={setTemplateTitle} onChange={this.ChangeTemplateTitle} />
+           <Divider orientation="left" plain>规格列表</Divider>
+           {setSpecification.map((arr) => {
+             return <div style={{
+               marginBottom: 20, 
+             }}
              >
-               {arr.name}
-             </Tag>
-             <Switch
-               checkedChildren="启用"
-               unCheckedChildren="暂不启用"
-               checked={arr.use}
-               onChange={(e) => this.handleSwitchAdj(arr)}
-               style={{
-                 marginRight: 10, 
-               }}
-             />
-             <Button
-               type="dashed"
-               danger
-               size="small"
-               icon={<DeleteTwoTone twoToneColor="red" />}
-               onClick={() => this.handleCloseAdjSpec(arr)}
-             >
-               移除
-             </Button>
-           </div>; 
-         })}
-       </Modal>
-       <Table
-         rowClassName={() => 'editable-row'}
-         bordered
-         dataSource={goodsModelsList}
-         columns={columns}
-         pagination={paginationProps}
-       />
-     </div>
+               <Tag
+                 style={{
+                   marginLeft: 10, 
+                 }}
+               >
+                 {arr.name}
+               </Tag>
+               <Switch
+                 checkedChildren="启用"
+                 unCheckedChildren="暂不启用"
+                 checked={arr.use}
+                 onChange={(e) => this.handleSwitchAdj(arr)}
+                 style={{
+                   marginRight: 10, 
+                 }}
+               />
+               <Button
+                 type="dashed"
+                 danger
+                 size="small"
+                 icon={<DeleteTwoTone twoToneColor="red" />}
+                 onClick={() => this.handleCloseAdjSpec(arr)}
+               >
+                 移除
+               </Button>
+             </div>; 
+           })}
+         </Modal>
+         <Table
+           rowClassName={() => 'editable-row'}
+           bordered
+           dataSource={goodsModelsList}
+           columns={columns}
+           pagination={paginationProps}
+         />
+       </div>
      </PageHeaderWrapper>
    );
  }

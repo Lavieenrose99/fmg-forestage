@@ -4,7 +4,7 @@
 import {
   Form, Input, Button, Select,
   Checkbox, InputNumber, DatePicker,
-  Divider, Upload, Modal, Steps, Radio, Switch, Space, Table, Result
+  Divider, Upload, Modal, Radio, Switch, Space
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
@@ -29,9 +29,9 @@ const uploadButton = (
     </div>
   </div>
 );
-const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 3, name: '自取' }];
+const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 4, name: '自取' }];
 const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上架时间' }, { id: 3, name: '放入仓库暂不上架' }];
-
+const CheckboxGroup = Checkbox.Group;
 const layout = {
   labelCol: {
     span: 4,
@@ -55,6 +55,23 @@ const EditorLayout = {
 
 const GoodsAdj = (props) => {
   const { info, closeModel } = props;
+  let getwaysChanger = [];
+  if (info.get_way === 1) {
+    getwaysChanger = [1];
+  } else if (info.get_way  === 2) {
+    getwaysChanger = [2];
+  } else if (info.get_way  === 3) {
+    getwaysChanger = [1, 2];
+  } else if (info.get_way  === 4) {
+    getwaysChanger = [1, 3];
+  } else if (info.get_way  === 5) {
+    getwaysChanger = [1, 4];
+  } else if (info.get_way === 6) {
+    getwaysChanger = [2, 4];
+  } else if (info.get_way  === 7) {
+    getwaysChanger = [1, 2, 4];
+  }
+  console.log(getwaysChanger)
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const list = info.pictures.map((arr, index) => {
@@ -154,7 +171,6 @@ const GoodsAdj = (props) => {
     setFileListAlot([...fileListAlot]);
   };
   useEffect(() => {
-    console.log((info.sale));
     formRef.current.setFieldsValue({
       name: (info.name ?? ''),
       price: info.price,
@@ -168,7 +184,7 @@ const GoodsAdj = (props) => {
         .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
       on_sale: (info.on_sale),
       sale: (info.sale),
-      get_way: info.get_way,
+      get_way: getwaysChanger,
       limit: (info.limit),
       putaway: info.putaway,
       putaway_time: moment(moment(info.putaway_time)
@@ -187,7 +203,6 @@ const GoodsAdj = (props) => {
   const {
     goodsArea, goodsSale,
     goodsClassChild, goodsClassFather,
-    goodsModelsList, goodsModel,
   } = props;
   const adjGoodsInfos = (subValues) => {
     const { dispatch } = props;
@@ -202,6 +217,25 @@ const GoodsAdj = (props) => {
     setRichTextContent('');
   };
   const onFinish = (values) => {
+    let get_way = 0;
+    for (let i = 0; i < values.get_way.length; i++) {
+      get_way += values.get_way[i];
+    }
+    if (get_way === 1) {
+      get_way = 1;
+    } else if (get_way === 2) {
+      get_way = 2;
+    } else if (get_way === 3) {
+      get_way = 3;
+    } else if (get_way === 4) {
+      get_way = 4;
+    } else if (get_way === 5) {
+      get_way = 5;
+    } else if (get_way === 6) {
+      get_way = 6;
+    } else if (get_way === 7) {
+      get_way = 7;
+    }
     const advance_time =  moment(values.advance_time).valueOf();
     const putaway_time = moment(values.putaway_time).valueOf();
     const kind_tag = [values.kind_tag];
@@ -220,6 +254,7 @@ const GoodsAdj = (props) => {
       place_tag,
       sale_tag, 
       pictures,
+      get_way,
       cover,
       view,
       detail,
@@ -379,13 +414,13 @@ const GoodsAdj = (props) => {
             }
           ]}
         >
-          <Radio.Group>
+          <CheckboxGroup>
             {
-            getaways.map((ways) => {
-              return <Radio value={ways.id}>{ways.name}</Radio>;
-            })
-          }
-          </Radio.Group>
+                getaways.map((ways) => {
+                  return <Checkbox value={ways.id}>{ways.name}</Checkbox>;
+                })
+}
+          </CheckboxGroup>
         </FormItem>
         <FormItem
           label="商品运费"

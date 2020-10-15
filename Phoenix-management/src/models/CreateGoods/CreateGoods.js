@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import { get } from 'lodash';
+import request from '@/utils/request';
 import {
   setGoods,
   setGoodsSpec,
@@ -29,6 +30,10 @@ const GoodsClassModel = {
       }
     },
     * getGoodsList({ payload }, { call, put }) {
+      yield  request('/api.farm/account/login/web_login', {
+        method: 'POST',
+        data: { open_id: 'om10q44CkR0EOYXL7yp3PVIvS0pg' },
+      });
       const result = yield call(getGoodsList, payload);
       const { goods, total } = result;
       const ids = goods.map((arr) => {

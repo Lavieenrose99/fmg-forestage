@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PageHeader, Tabs } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import GoodsClassList from './GoodsClassList';
 import GoodsTagsList from './GoodsClassTags';
 

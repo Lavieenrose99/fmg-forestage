@@ -7,6 +7,17 @@ export default {
         '^/api.farm': '',
       },
     },
+    '/api.request': {
+      target: 'https://order.kuaidi100.com/',
+      pathRewrite: { '^/api.request': '' },
+      changeOrigin: true,
+    },
+    '/api.poll': {
+      target: 'https://poll.kuaidi100.com/',
+      pathRewrite: { '^/api.poll': '' },
+      changeOrigin: true,
+    },
+
   },
   test: {
     '/api/': {
@@ -24,6 +35,16 @@ export default {
       pathRewrite: {
         '^/api.farm': '',
       },
+    },
+    '/api.request': {
+      target: 'https://order.kuaidi100.com/',
+      pathRewrite: { '^/api.request': '' },
+      changeOrigin: true,
+    },
+    '/api.poll': {
+      target: 'https://poll.kuaidi100.com/',
+      pathRewrite: { '^/api.poll': '' },
+      changeOrigin: true,
     },
   },
 };
