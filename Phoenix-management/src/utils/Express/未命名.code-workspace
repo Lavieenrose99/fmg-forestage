@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		}
+	],
+	"settings": {
+		"terminal.integrated.shell.osx": "/bin/zsh",
+		"files.associations": {
+			"*.cjson": "jsonc",
+			"*.wxss": "css",
+			"*.wxs": "javascript"
+		},
+		"emmet.includeLanguages": {
+			"wxml": "html"
+		},
+		"minapp-vscode.disableAutoConfig": true
+	}
+}

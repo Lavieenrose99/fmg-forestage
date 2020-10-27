@@ -411,6 +411,7 @@ class GoodsList extends React.Component {
             <Column
               title="商品名称" 
               dataIndex="name"
+              width="20%"
               key="firstName"
               render={(text, record) => (
                 <div style={{ textAlign: 'left' }}>

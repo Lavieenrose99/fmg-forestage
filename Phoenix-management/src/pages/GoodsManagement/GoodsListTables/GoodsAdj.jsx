@@ -71,7 +71,6 @@ const GoodsAdj = (props) => {
   } else if (info.get_way  === 7) {
     getwaysChanger = [1, 2, 4];
   }
-  console.log(getwaysChanger)
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const list = info.pictures.map((arr, index) => {
@@ -245,7 +244,7 @@ const GoodsAdj = (props) => {
     const cover = fileList[0].name;
     const detail = richTextContent;
     const pictures = fileListAlot.map((arrFiles, index) => {
-      return { picture: arrFiles.name, order: index };
+      return { picture: arrFiles.judege, order: index };
     });
     const subValues = Object.assign(values, {
       advance_time,

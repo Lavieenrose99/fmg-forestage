@@ -1,13 +1,19 @@
 import { get } from 'lodash';
+import { message } from 'antd';
 import {
   getBillsListNew,
   MgetBillsList,
   getBillAddress,
   getBillDetails,
   postDelivery,
-  MgetAccountList
+  MgetAccountList,
+  getExpressList,
+  getExpressMget,
+  putBillsStatus,
+  checkBillsList
+
 } from '@/services/Bill/bills_list';
-import {MgetGoods} from '@/services/CreateGoods/CreateGoods';
+import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
   
 const GoodsClassModel = {
   namespace: 'BillsListBack',
@@ -25,8 +31,34 @@ const GoodsClassModel = {
         payload: ids,
       });
     },
-    * sendDelivery({ payload }, { call, put }) {
-      yield call(postDelivery, payload);
+    * fetchExpressList({ payload }, { call, put }) {
+      const response = yield call(getExpressList, payload);
+      const infos = get(response, 'delivery', []);
+      const ids = infos.map((arr) => { return arr.id; });
+      yield put({
+        type: 'saveExpressList',
+        payload: infos,
+      });
+      yield put({
+        type: 'fetchExpressEntity',
+        payload: ids,
+      });
+    },
+    * fetchExpressEntity({ payload }, { call, put }) {  
+      const response = yield call(getExpressMget, payload);
+      yield put({
+        type: 'saveExpressEnity',
+        payload: response,
+      });
+    },
+    * sendDelivery({ payload }, { call }) {
+      const raw =  yield call(postDelivery, payload.delievry);
+      yield call(putBillsStatus, payload.ids);
+      if (raw.id !== 0) {
+        message.info('发货成功');
+      } else {
+        message.info('发货失败！');
+      }
     },
     * getBillslistEntity({ payload }, { call, put }) {
       const response = yield call(MgetBillsList, payload);
@@ -86,6 +118,24 @@ const GoodsClassModel = {
         payload: data,
       });
     },
+    * fetchCheckList({ payload }, { call, put }) {
+      const response = yield call(checkBillsList, payload.stime, payload.etime);
+      const userIdSet = [...new Set(response.map((arr) => {
+        return arr.account_id;
+      }))];
+      const accountInfo = yield call(MgetAccountList, userIdSet);
+      const account = accountInfo.map((info, index) => {
+        return { ...info, account_id: userIdSet[index] };
+      });
+      yield put({
+        type: 'saveChecklist',
+        payload: response,
+      });
+      yield put({
+        type: 'saveAccountCList',
+        payload: account,
+      });
+    },
    
   },
   reducers: {
@@ -93,6 +143,24 @@ const GoodsClassModel = {
       return {
         ...state,
         List: payload,
+      };
+    },
+    saveChecklist(state, { payload }) {
+      return {
+        ...state,
+        cBillsList: payload,
+      };
+    },
+    saveExpressList(state, { payload }) {
+      return {
+        ...state,
+        ExpressList: payload,
+      };
+    },
+    saveExpressEnity(state, { payload }) {
+      return {
+        ...state,
+        ExpressInfos: payload,
       };
     },
     saveChildGoods(state, { payload }) {
@@ -111,6 +179,12 @@ const GoodsClassModel = {
       return {
         ...state,
         Account: payload,
+      };
+    },
+    saveAccountCList(state, { payload }) {
+      return {
+        ...state,
+        cAccount: payload,
       };
     },
     saveBillAddress(state, { payload }) {

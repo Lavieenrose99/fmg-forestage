@@ -1,13 +1,15 @@
-import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
-import { Alert, Checkbox } from 'antd';
+import {
+  Alert, notification, message, Spin 
+} from 'antd';
 import React, { useState } from 'react';
-import { Link, connect } from 'umi';
-import { setAuthority } from '@/utils/authority';
+import { history, connect } from 'umi';
+import request from '@/utils/request';
 import LoginForm from './components/Login';
+import logo from '../../../../public/favicon.png';
 import styles from './style.less';
 
 const {
-  Tab, UserName, Password, Mobile, Captcha, Submit, 
+  Tab, UserName, Password, Submit, 
 } = LoginForm;
 
 const LoginMessage = ({ content }) => (
@@ -24,16 +26,38 @@ const LoginMessage = ({ content }) => (
 const Login = (props) => {
   const { userLogin = {}, submitting } = props;
   const { status, type: loginType } = userLogin;
-  const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
   const handleSubmit = (values) => {
-    const { dispatch } = props;
-    setAuthority(['admin']);
+    if (values.userName === 'admin' && values.password === '123') {
+      message.loading('加载中！！！');
+      request('/api.farm/account/login/web_login', {
+        method: 'POST',
+        data: { open_id: 'om10q44CkR0EOYXL7yp3PVIvS0pg' },
+      }).then((response) => {
+        if (
+          response.id === 8
+        ) {
+          message.success('登陆成功').then(() => {
+            history.push('/page');
+          });
+        } else {
+          notification.warning({
+            
+            message: '网络错误',
+          });
+        }
+      });
+    } else {
+      notification.warning({
+        message: '密码或者账号错误',
+      });
+    }
   };
 
   return (
     <div className={styles.main}>
+      <img alt="logo" className={styles.logo} src={logo} />
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab="账户密码登录">
           {status === 'error' && loginType === 'account' && !submitting && (
@@ -42,7 +66,7 @@ const Login = (props) => {
 
           <UserName
             name="userName"
-            placeholder="用户名: admin or user"
+            placeholder="用户名: admin"
             rules={[
               {
                 required: true,
@@ -52,7 +76,7 @@ const Login = (props) => {
           />
           <Password
             name="password"
-            placeholder="密码: 123456"
+            placeholder="密码: 123"
             rules={[
               {
                 required: true,
@@ -61,60 +85,8 @@ const Login = (props) => {
             ]}
           />
         </Tab>
-        <Tab key="mobile" tab="手机号登录">
-          {status === 'error' && loginType === 'mobile' && !submitting && (
-            <LoginMessage content="验证码错误" />
-          )}
-          <Mobile
-            name="mobile"
-            placeholder="手机号"
-            rules={[
-              {
-                required: true,
-                message: '请输入手机号！',
-              },
-              {
-                pattern: /^1\d{10}$/,
-                message: '手机号格式错误！',
-              }
-            ]}
-          />
-          <Captcha
-            name="captcha"
-            placeholder="验证码"
-            countDown={120}
-            getCaptchaButtonText=""
-            getCaptchaSecondText="秒"
-            rules={[
-              {
-                required: true,
-                message: '请输入验证码！',
-              }
-            ]}
-          />
-        </Tab>
-        <div>
-          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
-            自动登录
-          </Checkbox>
-          <a
-            style={{
-              float: 'right',
-            }}
-          >
-            忘记密码
-          </a>
-        </div>
+
         <Submit>登录</Submit>
-        <div className={styles.other}>
-          其他登录方式
-          <AlipayCircleOutlined className={styles.icon} />
-          <TaobaoCircleOutlined className={styles.icon} />
-          <WeiboCircleOutlined className={styles.icon} />
-          <Link className={styles.register} to="/user/register">
-            注册账户
-          </Link>
-        </div>
       </LoginForm>
     </div>
   );

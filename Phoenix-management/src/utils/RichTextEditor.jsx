@@ -1,3 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-alert */
+/* eslint-disable max-len */
+/* eslint-disable no-tabs */
+/* eslint-disable prefer-const */
+/* eslint-disable func-names */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable no-param-reassign */
 /* eslint-disable react/no-string-refs */
 /* eslint-disable react/jsx-no-bind */
 import React, { Component } from 'react';
@@ -124,6 +132,21 @@ class RichTextEditor extends Component {
       quill.setSelection(index + 1);//光标位置加1 
     }
 
+    filterHTMLTag(htmlstr) {
+     	//正则匹配所有img标签
+      //var regex0 = new RegExp("(i?)(\<img)([^\>]+\>)","gmi");
+      //正则匹配不含style="" 或 style='' 的img标签
+      let regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi');
+      //给不含style="" 或 style='' 的img标签加上style=""
+      htmlstr = htmlstr.replace(regex1, '$2 style=""$3');
+      //正则匹配含有style的img标签
+      let regex2 = new RegExp("(i?)(\<img.*?style=['\"])([^\>]+\>)", 'gmi');
+      //在img标签的style里面增加css样式(这里增加的样式：display:block;max-width:100%;height:auto;border:5px solid red;)
+      htmlstr = htmlstr.replace(regex2, '$2display:block;width:100%;height:auto;$3');
+      
+      return htmlstr;
+    }
+
     handleUpload() {      
       const this_ = this;
       /*调用上传图片的封装方法*/
@@ -137,8 +160,9 @@ class RichTextEditor extends Component {
     }
     
     handleChange(value) {
+      const filterValue = this.filterHTMLTag(value);
       const { subscribeRichText } = this.props;
-      this.setState({ text: value }, () => {
+      this.setState({ text: filterValue }, () => {
         const { text } = this.state;
         subscribeRichText(text);
       });
@@ -174,13 +198,13 @@ class RichTextEditor extends Component {
                   ref="uploadInput"
                   type="file"
                   accept="image/*"
-                  style={{ width: '100px', border: 'none', visibility: 'hidden' }}
+                  style={{ width: '100%', border: 'none', visibility: 'hidden' }}
                   onChange={this.changeImageBeforeUpload.bind(this)}
                 />
               </div>
               <div style={{ textAlign: 'center', margin: '10px 0' }}>
                 {src
-                  ? <img src={src} alt="" style={{ maxWidth: '100%', height: '300px' }} />
+                  ? <img src={src} alt="" style={{ width: '100%' }} />
                   :                            <div style={{ background: '#f2f2f2', width: '100%', height: '300px' }} />}
               </div>
             </div>

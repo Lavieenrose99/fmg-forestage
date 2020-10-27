@@ -14,6 +14,32 @@ export async function getBillsListNew(payload) {
     params: payload,
   });
 }
+//快递单号接口
+export async function getExpressList(payload) {
+  return request('/api.farm/delivery/info/list', {
+    method: 'GET',
+    params: payload,
+  });
+}
+//查账接口
+export async function checkBillsList(stime, etime) {
+  return request('/api.farm/pay/bill', {
+    method: 'POST',
+    data: { time_start: stime, time_end: etime },
+  });
+}
+export async function putBillsStatus(payload) {
+  return request(`/api.farm/_order/status/${payload.ooid}/child_order/${payload.oid}`, {
+    method: 'PUT',
+    data: { status: 3 },
+  });
+}
+export async function getExpressMget(payload) {
+  return request('/api.farm/delivery/info/_mget', {
+    method: 'POST',
+    data: { ids: payload },
+  });
+}
 export async function MgetBillsList(payload) {
   return request('/api.farm/_order/_mget', {
     method: 'POST',

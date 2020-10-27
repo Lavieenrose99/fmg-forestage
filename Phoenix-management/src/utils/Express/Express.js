@@ -18,17 +18,17 @@ export const expressCompany = [
 ];
 export const expressList =  [{
   title: '订单号',
-  dataIndex: 'id',
+  dataIndex: 'order_code',
   key: 'id',
 },
 {
   title: '快递单号',
-  dataIndex: 'delivry_sheet_code',
+  dataIndex: 'delivery_sheet_code',
   key: 'delivry_sheet_code',
 },
 {
   title: '快递公司',
-  dataIndex: 'delivry_corp_name',
+  dataIndex: 'delivery_corp_name',
   key: 'delivry_corp_name',
   render: (text) => {
     const num = expressCompany.map((data) => {
@@ -39,25 +39,26 @@ export const expressList =  [{
     );
   },
 },
-{
-  title: '订单状态',
-  key: 'invoice_status',
-  dataIndex: 'invoice_status',
-  render: (text) => {
-    let t = '';
-    if (text === '1') {
-      t = '未支付';
-    } else if (text === 2) {
-      t = '待发货';
-    } else if (text === 3) {
-      t = '待收获';
-    } else if (text === 4) {
-      t = '待评价';
-    } else if (text === 5) {
-      t = '已完成';
-    }
-    return (
-      t
-    );
-  },
-}];
+// {
+//   title: '订单状态',
+//   key: 'invoice_status',
+//   dataIndex: 'invoice_status',
+//   render: (text) => {
+//     let t = '';
+//     if (text === '1') {
+//       t = '未支付';
+//     } else if (text === 2) {
+//       t = '待发货';
+//     } else if (text === 3) {
+//       t = '待收获';
+//     } else if (text === 4) {
+//       t = '待评价';
+//     } else if (text === 5) {
+//       t = '已完成';
+//     }
+//     return (
+//       t
+//     );
+//   },
+// }
+];

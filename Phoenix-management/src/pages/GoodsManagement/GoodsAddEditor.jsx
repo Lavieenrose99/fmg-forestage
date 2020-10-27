@@ -123,14 +123,14 @@ export const GoodsAddEditor = (props) => {
     title: '规格',
     key: '规格',
     children: ModelsColums,
-    ...dataGoodsName,
-  }];
+   
+  }, ...dataGoodsName];
   const detailsNameOut = [{
     title: '规格',
     key: '规格',
     children: ModelsColums,
-    ...dataGoodsNameOut,   
-  } 
+  
+  }, ...dataGoodsNameOut   
   ];
   const comfirmDelItem = (index) => {
     const data = goodsDetails;
@@ -438,10 +438,18 @@ export const GoodsAddEditor = (props) => {
         icon: <SmileOutlined style={{ color: '#108ee9' }} />,
       });
     } else {
+      const cost_price = data.cost_price * 100;
+      const reduced_price = data.reduced_price * 100;
+      const price = data.price * 100;
+      const newPrice = {
+        cost_price,
+        reduced_price,
+        price,
+      };
       const specification = spciArr[0][0];
       const picture = fileList[0].response.key;
       const specific = { specification, picture };
-      const Finaldata = Object.assign(data, specific);
+      const Finaldata = Object.assign(data, specific, newPrice);
       setGoodsDetails([...goodsDetails, Finaldata]);
       setFileList([]);
       onReset();
@@ -514,7 +522,7 @@ export const GoodsAddEditor = (props) => {
     } else if (get_way === 7) {
       get_way = 7;
     }
-    const carriage = values.carriage*100;
+    const carriage = values.carriage * 100;
     const advance_time =  moment(values.advance_time).valueOf();
     const putaway_time = moment(values.putaway_time).valueOf();
     const kind_tag = [values.kind_tag];

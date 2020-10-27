@@ -1,10 +1,13 @@
+/* eslint-disable react/prop-types */
 import { Avatar, List } from 'antd';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './NoticeList.less';
 
 const NoticeList = ({
-  data = [],
+  data = [
+    
+  ],
   onClick,
   onClear,
   title,
@@ -73,12 +76,14 @@ const NoticeList = ({
       <div className={styles.bottomBar}>
         {showClear ? (
           <div onClick={onClear}>
-            {clearText} {title}
+            {clearText} 
+            {' '}
+            {title}
           </div>
         ) : null}
         {showViewMore ? (
           <div
-            onClick={e => {
+            onClick={(e) => {
               if (onViewMore) {
                 onViewMore(e);
               }

@@ -3,49 +3,43 @@ import {
 } from 'antd';
 import React, { useState, useEffect } from 'react';
 import request from '@/utils/request';
-import qs from 'qs';
-import md5 from 'js-md5';
+import { connect } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { expressList, ApiCode } from '@/utils/Express/Express';
 import { ExpressData } from '@/utils/Express/mock_data';
+import { get } from 'lodash';
 
-const ExpressList = () => {
+const ExpressList = (props) => {
+  const { ExpressList, ExpressInfo } = props;
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [expressInfo, setExpressInfo] = useState([]);
   const [Com, setCom] = useState('');
   const [Num, setNum] = useState('');
-  const paramData = JSON.stringify({
-    com: Com,
-    num: Num,
-    from: '',
-    phone: '',
-    to: '',
-    resultv2: '0',
-    show: '0',
-    order: 'desc', 
-  });
-  const md5code = md5(`${paramData}${ApiCode.key}${ApiCode.customer}`).toLocaleUpperCase();
+
   useEffect(() => {
-    const uploadItem = {
-      customer: ApiCode.customer,
-      param: paramData,
-      sign: md5code,
-    };
-    request('/api.poll/poll/query.do', {
+    request('/api.farm/delivery/info/post', {
       method: 'POST',
-      credentials: 'omit',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+      data: {
+        delivry_corp_name: Com,
+        delivry_sheet_code: Num,
       },
-      data: qs.stringify(uploadItem),
     }).then((data) => {
-      setExpressInfo(data.data);
+      setExpressInfo(data.info.data);
     }); 
   }, [Com]);
+  useEffect(() => {
+    props.dispatch({
+      type: 'BillsListBack/fetchExpressList',
+      payload: {
+        limit: 99,
+        page: 1,
+      },
+    });
+  }, []);
 
   const checkExpressStatus = (data) => {
-    setCom(data.delivry_corp_name);
-    setNum(data.delivry_sheet_code);
+    setCom(data.delivery_corp_name);
+    setNum(data.delivery_sheet_code);
     setVisibleDrawer(true); 
   };
   const columns = [
@@ -64,7 +58,7 @@ const ExpressList = () => {
   ];
   return (
     <PageHeaderWrapper>
-      <Table columns={columns} dataSource={ExpressData} />
+      <Table columns={columns} dataSource={ExpressInfo} />
       <Drawer
         width={640}
         placement="right"
@@ -86,4 +80,10 @@ const ExpressList = () => {
 
   );
 };
-export default ExpressList;
+export default connect(({
+  BillsListBack,
+}) => ({
+  BillsListBack,
+  ExpressList: get(BillsListBack, 'ExpressList', []),
+  ExpressInfo: get(BillsListBack, 'ExpressInfos', []),
+}))(ExpressList);

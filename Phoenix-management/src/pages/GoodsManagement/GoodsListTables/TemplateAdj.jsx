@@ -161,7 +161,6 @@ const TemplateAdj = (props) => {
     const picture = fileList[0].name;
     const specific = { specification, picture };
     const Finaldata = Object.assign(data, specific, newPrice);
-    console.log(Finaldata)
     fromSpec.resetFields();
     fromSpec.setFieldsValue({
       specification: [''],

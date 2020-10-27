@@ -6,7 +6,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 class AvatarDropdown extends React.Component {
-  onMenuClick = event => {
+  onMenuClick = (event) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -62,15 +62,7 @@ class AvatarDropdown extends React.Component {
         </span>
       </HeaderDropdown>
     ) : (
-      <span className={`${styles.action} ${styles.account}`}>
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      </span>
+      <span className={`${styles.action} ${styles.account}`} />
     );
   }
 }

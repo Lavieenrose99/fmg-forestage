@@ -12,6 +12,6 @@ const proSettings = {
   },
   title: '凤鸣谷',
   pwa: false,
-  iconfontUrl: 'http://qiniu.daosuan.net/picture-1602721913000',
+  iconfontUrl: '//at.alicdn.com/t/font_1787434_aotlqr7w799.js',
 };
 export default proSettings;
