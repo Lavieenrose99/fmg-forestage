@@ -61,22 +61,35 @@ const GoodsClassModel = {
       }
     },
     * getBillslistEntity({ payload }, { call, put }) {
-      const response = yield call(MgetBillsList, payload);
+      const raw = yield call(MgetBillsList, payload);
+      const response = raw.filter((info) => {
+        return info.account_id !== 0;
+      });
       //将选出去重复后的总订单id
       const userIdSet = [...new Set(response.map((arr) => {
         return arr.account_id;
       }))];
       const fatherBills = [...new Set(response.map((arr) => {
-        return arr.test_order;
+        return { ...arr.test_order, orderfatherUni: arr.order_num };
       }))];
+      const idSetBreak = [];
       const idSet = [];
+      const fatherBillsUniBreak = fatherBills.filter((arr, index, record) => {
+        if (index !== 0) {
+          //将每一次的id存入数组当中
+          idSetBreak.push(record[index - 1].id); 
+        }
+        return  (
+          idSetBreak.indexOf(arr.id) === -1 && arr.status === 1
+        );
+      });
       const fatherBillsUni = fatherBills.filter((arr, index, record) => {
         if (index !== 0) {
           //将每一次的id存入数组当中
           idSet.push(record[index - 1].id); 
         }
         return  (
-          idSet.indexOf(arr.id) === -1
+          idSet.indexOf(arr.id) === -1 && arr.status === 2
         );
       });
       const accountInfo = yield call(MgetAccountList, userIdSet);
@@ -90,6 +103,10 @@ const GoodsClassModel = {
       yield put({
         type: 'saveAccountList',
         payload: account,
+      });
+      yield put({
+        type: 'saveAccountMainListBreak',
+        payload: fatherBillsUniBreak,
       });
       yield put({
         type: 'saveAccountMainList',
@@ -119,7 +136,9 @@ const GoodsClassModel = {
       });
     },
     * fetchCheckList({ payload }, { call, put }) {
-      const response = yield call(checkBillsList, payload.stime, payload.etime);
+      const responseRaw = yield call(checkBillsList, payload.stime, payload.etime);
+      const { data } = responseRaw; 
+      const response = data;
       const userIdSet = [...new Set(response.map((arr) => {
         return arr.account_id;
       }))];
@@ -167,6 +186,12 @@ const GoodsClassModel = {
       return {
         ...state,
         ChildGoods: payload,
+      };
+    },
+    saveAccountMainListBreak(state, { payload }) {
+      return {
+        ...state,
+        MainListBreak: payload,
       };
     },
     saveAccountMainList(state, { payload }) {

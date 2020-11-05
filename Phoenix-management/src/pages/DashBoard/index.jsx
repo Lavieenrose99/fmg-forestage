@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable prefer-const */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react';
@@ -5,15 +6,13 @@ import {
   Statistic, Row, Col, Button, Card, Divider 
 } from 'antd';
 import moment from 'moment';
-import { createFromIconfontCN } from '@ant-design/icons';
 import { get } from 'lodash';
 import { connect } from 'umi';
+import { IconFont } from '@/utils/DataStore/icon_set.js';
 import DateLineChart from '../Charts/test_charts';
 import './index.less';
 
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1787434_aotlqr7w799.js',
-});
+
 const CardStyle = {
   height: '12vh',
 };
@@ -72,7 +71,7 @@ const StatisticPage = (props) => {
           <Card bordered bodyStyle={CardStyle}>
             <Statistic
               title="总销售额"
-              value={allBuys}
+              value={parseInt(allBuys).toFixed(2)}
               prefix={<IconFont type="iconfenzu" />}
             />
           </Card>

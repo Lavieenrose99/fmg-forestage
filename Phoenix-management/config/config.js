@@ -160,6 +160,20 @@ export default defineConfig({
               }
               
             ],
+          },          
+          {
+            path: '/page/study',
+            name: '研学模块',
+            icon: 'aim',
+            routes: [
+              {
+                path: '/page/study/list',
+                name: '课程列表',
+                icon: 'setting',
+                component: './Course/course_list',
+              }
+             
+            ],
           },
           {
             path: '/page/test',

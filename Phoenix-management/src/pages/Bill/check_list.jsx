@@ -1,13 +1,22 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable radix */
+/* eslint-disable no-magic-numbers */
 import React from 'react';
 import {
-  Table, Input, Button, Space, Tag
+  Table, Input, Button, Space, Tag, DatePicker, Modal
 } from 'antd';
 import { connect } from 'umi';
 import { get } from 'lodash';
+import request from '@/utils/request';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined, StopTwoTone, DownloadOutlined, 
+  ExclamationCircleOutlined 
+} from '@ant-design/icons';
+import './check_list.less';
 
+const { RangePicker } = DatePicker;
 @connect(({ BillsListBack }) => ({
   checkList: get(BillsListBack, 'cBillsList', []),
   cAccount: get(BillsListBack, 'cAccount', []),
@@ -18,6 +27,8 @@ class CheckList extends React.Component {
     searchedColumn: '',
     stime: 0,
     etime: Date.parse(new Date()) / 1000,
+    st: '',
+    et: '',
   };
 
   componentDidMount() {
@@ -87,11 +98,67 @@ class CheckList extends React.Component {
       searchedColumn: dataIndex,
     });
   };
-
+  
   handleReset = (clearFilters) => {
     clearFilters();
     this.setState({ searchText: '' });
   };
+
+  filterTimePicker = (date) => {
+    const start = date[0]._d;
+    const end = date[1]._d;
+    this.setState({
+      st: start,
+      et: end,
+    });
+  }
+
+  setTimeRegion = () => {
+    const {
+      st, et, 
+    } = this.state; 
+    this.props.dispatch({
+      type: 'BillsListBack/fetchCheckList',
+      payload: { stime: Date.parse(st) / 1000, etime: Date.parse(et) / 1000 }, 
+    });
+  }
+
+  onResetInfo =() => {
+    const { stime, etime } = this.state; 
+    this.props.dispatch({
+      type: 'BillsListBack/fetchCheckList',
+      payload: { stime, etime }, 
+    });
+  }
+
+  onSureDown = () => {
+    const {
+      st,
+    } = this.state;
+    if (st === '') {
+      Modal.error({
+        title: '凤鸣谷',
+        icon: <ExclamationCircleOutlined />,
+        content: '请设定对账单时间',
+      });
+    } else {
+      Modal.confirm({
+        title: '凤鸣谷',
+        icon: <ExclamationCircleOutlined />,
+        content: '确认下载吗？',
+        okText: '确认',
+        onOk: () => { this.onSubmit(); },
+        cancelText: '取消',
+      });
+    }
+  }
+
+  onSubmit =() => {
+    const {
+      st, et, 
+    } = this.state; 
+    window.location.href = `https://api.fmg.net.cn/pay/bill/download/${Date.parse(st) / 1000}/${Date.parse(et) / 1000}`;
+  }
 
   render() {
     const { checkList, cAccount }  = this.props;
@@ -104,7 +171,7 @@ class CheckList extends React.Component {
         ...this.getColumnSearchProps('out_trade_no'),
       },
       {
-        title: '快递单号',
+        title: '微信支付单号',
         dataIndex: 'transaction_id',
         key: 'transaction_id',
         width: '20%',
@@ -117,16 +184,16 @@ class CheckList extends React.Component {
         width: '8%',
         ...this.getColumnSearchProps('account_id'),
         render: (text) => {
-          const username = cAccount.length > 0 ? cAccount.filter((info) => {
-            return info.account_id === text;
-          })[0].nickname : null;
+          const username = cAccount.find((acc) => acc.account_id === text) 
+            ? cAccount.find((acc) => acc.account_id === text).nickname
+            : '账户注销';
           return (
             username
           );
         },
       },
       {
-        title: '订单状态',
+        title: '支付状态',
         dataIndex: 'trade_state',
         width: '8%',
         key: 'trade_state',
@@ -139,7 +206,7 @@ class CheckList extends React.Component {
         },
       },      
       {
-        title: '订单总额',
+        title: '支付总额',
         width: '8%',
         dataIndex: 'total_fee',
         key: 'trade_state',
@@ -157,11 +224,12 @@ class CheckList extends React.Component {
           const updateTimeStr = JSON.stringify(updateTime);
           const dateTime = [];
           for (let i = 0; i < updateTimeStr.length; i++) {
-            if ((i + 1) === 4 || (i + 1) === 6) {
+            if ((i + 1) === 4 || (i + 1) === 8 || (i + 1) === 6) {
               dateTime.push(`${updateTimeStr[i]}/`);
-            } else if (i === 7) {
+            } else if (i === 8) {
               dateTime.push(' ');
-            } else if (((i + 1) % 2 === 0) && ((i + 1) > 8)
+              dateTime.push(updateTimeStr[i]);
+            } else if (((i + 1) % 2 === 0) && ((i + 1) > 9)
             && ((i + 1) < updateTimeStr.length)) {
               dateTime.push(`${updateTimeStr[i]}:`);
             } else {
@@ -179,7 +247,50 @@ class CheckList extends React.Component {
       }
 
     ];
-    return <Table columns={columns} dataSource={this.props.checkList} />;
+    return (
+      <>
+        <div className="check-list-header-containter">
+          <Button
+            type="primary"
+            style={{
+              margin: 10,
+            }}
+            onClick={() => { this.setTimeRegion(); }}
+            icon={<SearchOutlined />}
+          >
+            搜索
+          </Button>
+          <RangePicker
+            format="YYYY-MM-DD HH:mm:ss"
+            showTime 
+            onChange={this.filterTimePicker}
+          />
+      
+          <Button
+            onClick={() => { this.onResetInfo(); }}
+            type="ghost"
+            style={{
+              margin: 10,
+            }}
+            icon={<StopTwoTone />}
+          >
+            全部
+          </Button>
+          <Button
+            onClick={() => { this.onSureDown(); }}
+            type="ghost"
+            style={{
+              marginLeft: 30,
+            }}
+            icon={<DownloadOutlined />}
+          >
+            下载对账表
+          </Button>
+          
+        </div>
+        <Table columns={columns} dataSource={this.props.checkList} />
+      </>
+    );
   }
 }
 

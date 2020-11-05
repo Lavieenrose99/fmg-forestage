@@ -1,24 +1,29 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-expressions */
 import React, { useState, useEffect, useRef } from 'react';
 import { get } from 'lodash';
 import { connect } from 'umi';
 import moment from 'moment';
 import {
-  Table, Input, InputNumber,
-  Form, PageHeader, Space, Modal, Select, 
-  Button, Dropdown, Badge, Menu
+  Table, Input, DatePicker,
+  Form, PageHeader, Space, Select, 
+  Button, Badge, Tabs
 } from 'antd';
-import request from '@/utils/request';
 import {
   RedoOutlined, MinusCircleTwoTone, 
-  PlusCircleTwoTone, DownOutlined 
+  PlusCircleTwoTone
 } from '@ant-design/icons';
 import DetailsDrawer  from '@/utils/Drawer/details_drawer.jsx';
 import DelieverySavingDrawer from '@/utils/Drawer/delivery_saving.jsx';
+import { TimeFilter, StatusSet } from '@/utils/DataStore/bills_data_set.js';
+import { IconFont } from '@/utils/DataStore/icon_set.js';
+import './bills_list.less';
 import PropTypes from 'prop-types';
 
 const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 const { Option } = Select;
+const { RangePicker } = DatePicker;
+const { TabPane } = Tabs;
 const layout = {
   labelCol: {
     span: 7,
@@ -27,33 +32,37 @@ const layout = {
 
 const BillsList = (props) => {
   const {
-    List, Address, Account, MainList, ChildGoods,
+    List, MainListBreak, Address, Account, MainList, ChildGoods,
   } = props;
   const [form] = Form.useForm();
   const [formExpress] = Form.useForm();
   const formRef = useRef(null);
   const [changeVisible, setChangeVisible] = useState(false);
+  const [account, setAccount] = useState(Account);
   const [showDrawer, setshowDrawer] = useState(false);
   const [data, setData] = useState([]);
   const [selectName, setSelectName] = useState('');
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [childOrderDetails, setChildOrderDetails] = useState([]);
-  const [selectAccId, setSelectAccID] = useState('');
+  const [selectAccGname, setSelectAccGname] = useState('');
+  const [selectAccSta, setSelectAccSta]  = useState('');
   const [orderId, setOrderId] = useState('');
   const [editingKey, setEditingKey] = useState('');
   const [childGoodsIdArr, setChildGoodsIdArr] = useState([]);
   const [childUnionInfo, setChildUnionInfo] = useState([]);
   const [childrenDrawer, setChildrenDrawer]  = useState(false);
   const [childBillsId, setChildBillsId] = useState({});
-  // const time = new Date().getTime();
-  // const paraData = JSON.stringify({ sendAddr: `${mockAddress.detail}` });
-  // const md5Code = md5(`${paraData}${  
-  //   time}${ApiCode.key}${ApiCode.secret}`).toLocaleUpperCase();
-  const MainListColum = MainList.map((arr, index) => {
+  const MainListColumUni = MainList.map((arr, index) => {
     return {
       ...arr, key: index,
     };
   });
+  const MainListColumBreak = MainListBreak.map((arr, index) => {
+    return {
+      ...arr, key: index,
+    };
+  });
+
   const onExpand = (_, record) => {
     const ChildOrders = List.filter((info) => {
       return info.test_order.id === record.id;
@@ -62,11 +71,13 @@ const BillsList = (props) => {
     });
     setSelectedOrder(ChildOrders);
   };
+
   const onExpandChild = (_, record) => {
     setChildOrderDetails(record.order_detail);
     const ChildGoodsId = record.order_detail.map((info) => {
       return info.goods_id;
     });
+
     const ChildGoodsArr = record.order_detail.map((info) => {
       return info.goods_specification_id;
     });
@@ -87,6 +98,37 @@ const BillsList = (props) => {
     });
     setChildUnionInfo(UnionGoods);
   }, [ChildGoods]);
+  const rawTimeSelector = (info) => {
+    const reduce = info;
+    props.dispatch({
+      type: 'BillsListBack/fetchBillsList',
+      payload: {
+        page: 1,
+        limit: 99,
+        username: selectName,
+        name: selectAccGname,
+        status: selectAccSta,
+        start_time: (Date.parse(new Date()) / 1000  - reduce),
+        end_time: Date.parse(new Date()) / 1000,
+      },
+    });
+  };
+  const filterTimePicker = (date) => {
+    const start = date[0]._d;
+    const end = date[1]._d;
+    props.dispatch({
+      type: 'BillsListBack/fetchBillsList',
+      payload: {
+        page: 1,
+        limit: 99,
+        username: selectName,
+        name: selectAccGname,
+        status: selectAccSta,
+        start_time: Date.parse(start) / 1000,
+        end_time: Date.parse(end) / 1000,
+      },
+    });
+  };
   const expandedTestRowRender = () => {
     const columns = [
       {
@@ -291,13 +333,17 @@ const BillsList = (props) => {
   useEffect(() => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
-      payload: { page: 1, limit: 99 },
+      payload: {
+        page: 1, limit: 99, 
+      },
     });
   }, []);
-
+  useEffect(() => {
+    setAccount(Account);
+  }, [Account]);
   const reloadSelector = () => {
     setSelectName('');
-    setSelectAccID('');
+    setSelectAccGname('');
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
@@ -307,14 +353,19 @@ const BillsList = (props) => {
     });
   };
   const selectUserName = (e) => {
+    const auId = account.filter((arr) => {
+      return arr.nickname === e.target.value;
+    }).length !== 0
+      ? account.filter((arr) => {
+        return arr.nickname === e.target.value;
+      })[0].account_id : null;
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
         page: 1,
         limit: 99,
-        username: 
-        e.target.value,
-        account_id: selectAccId, 
+        author_id: auId,
+        name: selectAccGname, 
       },
     });
     setSelectName(e.target.value);
@@ -323,10 +374,27 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1, limit: 99, username: selectName, account_id: e.target.value, 
+        page: 1,
+        limit: 99,
+        username: selectName,
+        name: e.target.value,
+        status: selectAccSta,
       },
     });
-    setSelectAccID(e.target.value);
+    setSelectAccGname(e.target.value);
+  };
+  const selectBillsStatus = (e) => {
+    props.dispatch({
+      type: 'BillsListBack/fetchBillsList',
+      payload: {
+        page: 1,
+        limit: 99,
+        username: selectName,
+        account_id: selectAccGname,
+        status: e,
+      },
+    });
+    setSelectAccSta(e);
   };
   const clickShow = () => {
     const show = showDrawer;
@@ -364,7 +432,13 @@ const BillsList = (props) => {
     {
       title: '订单号',
       dataIndex: 'order_num',
-      key: 'order_num',
+      key: 1,
+      width: '20%',
+    },
+    {
+      title: '订单号',
+      dataIndex: 'orderfatherUni',
+      key: 2,
       width: '20%',
     },
     {
@@ -373,16 +447,16 @@ const BillsList = (props) => {
       key: 'order_num',
       width: '8%',
       render: (text) => {
-        const username = Account.length !== 0 ? Account.filter((info) => {
-          return info.account_id === text;
-        })[0].nickname : null;
+        const username = account.find((acc) => acc.account_id === text) 
+          ? account.find((acc) => acc.account_id === text).nickname
+          : '无';
         return (
           username
         );
       },
     },
     {
-      title: '订单状态',
+      title: '订单类型',
       dataIndex: 'status',
       key: 'order_num',
       width: '8%',
@@ -475,9 +549,13 @@ const BillsList = (props) => {
       },
     }
   ];
-  const mergedColumns = columns.map((col) => {
-    return col;
+  const mergedColumnsUni = columns.filter((col) => {
+    return col.key !== 1;
   });
+  const mergedColumns = columns.filter((col) => {
+    return col.key !== 2;
+  });
+  
   return (
     <Form form={form} component={false}>
       <PageHeader
@@ -502,15 +580,37 @@ const BillsList = (props) => {
                   </span>
                   <span className="good-selector-items">
                     <span>
-                      订单号: 
+                      商品名称: 
                     </span>
                     <Input
                       className="goods-selector-name" 
-                      value={selectAccId}
+                      value={selectAccGname}
                       onChange={selectAccountId}
-                      placeholder="请输入订单号"
+                      placeholder="请输入商品名称"
                     />
                   </span>
+                  <span className="good-selector-items">
+                    <span>
+                      订单状态: 
+                    </span>
+                    <Select
+                      className="goods-selector-name" 
+                      placeholder="请选择订单状态"
+                      onChange={selectBillsStatus}
+                    >
+                      {
+                        StatusSet.map((info) => {
+                          return <Option value={info.value}>
+                            {
+                            info.title
+                          }
+
+                          </Option>;
+                        })
+                      }
+                    </Select>
+                  </span>
+
                   <Button
                     type="primary"
                     onClick={reloadSelector}
@@ -520,27 +620,89 @@ const BillsList = (props) => {
                   </Button>
                 </Space>
               </div>
+              <div className="bills-date-selector">
+                <Select className="span-filter" defaultValue={TimeFilter[0].value} onChange={rawTimeSelector}>
+                  {
+                    TimeFilter.map((info) => {
+                      return  <Option value={info.value}>
+                        {
+                     info.time 
+}
+                      </Option>;
+                    })
+                  }
+                </Select>
+                <span>
+                  下单时间: 
+                </span>
+                <RangePicker
+                  className="span-name-item"
+                  format="YYYY-MM-DD HH:mm:ss"
+                  showTime 
+                  onChange={filterTimePicker}
+                />
+              </div>
             </div>
-            
-            <Table
-              bordered
-              expandable={{
-                expandedRowRender,
-                defaultExpandAllRows: false,  
-                expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
-                  <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                ) : (
-                  <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                )),
-                onExpand,
-              }}
-              dataSource={MainListColum}
-              columns={mergedColumns}
-              rowClassName="editable-row"
-              pagination={{
-                onChange: cancel,
-              }}
-            />
+            <Tabs defaultActiveKey="1" centered>
+              <TabPane
+                key="1"
+                tab={
+                  <span>
+                    <IconFont type="iconhebing" />
+                    未拆分
+                  </span>
+              }
+              >
+                <Table
+                  bordered
+                  expandable={{
+                    expandedRowRender,
+                    defaultExpandAllRows: false,  
+                    expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
+                      <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                    ) : (
+                      <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                    )),
+                    onExpand,
+                  }}
+                  dataSource={MainListColumUni}
+                  columns={mergedColumnsUni}
+                  rowClassName="editable-row"
+                  pagination={{
+                    onChange: cancel,
+                  }}
+                />
+              </TabPane>
+              <TabPane
+                tab={
+                  <span>
+                    <IconFont type="iconfenli" />
+                    已拆分
+                  </span>
+              }
+                key="2"
+              >
+                <Table
+                  bordered
+                  expandable={{
+                    expandedRowRender,
+                    defaultExpandAllRows: false,  
+                    expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
+                      <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                    ) : (
+                      <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                    )),
+                    onExpand,
+                  }}
+                  dataSource={MainListColumBreak}
+                  columns={mergedColumns}
+                  rowClassName="editable-row"
+                  pagination={{
+                    onChange: cancel,
+                  }}
+                />
+              </TabPane>
+            </Tabs>
         
           </>
 }
@@ -572,6 +734,7 @@ export default  connect(({
   BillsListBack,
 }) => ({
   List: get(BillsListBack, 'List', []),
+  MainListBreak: get(BillsListBack, 'MainListBreak', []),
   MainList: get(BillsListBack, 'MainList', []),
   Details: get(BillsListBack, 'Details', {}),
   Address: get(BillsListBack, 'Address', {}),

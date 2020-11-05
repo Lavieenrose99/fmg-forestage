@@ -72,7 +72,7 @@ export const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
   const [formAdj]  = Form.useForm();
-  const QINIU_SERVER = 'http://upload-z2.qiniup.com';
+  const QINIU_SERVER = 'https://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
