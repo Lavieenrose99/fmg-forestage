@@ -171,6 +171,12 @@ export default defineConfig({
                 name: '课程列表',
                 icon: 'setting',
                 component: './Course/course_list',
+              },
+              {
+                path: '/page/study/tags',
+                name: '课程标签',
+                icon: 'setting',
+                component: './Course/course_tags_setting',
               }
              
             ],

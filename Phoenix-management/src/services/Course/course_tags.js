@@ -1,10 +1,18 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-05 14:47:25
+ * @LastEditTime: 2020-11-09 22:04:50
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /fmg-management/Phoenix-management/src/services/Course/course_tags.js
+ */
 import request from '@/utils/request';
 //研学类型api
 export async function setCourseClassTags(payload) {
   return request('/api.farm/study/course/kind', {
     method: 'POST',
     data: {
-      name: payload.name,
+      name: payload,
     },
   });
 }
@@ -40,7 +48,7 @@ export async function setCourseTypeTags(payload) {
   return request('/api.farm/study/course/tag', {
     method: 'POST',
     data: {
-      name: payload.name,
+      name: payload,
     },
   });
 }
