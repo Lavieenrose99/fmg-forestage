@@ -156,7 +156,7 @@ const CourseList = (props) => {
                           Modal.confirm({
                             mask: false,
                             title: '凤鸣谷',
-                            content: '确认创建标签吗',
+                            content: '确认删除标签吗',
                             okText: '确认',
                             cancelText: '取消',
                             onOk: () => { 
@@ -209,7 +209,7 @@ const CourseList = (props) => {
                           Modal.confirm({
                             mask: false,
                             title: '凤鸣谷',
-                            content: '确认创建标签吗',
+                            content: '确认删除标签吗',
                             okText: '确认',
                             cancelText: '取消',
                             onOk: () => { 

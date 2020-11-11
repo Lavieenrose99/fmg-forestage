@@ -16,9 +16,10 @@ const CourseList = (props) => {
   useEffect(() => {
     props.dispatch({
       type: 'fmgCourse/fetchCourseList',
-      payload: { limit: 10, page: 1 },
+      payload: { limit: 99, page: 1 },
     });
   }, []);
+  //console.log(props)
   return (
     <>
       <Row gutter={[16, 80]} wrap>
