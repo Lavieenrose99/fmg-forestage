@@ -205,7 +205,7 @@ class RichTextEditor extends Component {
               <div style={{ textAlign: 'center', margin: '10px 0' }}>
                 {src
                   ? <img src={src} alt="" style={{ width: '100%' }} />
-                  :                            <div style={{ background: '#f2f2f2', width: '100%', height: '300px' }} />}
+                  :  <div style={{ background: '#f2f2f2', width: '100%', height: '300px' }} />}
               </div>
             </div>
           </Modal>

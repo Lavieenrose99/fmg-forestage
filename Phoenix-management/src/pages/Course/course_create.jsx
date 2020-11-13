@@ -72,17 +72,15 @@ export const GoodsAddEditor = (props) => {
   } = props;
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
-  const [formAdj]  = Form.useForm();
   const QINIU_SERVER = 'https://upload-z2.qiniup.com';
   const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
-  const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
   const formRef = useRef(null);
-  const formAdjRef = useRef(null);
-  const [goodsDetails, setGoodsDetails] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
   const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
+  const [metionThings, setMetionThings] = useState(localStorage.getItem('MetionStaff'));
+  const [courseArrange, setCourseArrange] = useState(localStorage.getItem('arrange'));
   const [handleVisible, setHandleVisible] = useState(false);
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [basicInfoOfCourse, setBasicInfoOfCourse] = useState({});
@@ -90,15 +88,12 @@ export const GoodsAddEditor = (props) => {
   const [is_put, setIs_put] = useState(true);
   const [courseInfo, setCourseInfo] = useState({});
   const [session, SetSession] = useState([]);
-
-  const handlePreview = (file) => {
-    setPreviewImage(file.url || file.thumbUrl);
-    setPreviewVisible(true);
-  };
     
   const onResetInfo = () => {
     localStorage.removeItem('FileList');
     localStorage.removeItem('storage');
+    localStorage.removeItem('arrange');
+    localStorage.removeItem('MetionStaff');
     localStorage.removeItem('RichText'); 
     setFileList([]);
     setGoodsDetails('');
@@ -149,6 +144,14 @@ export const GoodsAddEditor = (props) => {
     localStorage.setItem('RichText', text);
     setRichTextContent(text);
   };
+  const subscribeMetionStaff = (text) => {
+    localStorage.setItem('MetionStaff', text);
+    setMetionThings(text);
+  };
+  const subscribeCourseArrange = (text) => {
+    localStorage.setItem('arrange', text);
+    setCourseArrange(text);
+  };
     
   useEffect(() => {
     fromSpec.setFieldsValue({
@@ -185,30 +188,25 @@ export const GoodsAddEditor = (props) => {
   
   useEffect(() => {
     subscriptions();
-    if (formAdjRef.current) {
-      formRef.current.setFieldsValue({
-        name: (storeageGoods.name ?? ''),
-        small_name: storeageGoods.small_name,
-        describe: storeageGoods.describe,
-        feature: storeageGoods.feature,
-        crowd: storeageGoods.crowd,
-        attention: storeageGoods.attention,
-        plan: storeageGoods.plan,
-        place_tag: storeageGoods.place_tag,
-        course_tag: storeageGoods.course_tag,
-        kind: storeageGoods.kind,
-        time: storeageGoods.time,
-        begin_time: moment(moment(storeageGoods.advance_time)
-          .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
-        end_time: moment(moment(storeageGoods.putaway_time)
-          .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
-      });
-    }
+    formRef.current.setFieldsValue({
+      name: (storeageGoods.name ?? ''),
+      small_name: storeageGoods.small_name,
+      describe: storeageGoods.describe,
+      feature: storeageGoods.feature,
+      crowd: storeageGoods.crowd,
+      attention: storeageGoods.attention,
+      plan: storeageGoods.plan,
+      place_tag: storeageGoods.place_tag,
+      course_tag: storeageGoods.course_tag,
+      kind: storeageGoods.kind,
+      time: storeageGoods.time,
+      begin_time: moment(moment(storeageGoods.advance_time)
+        .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
+      end_time: moment(moment(storeageGoods.putaway_time)
+        .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
+    });
   }, []);
  
-  const subGoodsInfos = (subValues) => {
-    setCurrent(current + 1);
-  };
   const onFinish = (values) => {
     const begin_time =  moment(values.begin_time).valueOf();
     const end_time = moment(values.end_time).valueOf();
@@ -217,8 +215,18 @@ export const GoodsAddEditor = (props) => {
     const course_tag = [values.course_tag];
     const cover = fileList[0].response.key;
     const detail = richTextContent;
+    const attention = metionThings;
+    const plan = courseArrange;
     const basicInfoRaw = {
-      begin_time, end_time, kind, place_tag, cover, detail, course_tag, 
+      begin_time,
+      end_time,
+      kind,
+      place_tag,
+      cover,
+      detail,
+      course_tag,
+      attention,
+      plan,
     };
     const basicInfoUnion = Object.assign(values, basicInfoRaw);
     setBasicInfoOfCourse(basicInfoUnion);
@@ -254,7 +262,6 @@ export const GoodsAddEditor = (props) => {
         breadcrumb={{ routes }}
         title="创建课程"
         footer={<Steps
-            //type="navigation"
           current={current}
           className="site-navigation-steps"
         >
@@ -336,24 +343,6 @@ export const GoodsAddEditor = (props) => {
             <Row>
               <Col offset={2} span={17}>
                 <Form.Item
-                  name="attention"
-                  label="注意事项"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <TextArea
-                    placeholder="学员在上课前应该了解的准备工作"
-                  />
-                </Form.Item>
-              </Col>
-              
-            </Row>
-            <Row>
-              <Col offset={2} span={17}>
-                <Form.Item
                   name="crowd"
                   label="适合人群"
                   rules={[
@@ -368,23 +357,6 @@ export const GoodsAddEditor = (props) => {
                 </Form.Item>
               </Col>
               
-            </Row>
-            <Row>
-              <Col offset={2} span={17}>
-                <Form.Item
-                  name="plan"
-                  label="课程安排"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <TextArea
-                    placeholder="简单描述课程的基本安排"
-                  />
-                </Form.Item>
-              </Col>
             </Row>
             <Row gutter={[20, 5]}>
               <Col offset={4} span={5}>
@@ -451,11 +423,11 @@ export const GoodsAddEditor = (props) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row>
-              <Col offset={4} span={5}>
+            <Row justify="end">
+              <Col offset={3} span={7}>
                 <Form.Item
                   name="begin_time"
-                  label="课程开始时间"
+                  label="开始时间"
                   rules={[
                     {
                       required: true,
@@ -467,10 +439,10 @@ export const GoodsAddEditor = (props) => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={7} pull={2}>
                 <Form.Item
                   name="end_time"
-                  label="课程结束时间"
+                  label="结束时间"
                   rules={[
                     {
                       required: true,
@@ -482,10 +454,10 @@ export const GoodsAddEditor = (props) => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={7} pull={4}>
                 <Form.Item
                   name="time"
-                  label="实际课时"
+                  label="课程天数"
                   rules={[
                     {
                       required: true,
@@ -537,6 +509,20 @@ export const GoodsAddEditor = (props) => {
             <Divider>编辑课程详情</Divider>
             <Form.Item {...EditorLayout}>
               <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
+            </Form.Item>
+            <Divider>编辑注意事项</Divider>
+            <Form.Item {...EditorLayout}>
+              <RichTextEditor
+                subscribeRichText={subscribeMetionStaff} 
+                defaultText={metionThings}
+              />
+            </Form.Item>
+            <Divider>编辑课程安排</Divider>
+            <Form.Item {...EditorLayout}>
+              <RichTextEditor
+                subscribeRichText={subscribeCourseArrange} 
+                defaultText={courseArrange}
+              />
             </Form.Item>
             <div style={{ textAlign: 'center' }}>
               <Space size="large">
