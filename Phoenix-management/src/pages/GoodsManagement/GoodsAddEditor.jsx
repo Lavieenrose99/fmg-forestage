@@ -21,6 +21,7 @@ import {
 } from '@/utils/DataStore/data_goods';
 import PropTypes from 'prop-types';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
+import { filterHTMLTag } from '../../utils/adjust_picture';
 import '../../style/GoodsAddEditor.less';
 
 const routes = [
@@ -530,7 +531,7 @@ export const GoodsAddEditor = (props) => {
     const sale_tag = [values.sale_tag];
     const cover = fileList[0].response.key;
     const view = fileVidoList[0].response.key;
-    const detail = richTextContent;
+    const detail = filterHTMLTag(richTextContent);
     const pictures = fileListAlot.map((arrFiles, index) => {
       return { picture: arrFiles.judege, order: index };
     });

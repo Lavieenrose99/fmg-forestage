@@ -129,26 +129,10 @@ class RichTextEditor extends Component {
       const range = quill.getSelection();
       const index = range ? range.index : 0;
       quill.insertEmbed(index, 'image', url, Quill.sources.USER);//插入图片
-      quill.setSelection(index + 1);//光标位置加1 
-    }
-
-    filterHTMLTag(htmlstr) {
-     	//正则匹配所有img标签
-      //var regex0 = new RegExp("(i?)(\<img)([^\>]+\>)","gmi");
-      //正则匹配不含style="" 或 style='' 的img标签
-      let regex1 = new RegExp("(i?)(\<img)(?!(.*?style=['\"](.*)['\"])[^\>]+\>)", 'gmi');
-      //给不含style="" 或 style='' 的img标签加上style=""
-      htmlstr = htmlstr.replace(regex1, '$2 style=""$3');
-      //正则匹配含有style的img标签
-      let regex2 = new RegExp("(i?)(\<img.*?style=['\"])([^\>]+\>)", 'gmi');
-      //在img标签的style里面增加css样式(这里增加的样式：display:block;max-width:100%;height:auto;border:5px solid red;)
-      htmlstr = htmlstr.replace(regex2, '$2display:block;width:100%;height:auto;$3');
-      
-      return htmlstr;
+      quill.setSelection(index + 2);//光标位置加1 
     }
 
     handleUpload() {      
-      const this_ = this;
       /*调用上传图片的封装方法*/
       if (!this.state.file) {
         alert('请选择图片！！');
@@ -160,7 +144,8 @@ class RichTextEditor extends Component {
     }
     
     handleChange(value) {
-      const filterValue = this.filterHTMLTag(value);
+      console.log(value);
+      const filterValue = value;
       const { subscribeRichText } = this.props;
       this.setState({ text: filterValue }, () => {
         const { text } = this.state;

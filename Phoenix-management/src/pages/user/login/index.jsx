@@ -3,7 +3,6 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { history, connect } from 'umi';
-import QRCode from 'qrcode.react'
 import request from '@/utils/request';
 import LoginForm from './components/Login';
 import logo from '../../../../public/favicon.png';
@@ -35,7 +34,6 @@ const Login = (props) => {
       protocol,
       hostname,
     } = window.location;
-    console.log(port,protocol,hostname)
     if (values.userName === 'admin' && values.password === '123') {
       message.loading('加载中！！！');
       request('/api.farm/account/login/web_login', {
