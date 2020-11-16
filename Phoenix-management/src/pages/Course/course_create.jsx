@@ -13,7 +13,6 @@ import { get } from 'lodash';
 import React, {
   useState, useEffect, useRef
 } from 'react';
-import FormItem from 'antd/lib/form/FormItem';
 import { connect } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
@@ -23,6 +22,7 @@ import {
 import { IconFont } from '@/utils/DataStore/icon_set.js';
 import PropTypes from 'prop-types';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
+import { filterHTMLTag } from '../../utils/adjust_picture';
 import '../../style/GoodsAddEditor.less';
   
 const routes = [
@@ -96,7 +96,9 @@ export const GoodsAddEditor = (props) => {
     localStorage.removeItem('MetionStaff');
     localStorage.removeItem('RichText'); 
     setFileList([]);
-    setGoodsDetails('');
+    setCourseArrange('');
+    setCourseInfo('');
+    setRichTextContent('');
     form.resetFields();
     // eslint-disable-next-line no-restricted-globals
     location.reload(true);
@@ -201,9 +203,9 @@ export const GoodsAddEditor = (props) => {
       kind: storeageGoods.kind,
       time: storeageGoods.time,
       begin_time: moment(moment(storeageGoods.advance_time)
-        .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
+        .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
       end_time: moment(moment(storeageGoods.putaway_time)
-        .format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss'),
+        .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
     });
   }, []);
  
@@ -214,9 +216,9 @@ export const GoodsAddEditor = (props) => {
     const place_tag = [values.place_tag];
     const course_tag = [values.course_tag];
     const cover = fileList[0].response.key;
-    const detail = richTextContent;
-    const attention = metionThings;
-    const plan = courseArrange;
+    const detail = filterHTMLTag(richTextContent);
+    const attention = filterHTMLTag(metionThings);
+    const plan = filterHTMLTag(courseArrange);
     const basicInfoRaw = {
       begin_time,
       end_time,
@@ -380,7 +382,7 @@ export const GoodsAddEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={5} pull={1}>
                 <Form.Item
                   name="course_tag"
                   label="课程标签"
@@ -401,7 +403,7 @@ export const GoodsAddEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={5} pull={2}>
                 <Form.Item
                   name="kind"
                   label="课程种类"
@@ -423,38 +425,8 @@ export const GoodsAddEditor = (props) => {
                 </Form.Item>
               </Col>
             </Row>
-            <Row justify="end">
-              <Col offset={3} span={7}>
-                <Form.Item
-                  name="begin_time"
-                  label="开始时间"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <DatePicker
-                    showTime
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={7} pull={2}>
-                <Form.Item
-                  name="end_time"
-                  label="结束时间"
-                  rules={[
-                    {
-                      required: true,
-                    }
-                  ]}
-                >
-                  <DatePicker
-                    showTime
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={7} pull={4}>
+            <Row>
+              <Col span={4} offset={4} style={{ paddingLeft: 10 }}>
                 <Form.Item
                   name="time"
                   label="课程天数"
@@ -467,6 +439,39 @@ export const GoodsAddEditor = (props) => {
                   <InputNumber />
                 </Form.Item>
               </Col>
+              <Col span={7} pull={1}>
+                <Form.Item
+                  name="begin_time"
+                  label="开始时间"
+                  rules={[
+                    {
+                      required: true,
+                    }
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={7} pull={3}>
+                <Form.Item
+                  name="end_time"
+                  label="结束时间"
+                  rules={[
+                    {
+                      required: true,
+                    }
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm"
+                  />
+                </Form.Item>
+              </Col>
+             
             </Row>
             
             <Row>

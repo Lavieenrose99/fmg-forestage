@@ -460,23 +460,32 @@ class GoodsList extends React.Component {
               )}
             />
             <Column
+              width="20%"
               title="操作"
               key="index"
               render={(_, text, index) => (
                 <Space size="middle" key={index}>
-                  <a onClick={() => this.showModal(text)} key={text}>基本信息</a> 
+                  <Tag
+                    onClick={() => this.showModal(text)} 
+                    key={text}
+                    color="#108ee9"
+                  >
+                    基本信息
+                  </Tag> 
                   
-                  <a onClick={() => this.showModalTem(
-                    text.specification,
-                    text.id,
-                    text.template,
-                    text.template_id,
-                    text.sale
-                  )}
+                  <Tag
+                    color="#2db7f5" 
+                    onClick={() => this.showModalTem(
+                      text.specification,
+                      text.id,
+                      text.template,
+                      text.template_id,
+                      text.sale
+                    )}
                   >
                     规格信息
-                  </a> 
-                  <a onClick={() => this.confirm(text)}>删除商品</a>
+                  </Tag> 
+                  <Tag onClick={() => this.confirm(text)} color="#f50">删除商品</Tag>
                 </Space>
               )}
             />

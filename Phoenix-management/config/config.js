@@ -173,16 +173,16 @@ export default defineConfig({
                 component: './Course/course_list',
               },
               {
-                path: '/page/study/tags',
-                name: '课程标签',
-                icon: 'setting',
-                component: './Course/course_tags_setting',
-              },
-              {
                 path: '/page/study/create_course',
                 name: '创建课程',
                 icon: 'setting',
                 component: './Course/course_create.jsx',
+              },
+              {
+                path: '/page/study/tags',
+                name: '课程标签',
+                icon: 'setting',
+                component: './Course/course_tags_setting',
               }
              
             ],

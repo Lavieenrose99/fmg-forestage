@@ -7,7 +7,7 @@ import {
   Divider, Upload, Modal, Radio, Switch, Space
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import { PlusOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
+import {  UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { connect } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
@@ -18,6 +18,7 @@ import React, {
 } from 'react';
 import { get } from 'lodash';
 import RichTextEditor from '@/utils/RichTextEditor';
+import { filterHTMLTag } from '@/utils/adjust_picture';
 import  './index.less';
 
 const { Option, OptGroup } = Select;
@@ -242,7 +243,7 @@ const GoodsAdj = (props) => {
     const sale_tag = [values.sale_tag];
     const view = fileVidoList[0].name;
     const cover = fileList[0].name;
-    const detail = richTextContent;
+    const detail =  filterHTMLTag(richTextContent);
     const pictures = fileListAlot.map((arrFiles, index) => {
       return { picture: arrFiles.judege, order: index };
     });

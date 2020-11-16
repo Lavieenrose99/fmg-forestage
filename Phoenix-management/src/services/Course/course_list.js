@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:36:22
- * @LastEditTime: 2020-11-11 09:44:42
- * @LastEditors: your name
+ * @LastEditTime: 2020-11-16 22:27:33
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Course/course_list.js
  */
@@ -24,5 +24,10 @@ export async function MgetCourseEnity(payload) {
   return request('/api.farm/study/course/_mget', {
     method: 'POST',
     data: { ids: payload },
+  });
+}
+export async function DelCourse(payload) {
+  return request(`/api.farm/study/course/${payload}`, {
+    method: 'DELETE',
   });
 }
