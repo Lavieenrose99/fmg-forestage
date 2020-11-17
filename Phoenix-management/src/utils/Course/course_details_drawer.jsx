@@ -1,18 +1,21 @@
-/* eslint-disable camelcase */
+import React, {
+  useState, useEffect, useRef
+} from 'react';
 import {
   Form, Input, Button, Select,
   InputNumber, DatePicker, notification,
   Divider, Upload, Modal, Steps, Radio, Switch,
-  Space, Table, Result, PageHeader, Checkbox, Row, Col
+  Space, Table, Result, PageHeader, Checkbox, Row, Col,
+  Drawer
 } from 'antd';
+import PropTypes from 'prop-types';
+import { QINIU_SERVER, BASE_QINIU_URL } 
+  from '@/utils/Token';
 import {
   UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
 } from '@ant-design/icons';
 import moment  from 'moment';
 import { get } from 'lodash';
-import React, {
-  useState, useEffect, useRef
-} from 'react';
 import { connect } from 'umi';
 import TextArea from 'antd/lib/input/TextArea';
 import request from '@/utils/request';
@@ -20,69 +23,65 @@ import {
   couseSession 
 } from '@/utils/DataStore/course_table';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
-import PropTypes from 'prop-types';
-import { layoutCourse, EditorLayout, uploadButton } from '@/utils/Layout/basic_layout.jsx';
-import { QINIU_SERVER, BASE_QINIU_URL } 
-  from '@/utils/Token';
-import RichTextEditor from '../../utils/RichTextEditor.jsx';
-import { filterHTMLTag } from '../../utils/adjust_picture';
-import '../../style/GoodsAddEditor.less';
-  
-const routes = [
-  {
-    path: '/',
-    breadcrumbName: '首页',
-  },
-  {
-    path: '/goods',
-    breadcrumbName: '商品管理',
-  },
-  {
-    path: '/goods/add-goods',
-    breadcrumbName: '添加商品',
-  }
-];
-  
-const { Option } = Select;
-  
+import RichTextEditor from '../RichTextEditor.jsx';
+import { filterHTMLTag } from '../adjust_picture';
+import { EditorLayout, uploadButton, layoutCourse } from '../Layout/basic_layout.jsx';
+
+const { Option } = Select;  
 const { Step } = Steps;
-  
-export const GoodsAddEditor = (props) => {
+
+const CourseDetails = (props) => {
   const {
-    goodsArea, goodsSale,
-    couresTagsList, couresTypeList,
-    goodsModelsList, goodsModel,
+    show, changeStaus, detailsInfo, couresTypeList,
+    couresTagsList,
+    goodsArea, 
   } = props;
+  const PFile = {
+    url: BASE_QINIU_URL + detailsInfo.cover,
+    uid: 11,
+    name: detailsInfo.cover,
+    status: 'done', 
+  }; 
   const [form] = Form.useForm();
-  const [fromSpec] = Form.useForm();
-  const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
-  const formRef = useRef(null);
-  const [qiniuToken, setQiniuToken] = useState('');
-  const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
-  const [metionThings, setMetionThings] = useState(localStorage.getItem('MetionStaff'));
-  const [courseArrange, setCourseArrange] = useState(localStorage.getItem('arrange'));
-  const [handleVisible, setHandleVisible] = useState(false);
-  const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
-  const [basicInfoOfCourse, setBasicInfoOfCourse] = useState({});
   const [current, setCurrent] = useState(0);
-  const [is_put, setIs_put] = useState(true);
-  const [courseInfo, setCourseInfo] = useState({});
-  const [session, SetSession] = useState([]);
-    
-  const onResetInfo = () => {
-    localStorage.removeItem('FileList');
-    localStorage.removeItem('storage');
-    localStorage.removeItem('arrange');
-    localStorage.removeItem('MetionStaff');
-    localStorage.removeItem('RichText'); 
-    setFileList([]);
-    setCourseArrange('');
-    setCourseInfo('');
-    setRichTextContent('');
-    form.resetFields();
-    // eslint-disable-next-line no-restricted-globals
-    location.reload(true);
+  const [qiniuToken, setQiniuToken] = useState('');
+  const [fileList, setFileList] = useState();
+  const [richTextContent, setRichTextContent] = useState('');
+  const [metionThings, setMetionThings] = useState('');
+  const [courseArrange, setCourseArrange] = useState('');
+  useEffect(() => {
+    if (form) {
+      form.setFieldsValue({
+        name: (detailsInfo.name ?? ''),
+        small_name: detailsInfo.small_name,
+        describe: detailsInfo.describe,
+        feature: detailsInfo.feature,
+        crowd: detailsInfo.crowd,
+        attention: detailsInfo.attention,
+        plan: detailsInfo.plan,
+        place_tag: detailsInfo.place_tag,
+        course_tag: detailsInfo.course_tag,
+        kind: detailsInfo.kind,
+        time: detailsInfo.time,
+        begin_time: moment(moment(detailsInfo.advance_time)
+          .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
+        end_time: moment(moment(detailsInfo.putaway_time)
+          .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
+      });
+    }
+    setCourseArrange(detailsInfo.plan);
+    setMetionThings(detailsInfo.attention);
+    setRichTextContent(detailsInfo.detail);
+    setFileList([PFile]);
+  }, [detailsInfo]);
+  const subscribeRichText = (text) => {
+    setRichTextContent(text);
+  };
+  const subscribeMetionStaff = (text) => {
+    setMetionThings(text);
+  };
+  const subscribeCourseArrange = (text) => {
+    setCourseArrange(text);
   };
   const getQiNiuToken = () => {
     request('/api.farm/goods/resources/qiniu/upload_token', {
@@ -102,160 +101,52 @@ export const GoodsAddEditor = (props) => {
     } = file;
     const fileItem = {
       uid,
-      name,
+      name: response.key,
       type,
       thumbUrl,
       status,
-      response,
-      url: BASE_QINIU_URL + (response.key || ''),
+      url: BASE_QINIU_URL + (response.key),
     };
-    setPreviewImage(fileItem.url);
     setFileList([fileItem]);
-    localStorage.setItem('FileList', JSON.stringify(fileItem));
   };
-    
-  const subscribeRichText = (text) => {
-    localStorage.setItem('RichText', text);
-    setRichTextContent(text);
-  };
-  const subscribeMetionStaff = (text) => {
-    localStorage.setItem('MetionStaff', text);
-    setMetionThings(text);
-  };
-  const subscribeCourseArrange = (text) => {
-    localStorage.setItem('arrange', text);
-    setCourseArrange(text);
-  };
-    
-  useEffect(() => {
-    fromSpec.setFieldsValue({
-      specification: [''],
-    });
-  }, []);
-  
-  useEffect(() => {
-    props.dispatch({
-      type: 'couresTags/fetchCourseTags',
-      payload: { limit: 10, page: 1 },
-    });
-    props.dispatch({
-      type: 'couresTags/fetchTypeCourseTags',
-      payload: { limit: 10, page: 1 },
-    });
-    props.dispatch({
-      type: 'goodsArea/fetchAreaTags',
-      payload: { page: 1, limit: 99 },
-    });
-  }, []);
-  const subscriptions = (values) => {
-    if (values) {
-      const begin_time =  moment(values.begin_time).valueOf();
-      const end_time = moment(values.end_time).valueOf();
-      const timestap = {
-        begin_time, end_time,
-      };
-      const Goods = storeageGoods;
-      const newGoods = Object.assign(Goods, values, timestap);
-      localStorage.setItem('storage', JSON.stringify(newGoods));
-    }
-  };
-  
-  useEffect(() => {
-    subscriptions();
-    formRef.current.setFieldsValue({
-      name: (storeageGoods.name ?? ''),
-      small_name: storeageGoods.small_name,
-      describe: storeageGoods.describe,
-      feature: storeageGoods.feature,
-      crowd: storeageGoods.crowd,
-      attention: storeageGoods.attention,
-      plan: storeageGoods.plan,
-      place_tag: storeageGoods.place_tag,
-      course_tag: storeageGoods.course_tag,
-      kind: storeageGoods.kind,
-      time: storeageGoods.time,
-      begin_time: moment(moment(storeageGoods.advance_time)
-        .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
-      end_time: moment(moment(storeageGoods.putaway_time)
-        .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
-    });
-  }, []);
- 
   const onFinish = (values) => {
-    const begin_time =  moment(values.begin_time).valueOf();
-    const end_time = moment(values.end_time).valueOf();
-    const kind = [values.kind];
-    const place_tag = [values.place_tag];
-    const course_tag = [values.course_tag];
-    const cover = fileList[0].response.key;
-    const detail = filterHTMLTag(richTextContent);
-    const attention = filterHTMLTag(metionThings);
-    const plan = filterHTMLTag(courseArrange);
-    const basicInfoRaw = {
-      begin_time,
-      end_time,
-      kind,
-      place_tag,
-      cover,
-      detail,
-      course_tag,
-      attention,
-      plan,
-    };
-    const basicInfoUnion = Object.assign(values, basicInfoRaw);
-    setBasicInfoOfCourse(basicInfoUnion);
-    setCurrent(current + 1);
+    
   };
-  const addSession = (info) => {
-    const begin_time =  moment(info.begin_time).valueOf();
-    const end_time = moment(info.end_time).valueOf();
-    const ID = session.length + 1;
-    const seTime = { begin_time, end_time, ID };
-    const sessionItem = Object.assign(info, seTime);
-    const preSession = session;
-    SetSession([...preSession, sessionItem]);
-  };
-  const handleCourseInfo = () => {
-    const courseInfoRaw = { session, ...basicInfoOfCourse };
-    setCourseInfo(courseInfoRaw);
-    setHandleVisible(true);
-  };
-  const comfirmHandleCourse = () => {
-    const finalData = { ...courseInfo, is_put };
-    props.dispatch({
-      type: 'fmgCourse/createCourse',
-      payload: finalData,
-    });
-    setCurrent(2);
-  };
+ 
   return (
     <>
-      <PageHeader
-        style={{ backgroundColor: 'white', marginBottom: 30 }}
-        className="goods-publish-all-pages"
-        breadcrumb={{ routes }}
-        title="创建课程"
-        footer={<Steps
-          current={current}
-          className="site-navigation-steps"
-        >
-          <Step title="基本信息" description="完善课程基础信息" />
-          <Step title="场次安排" description="完善课程场次信息" />
-          <Step title="成功提交" description="课程成功" />
-        </Steps>}
-      /> 
+      <Drawer
+        placement="top"
+        height="100%"
+        visible={show} 
+        destroyOnClose
+        forceRender
+        onClose={() => {
+          changeStaus(!show);
+        }}
+      >
+        <PageHeader
+          style={{ backgroundColor: 'white', marginBottom: 30 }}
+          className="goods-publish-all-pages"
+          title="创建课程"
+          footer={<Steps
+            current={current}
+            className="site-navigation-steps"
+          >
+            <Step title="基本信息" description="完善课程基础信息" onClick={() => { setCurrent(0); }} />
+            <Step title="场次安排" description="完善课程场次信息" onClick={() => { setCurrent(1); }} />
+          </Steps>}
+        /> 
          
-      <div className="steps-content">
-        {
+        <div className="steps-content">
+          {
     (() => {
       if (current === 0) {
         return (<div className="goods-basic-publish-contianer">
           <Divider>课程基本信息</Divider>
           <Form
-            onValuesChange={subscriptions}
             {...layoutCourse}
             form={form}
-            ref={formRef}
             name="control-hooks"
             onFinish={onFinish}
             labelAlign="left"
@@ -465,17 +356,13 @@ export const GoodsAddEditor = (props) => {
                           token: qiniuToken,
                           key: `picture-${Date.parse(new Date())}`,
                         }}
-                        showUploadList={false}
                         listType="picture-card"
                         beforeUpload={getUploadToken}
+                        fileList={fileList}
+                        //onRemove={onFileList}
                         onChange={handleChange}
                       >
-                        {fileList[0] ? <img
-                          src={fileList[0] 
-                            ? BASE_QINIU_URL + fileList[0].response.key : null}
-                          alt="avatar"
-                          style={{ width: '100%' }}
-                        /> :  uploadButton}
+                        {uploadButton}
                       </Upload>
                     </span>
                   </>
@@ -485,7 +372,10 @@ export const GoodsAddEditor = (props) => {
             </Row>
             <Divider>编辑课程详情</Divider>
             <Form.Item {...EditorLayout}>
-              <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
+              <RichTextEditor
+                subscribeRichText={subscribeRichText} 
+                defaultText={richTextContent}
+              />
             </Form.Item>
             <Divider>编辑注意事项</Divider>
             <Form.Item {...EditorLayout}>
@@ -514,7 +404,7 @@ export const GoodsAddEditor = (props) => {
                   下一步
                 </Button>
                 <Button
-                  onClick={onResetInfo}
+                  //onClick={onResetInfo}
                   type="primary"
                   style={{
                     margin: 20,
@@ -529,10 +419,7 @@ export const GoodsAddEditor = (props) => {
         </div>);
       } if (current === 1) {
         return (<>
-          <Form
-            onFinish={addSession}
-            form={fromSpec}
-          >
+          <Form>
             <Row style={{ backgroundColor: '#FFFFFF' }} gutter={[10, 40]}>
               <Col offset={2} span={6}>
                 <Form.Item
@@ -613,20 +500,20 @@ export const GoodsAddEditor = (props) => {
           <Table
             bordered
             columns={couseSession}
-            dataSource={session}
+            dataSource={detailsInfo.session}
           />
           <div style={{ textAlign: 'center', marginTop: 10 }}>
             <Space>
               <Button type="primary" onClick={() => { setCurrent(current - 1); }}>上一步</Button>
-              <Button type="primary" onClick={handleCourseInfo}>提交</Button>
+              <Button type="primary">提交</Button>
             </Space>
           </div>
           <Modal
             mask={false}
             title="凤鸣谷"
-            visible={handleVisible}
-            onOk={comfirmHandleCourse}
-            onCancel={() => { setHandleVisible(false); }}
+            // visible={handleVisible}
+            // onOk={comfirmHandleCourse}
+            // onCancel={() => { setHandleVisible(false); }}
             okText="提交"
             cancelText="取消"
           >
@@ -635,7 +522,7 @@ export const GoodsAddEditor = (props) => {
                 <strong>
                   是否发布: 
                 </strong>
-                <Switch defaultChecked={is_put} onChange={(e) => { setIs_put(e); }} />
+                <Switch defaultChecked={detailsInfo.is_put} />
               </Space>
             </div>
             
@@ -643,24 +530,15 @@ export const GoodsAddEditor = (props) => {
         </>
         );
       }
-      if (current === 2) {
-        return (
-          <Result
-            icon={<SmileOutlined />}
-            title="成功创建课程信息"
-            extra={<Button type="primary" onClick={() => setCurrent(0)}>返回创建首页</Button>}
-          />
-        );
-      }
     })()
   }
-      </div>
-  
+        </div>
+      </Drawer>
     </>
-    
   );
 };
-GoodsAddEditor.propTypes = {
+
+CourseDetails.propTypes = {
   dispatch: PropTypes.func.isRequired,
   goodId: PropTypes.number,
   goodsArea: PropTypes.arrayOf({}),
@@ -671,7 +549,7 @@ GoodsAddEditor.propTypes = {
   couresTagsList: PropTypes.arrayOf({}),
   couresTypeList: PropTypes.arrayOf({}),
 };
-GoodsAddEditor.defaultProps = {
+CourseDetails.defaultProps = {
   goodId: 0,
   goodsArea: [],
   goodsSale: [],
@@ -680,25 +558,9 @@ GoodsAddEditor.defaultProps = {
   goodsModelsList: [],
   couresTagsList: [],
   couresTypeList: [],
-  
+    
 };
-  
 export default connect(({
-  goodsArea, goodsSale, goodsClass,
-  goodsModels, CreateGoods, couresTags,
 }) => ({
-  goodsModels,
-  goodsSale: get(goodsSale, 'tags', []),
-  goodsArea: get(goodsArea, 'info', []),
-  goodsClassFather: get(goodsClass, 'tags', [])
-    .filter((arr) => { return arr.parent_id === 0; }),
-  goodsClassChild: get(goodsClass, 'tags', [])
-    .filter((arr) => { return arr.parent_id !== 0; }),
-  goodsModelsList: get(goodsModels, 'infos', ''),
-  goodsModel: get(goodsModels, 'info', {}),
-  goodId: CreateGoods.goodId,
-  GoodsAreaTags: goodsArea.GoodsAreaTags,
-  couresTagsList: get(couresTags, 'tags', []),
-  couresTypeList: get(couresTags, 'typeTags', []),
-  
-}))(GoodsAddEditor);
+    
+}))(CourseDetails);

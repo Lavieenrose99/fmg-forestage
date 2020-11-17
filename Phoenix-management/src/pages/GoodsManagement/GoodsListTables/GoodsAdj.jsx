@@ -18,41 +18,14 @@ import React, {
 } from 'react';
 import { get } from 'lodash';
 import RichTextEditor from '@/utils/RichTextEditor';
+import { layout, EditorLayout, uploadButton, tailLayout } from '@/utils/Layout/basic_layout.jsx';
 import { filterHTMLTag } from '@/utils/adjust_picture';
 import  './index.less';
 
 const { Option, OptGroup } = Select;
-const uploadButton = (
-  <div>
-    <div className="ant-upload-text">
-      <UploadOutlined />
-      上传
-    </div>
-  </div>
-);
 const getaways = [{ id: 1, name: '快递' }, { id: 2, name: '同城配送' }, { id: 4, name: '自取' }];
 const putaways = [{ id: 1, name: '立即上架' }, { id: 2, name: '自定义上架时间' }, { id: 3, name: '放入仓库暂不上架' }];
 const CheckboxGroup = Checkbox.Group;
-const layout = {
-  labelCol: {
-    span: 4,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 10,
-    span: 16,
-  },
-};
-const EditorLayout = {
-  wrapperCol: {
-    offset: 1,
-    //span: 8,
-  },
-};
 
 const GoodsAdj = (props) => {
   const { info, closeModel } = props;
@@ -96,7 +69,6 @@ const GoodsAdj = (props) => {
   };
   const [form] = Form.useForm();
   const formRef = useRef(null);
-  const [fromSpec] = Form.useForm();
   const [fileList, setFileList] = useState([PFile]);
   const [fileListAlot, setFileListAlot] = useState(list);
   const [fileVidoList, setfileVidoList] = useState([Video]);

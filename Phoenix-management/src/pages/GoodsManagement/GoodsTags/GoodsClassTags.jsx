@@ -9,9 +9,9 @@ import { get, noop } from 'lodash';
 import PropTypes from 'prop-types';
 import request from '@/utils/request';
 import { PlusCircleTwoTone, UploadOutlined } from '@ant-design/icons';
-
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
-const QINIU_SERVER = 'http://upload-z2.qiniup.com';
+import { QINIU_SERVER, BASE_QINIU_URL } 
+  from '@/utils/Token';
+  
 const uploadButton = (
   <div>
     <div className="ant-upload-text">

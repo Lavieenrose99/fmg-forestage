@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'umi';
+import { connect, Link } from 'umi';
 import { get } from 'lodash';
 import {
-  Tag, Table, Modal, Space
+  Tag, Table, Modal, Space, Input, Select, Button
 } from 'antd';
 import {
-  
+  RedoOutlined, PlusCircleTwoTone
 } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import  CourseDetails  from '@/utils/Course/Course_details_drawer.jsx';
 import './course_list.less';
+
+const { Option } = Select;
 
 const CourseList = (props) => {
   const {
     fmgCourseList, couresTagsList,
     couresTypeList, goodsArea, 
   } = props;
+  const fmgCourseListFinal = fmgCourseList.map((arr, index) => {
+    return { key: index, ...arr };
+  });
+  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [details, setDetails] = useState({});
   useEffect(() => {
     props.dispatch({
       type: 'fmgCourse/fetchCourseList',
@@ -70,6 +79,7 @@ const CourseList = (props) => {
     {
       title: '属地标签',
       dataIndex: 'place_tag',
+      key: 'id',
       render: (tag) => {
         //console.log(tag[0])
         let  name = '';
@@ -84,10 +94,18 @@ const CourseList = (props) => {
       },   
     }, { title: '课程天数', dataIndex: 'time' }, {
       title: '操作',
+      key: 'id',
       render: (text) => {
+        //console.log(text)
         return (
           <Space>
-            <Tag color="#108ee9">
+            <Tag
+              color="#108ee9"
+              onClick={() => {
+                setDetails(text);
+                setDetailsVisible(!detailsVisible);
+              }}
+            >
               查看详情
             </Tag>
             <Tag
@@ -118,10 +136,93 @@ const CourseList = (props) => {
  
   return (
     <>
-      <Table
-        columns={courseList}
-        dataSource={fmgCourseList}
-      />
+      <PageHeaderWrapper>
+        <div className="goods-list-container">
+          <Link to="/page/study/create_course">
+            <Button
+              type="primary"
+              style={{
+                margin: 20,
+              }}
+              icon={<PlusCircleTwoTone />}
+            >
+              添加课程
+            </Button>
+          </Link>
+          <div className="goods-list-selector">
+            <Space size="large">
+              <span className="good-selector-items">
+                <span>
+                  课程名称: 
+                </span>
+                <Input
+                  className="goods-selector-name" 
+                  //onChange={this.MainTextOnChange}
+                  placeholder="请输入该课程名称"
+                />
+              </span>
+              <span className="good-selector-items">
+                <span>
+                  课程标签: 
+                </span>
+                <Select
+                  className="goods-selector-class"
+                  //onChange={this.selectClassItem}
+                  placeholder="请选择课程标签"
+                >
+                  {
+            
+              }
+                </Select>
+              </span>
+              <span className="good-selector-items">
+                <span>
+                  种类标签: 
+                </span>
+                <Select
+                  className="goods-selector-class"
+                  //onChange={this.selectClassItem}
+                  placeholder="请选择种类标签"
+                >
+                  {
+            
+              }
+                </Select>
+              </span>
+              <span className="good-selector-items">
+                <span>
+                  属地标签: 
+                </span>
+                <Select
+                  className="goods-selector-area"
+                  //onChange={this.selectAreaItem}
+                  placeholder="请选择属地标签"
+                  defaultValue={0}
+                />
+              </span>
+              <Button
+                type="primary"
+                //onClick={this.reloadSelector}
+                icon={<RedoOutlined />}
+              >
+                全部
+              </Button>
+            </Space>
+          </div>
+        </div>
+        <Table
+          columns={courseList}
+          dataSource={fmgCourseListFinal}
+        />
+        <CourseDetails
+          show={detailsVisible} 
+          changeStaus={setDetailsVisible}
+          detailsInfo={details}
+          couresTypeList={couresTypeList}
+          couresTagsList={couresTagsList}
+          goodsArea={goodsArea}
+        />
+      </PageHeaderWrapper>
     </>
   );
 };

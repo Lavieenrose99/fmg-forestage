@@ -34,6 +34,14 @@ class RichTextEditor extends Component {
     this.handleUpload = this.handleUpload.bind(this);
   }
 
+  componentWillReceiveProps(nextProp) {
+    if (this.props.defaultText !== nextProp.defaultText) {
+      this.setState({
+        text: nextProp.defaultText,
+      });
+    }
+  }
+  
     modules={ //富文本配置
       toolbar: {
         container: [
@@ -144,7 +152,6 @@ class RichTextEditor extends Component {
     }
     
     handleChange(value) {
-      console.log(value);
       const filterValue = value;
       const { subscribeRichText } = this.props;
       this.setState({ text: filterValue }, () => {

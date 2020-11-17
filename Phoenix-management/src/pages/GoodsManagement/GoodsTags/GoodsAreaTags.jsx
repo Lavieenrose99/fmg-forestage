@@ -9,10 +9,10 @@ import request from '@/utils/request';
 import { connect } from 'umi';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
+import { QINIU_SERVER, BASE_QINIU_URL } 
+  from '@/utils/Token';
 import { PlusCircleTwoTone, UploadOutlined } from '@ant-design/icons';
 
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
-const QINIU_SERVER = 'http://upload-z2.qiniup.com';
 const uploadButton = (
   <div>
     <div className="ant-upload-text">

@@ -7,34 +7,20 @@ import {
   Form, Icon,
   Input, Button, Select, PageHeader,
   Upload, Modal, Divider, Table, Space, Tabs
-     
 } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import {
+  layout, tailLayout 
+} from '@/utils/Layout/basic_layout.jsx';
 import { connect } from 'umi';
 import { get } from 'lodash';
-  
+import { QINIU_SERVER, BASE_QINIU_URL } 
+  from '@/utils/Token';
+
 const { Option, OptGroup } = Select;
 const { Column, ColumnGroup } = Table;
 const { TabPane } = Tabs;
   
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
-  
 const IconUpload = (props) => {
-  const QINIU_SERVER = 'http://upload-z2.qiniup.com';
-  const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const [qiniuToken, setQiniuToken] = useState('');
   const [form] = Form.useForm();
   const [showAdj, setShowAdj] = useState(false);

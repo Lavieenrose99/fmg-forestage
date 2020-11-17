@@ -20,6 +20,12 @@ import {
   dataGoodsName, dataGoodsNameOut, getaways, putaways 
 } from '@/utils/DataStore/data_goods';
 import PropTypes from 'prop-types';
+import {
+  layout, 
+  EditorLayout, ModelListlayout, tailLayout, uploadButton
+} from '@/utils/Layout/basic_layout.jsx';
+import { QINIU_SERVER, BASE_QINIU_URL } 
+  from '@/utils/Token';
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import { filterHTMLTag } from '../../utils/adjust_picture';
 import '../../style/GoodsAddEditor.less';
@@ -41,31 +47,6 @@ const routes = [
 
 const { Option, OptGroup } = Select;
 const CheckboxGroup = Checkbox.Group;
-const layout = {
-  labelCol: {
-    offset: 4,
-  },
-  wrapperCol: {
-    span: 12,
-  },
-};
-const ModelListlayout = {
-  labelCol: {
-    offset: 0,
-  },
-};
-const EditorLayout = {
-  wrapperCol: {
-    offset: 4,
-    //span: 8,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 9,
-    span: 16,
-  },
-};
 
 const { Step } = Steps;
 
@@ -73,8 +54,6 @@ export const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
   const [formAdj]  = Form.useForm();
-  const QINIU_SERVER = 'https://upload-z2.qiniup.com';
-  const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
@@ -305,17 +284,7 @@ export const GoodsAddEditor = (props) => {
     }
     localStorage.setItem('FileListAlot', JSON.stringify(fileListAlot));
     setFileListAlot([...fileListAlot]);
-  };
-
-  const uploadButton = (
-    <div>
-      <div className="ant-upload-text">
-        <UploadOutlined />
-        上传
-      </div>
-    </div>
-  );
-  
+  };  
   const subscribeRichText = (text) => {
     localStorage.setItem('RichText', text);
     setRichTextContent(text);
