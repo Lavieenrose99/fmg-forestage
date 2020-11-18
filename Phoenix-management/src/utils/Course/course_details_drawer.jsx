@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, {
   useState, useEffect, useRef
 } from 'react';
@@ -32,7 +33,7 @@ const { Step } = Steps;
 
 const CourseDetails = (props) => {
   const {
-    show, changeStaus, detailsInfo, couresTypeList,
+    show, changeStaus, detailsInfo, couresTypeList, id,
     couresTagsList,
     goodsArea, 
   } = props;
@@ -43,12 +44,18 @@ const CourseDetails = (props) => {
     status: 'done', 
   }; 
   const [form] = Form.useForm();
+  const [fromSpec] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [qiniuToken, setQiniuToken] = useState('');
+  const [session, setSession] = useState('');
   const [fileList, setFileList] = useState();
   const [richTextContent, setRichTextContent] = useState('');
   const [metionThings, setMetionThings] = useState('');
   const [courseArrange, setCourseArrange] = useState('');
+  const [basicInfoOfCourse, setBasicInfoOfCourse] = useState({});
+  const [handleVisible, setHandleVisible] = useState(false);
+  const [courseInfo, setCourseInfo] = useState({});
+  const [is_put, setIs_put] = useState('');
   useEffect(() => {
     if (form) {
       form.setFieldsValue({
@@ -69,9 +76,15 @@ const CourseDetails = (props) => {
           .format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm'),
       });
     }
+    const fmgCourseListSession = detailsInfo.session 
+      ? detailsInfo.session.map((arr, index) => {
+        return { ID: index, ...arr };
+      }) : null;
     setCourseArrange(detailsInfo.plan);
     setMetionThings(detailsInfo.attention);
     setRichTextContent(detailsInfo.detail);
+    setIs_put(detailsInfo.is_put);
+    setSession(fmgCourseListSession);
     setFileList([PFile]);
   }, [detailsInfo]);
   const subscribeRichText = (text) => {
@@ -110,7 +123,47 @@ const CourseDetails = (props) => {
     setFileList([fileItem]);
   };
   const onFinish = (values) => {
+    const begin_time =  moment(values.begin_time).valueOf();
+    const end_time = moment(values.end_time).valueOf();
+    const cover = fileList[0].name;
+    const detail = filterHTMLTag(richTextContent);
+    const attention = filterHTMLTag(metionThings);
+    const plan = filterHTMLTag(courseArrange);
+    const basicInfoRaw = {
+      begin_time,
+      end_time,
+      cover,
+      detail,
+      attention,
+      plan,
+    };
     
+    const basicInfoUnion = Object.assign(values, basicInfoRaw);
+    setBasicInfoOfCourse(basicInfoUnion);
+    setCurrent(current + 1);
+  };
+  const addSession = (info) => {
+    const begin_time =  moment(info.begin_time).valueOf();
+    const end_time = moment(info.end_time).valueOf();
+    const ID = session.length + 1;
+    const seTime = { begin_time, end_time, ID };
+    const sessionItem = Object.assign(info, seTime);
+    const preSession = session;
+    setSession([...preSession, sessionItem]);
+  };
+  const handleCourseInfo = () => {
+    const courseInfoRaw = { session, ...basicInfoOfCourse };
+    setCourseInfo(courseInfoRaw);
+    setHandleVisible(true);
+  };
+  const comfirmHandleCourse = () => {
+    const finalData = { ...courseInfo, is_put };
+    console.log(finalData);
+    props.dispatch({
+      type: 'fmgCourse/AdjCourse',
+      payload: { finalData, cid: id },
+      
+    });
   };
  
   return (
@@ -419,7 +472,10 @@ const CourseDetails = (props) => {
         </div>);
       } if (current === 1) {
         return (<>
-          <Form>
+          <Form
+            onFinish={addSession}
+            form={fromSpec}
+          >
             <Row style={{ backgroundColor: '#FFFFFF' }} gutter={[10, 40]}>
               <Col offset={2} span={6}>
                 <Form.Item
@@ -500,21 +556,21 @@ const CourseDetails = (props) => {
           <Table
             bordered
             columns={couseSession}
-            dataSource={detailsInfo.session}
+            dataSource={session}
           />
           <div style={{ textAlign: 'center', marginTop: 10 }}>
             <Space>
               <Button type="primary" onClick={() => { setCurrent(current - 1); }}>上一步</Button>
-              <Button type="primary">提交</Button>
+              <Button type="primary" onClick={handleCourseInfo}>修改</Button>
             </Space>
           </div>
           <Modal
             mask={false}
             title="凤鸣谷"
-            // visible={handleVisible}
-            // onOk={comfirmHandleCourse}
-            // onCancel={() => { setHandleVisible(false); }}
-            okText="提交"
+            visible={handleVisible}
+            onOk={comfirmHandleCourse}
+            onCancel={() => { setHandleVisible(false); }}
+            okText="修改"
             cancelText="取消"
           >
             <div style={{ textAlign: 'center' }}>
@@ -522,7 +578,10 @@ const CourseDetails = (props) => {
                 <strong>
                   是否发布: 
                 </strong>
-                <Switch defaultChecked={detailsInfo.is_put} />
+                <Switch
+                  defaultChecked={is_put} 
+                  onChange={(e) => { setIs_put(e); }}
+                />
               </Space>
             </div>
             

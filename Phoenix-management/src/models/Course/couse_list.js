@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-11-16 22:34:48
+ * @LastEditTime: 2020-11-18 15:54:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -9,7 +9,8 @@
 import { message } from 'antd';
 import { get } from 'lodash';
 import {
-  getCourseList, MgetCourseEnity, createCourse, DelCourse
+  getCourseList, MgetCourseEnity, 
+  createCourse, DelCourse, adjCourse
 } from '@/services/Course/course_list';
   
 const fmgCourseModel = {
@@ -35,6 +36,16 @@ const fmgCourseModel = {
         type: 'saveCourseList',
         payload: raw,
       });
+    },
+    * AdjCourse({ payload }, { call }) {
+      console.log(payload)
+      const { finalData , cid } = payload;
+      const reply  = yield call(adjCourse, finalData, cid);
+      if (reply) {
+        yield message.success('修改成功'); 
+      } else {
+        yield message.error('修改失败');
+      }
     },
     * DelCourse({ payload }, { call }) {
       const reply  = yield call(DelCourse, payload);

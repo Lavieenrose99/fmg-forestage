@@ -152,6 +152,13 @@ export default defineConfig({
               //authority: ['admin'],
               },
               {
+                path: '/page/goodspayment/handle_list',
+                name: '售后订单 ',
+                icon: 'smile',
+                component: './Bill/check_list',
+              //authority: ['admin'],
+              },
+              {
                 path: '/page/goodspayment/check_list',
                 name: '对单表',
                 icon: 'smile',
