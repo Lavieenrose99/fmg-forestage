@@ -56,19 +56,26 @@ export const GoodsAddEditor = (props) => {
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
   const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
+  const [current, setCurrent] = useState(0);
   const formRef = useRef(null);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [is_put, setIs_put] = useState(true);
+  const [handleVisible, setHandleVisible] = useState(false);
   const [qiniuToken, setQiniuToken] = useState('');
   const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
   const [metionThings, setMetionThings] = useState(localStorage.getItem('MetionStaff'));
   const [courseArrange, setCourseArrange] = useState(localStorage.getItem('arrange'));
-  const [handleVisible, setHandleVisible] = useState(false);
+  const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
+  const [fileListAlot, setFileListAlot] = useState((JSON.parse(localStorage.getItem('FileListAlot')) ?? []));
   const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [basicInfoOfCourse, setBasicInfoOfCourse] = useState({});
-  const [current, setCurrent] = useState(0);
-  const [is_put, setIs_put] = useState(true);
   const [courseInfo, setCourseInfo] = useState({});
   const [session, SetSession] = useState([]);
+
+  const onResetPicture = () => {
+    localStorage.removeItem('FileListAlot');
+    setFileListAlot([]);
+  };
     
   const onResetInfo = () => {
     localStorage.removeItem('FileList');
@@ -76,6 +83,7 @@ export const GoodsAddEditor = (props) => {
     localStorage.removeItem('arrange');
     localStorage.removeItem('MetionStaff');
     localStorage.removeItem('RichText'); 
+    localStorage.removeItem('FileListAlot');
     setFileList([]);
     setCourseArrange('');
     setCourseInfo('');
@@ -112,6 +120,40 @@ export const GoodsAddEditor = (props) => {
     setPreviewImage(fileItem.url);
     setFileList([fileItem]);
     localStorage.setItem('FileList', JSON.stringify(fileItem));
+  };
+  const handleChangeAlot = ({ file  }) => {
+    const {
+      uid, name, type, thumbUrl, status, response = {},
+    } = file;
+    const fileItem = {
+      uid,
+      name,
+      type,
+      thumbUrl,
+      status,
+      response,
+      index: fileListAlot.length,
+      judege: (response.key || ''),
+      url: BASE_QINIU_URL + (response.key),
+    };
+
+    if (fileItem.judege.length !== 0) {
+      fileListAlot.pop();
+      fileListAlot.pop();
+      fileListAlot.push(fileItem);
+    } else if (fileItem.status !== 'error') {
+      fileListAlot.push(fileItem);
+    }
+    localStorage.setItem('FileListAlot', JSON.stringify(fileListAlot));
+    setFileListAlot([...fileListAlot]);
+  }; 
+  const onFileListAlot = (values) => {
+    fileListAlot.splice(values.uid, 1);
+    return false;
+  };
+  const handlePreview = (file) => {
+    setPreviewImage(file.url || file.thumbUrl);
+    setPreviewVisible(true);
   };
     
   const subscribeRichText = (text) => {
@@ -191,6 +233,9 @@ export const GoodsAddEditor = (props) => {
     const detail = filterHTMLTag(richTextContent);
     const attention = filterHTMLTag(metionThings);
     const plan = filterHTMLTag(courseArrange);
+    const pictures = fileListAlot.map((arrFiles, index) => {
+      return { picture: arrFiles.judege, order: index };
+    });
     const basicInfoRaw = {
       begin_time,
       end_time,
@@ -201,6 +246,7 @@ export const GoodsAddEditor = (props) => {
       course_tag,
       attention,
       plan,
+      pictures,
     };
     const basicInfoUnion = Object.assign(values, basicInfoRaw);
     setBasicInfoOfCourse(basicInfoUnion);
@@ -447,7 +493,7 @@ export const GoodsAddEditor = (props) => {
             </Row>
             
             <Row>
-              <Col offset={4} span={6}>
+              <Col offset={4} span={5}>
                 <Form.Item
                   name="cover"
                   label="课程封面"
@@ -481,6 +527,44 @@ export const GoodsAddEditor = (props) => {
                   </>
              
                 </Form.Item>
+              </Col>
+              <Col pull={2} span={12}>
+                <>
+                  <Form.Item
+                    label="课程轮播图"
+                    rules={[
+                      {
+                      //required: true,
+                      }
+                    ]}
+                  >
+                    <span onClick={getUploadToken}>
+                      <Upload
+                        action={QINIU_SERVER}
+                        data={{
+                          token: qiniuToken,
+                          key: `picture-${Date.parse(new Date())}`,
+                        }}
+                        listType="picture-card"
+                        beforeUpload={getUploadToken}
+                        fileList={fileListAlot}
+                        onRemove={onFileListAlot}
+                        onPreview={handlePreview}
+                        onChange={handleChangeAlot}
+                      >
+                        {fileListAlot.length >= 5 ? null : uploadButton}
+                      </Upload>
+                    </span>
+                  </Form.Item>
+                </>
+         
+                <Modal
+                  visible={previewVisible}
+                  footer={null}
+                  onCancel={() => setPreviewVisible(!previewVisible)}
+                >
+                  <img style={{ width: '100%' }} src={previewImage} alt="previewImg" />
+                </Modal>
               </Col>
             </Row>
             <Divider>编辑课程详情</Divider>
@@ -522,6 +606,16 @@ export const GoodsAddEditor = (props) => {
                   icon={<StopTwoTone />}
                 >
                   重置
+                </Button>
+                <Button
+                  onClick={onResetPicture}
+                  type="primary"
+                  style={{
+                    margin: 20,
+                  }}
+                  icon={<StopTwoTone />}
+                >
+                  重置轮播
                 </Button>
               </Space>
             </div>

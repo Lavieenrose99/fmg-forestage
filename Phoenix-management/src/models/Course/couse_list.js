@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-11-18 15:54:22
+ * @LastEditTime: 2020-11-19 09:27:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -38,7 +38,6 @@ const fmgCourseModel = {
       });
     },
     * AdjCourse({ payload }, { call }) {
-      console.log(payload)
       const { finalData , cid } = payload;
       const reply  = yield call(adjCourse, finalData, cid);
       if (reply) {

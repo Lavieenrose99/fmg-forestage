@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:36:22
- * @LastEditTime: 2020-11-18 15:46:33
+ * @LastEditTime: 2020-11-19 10:07:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Course/course_list.js
@@ -15,7 +15,6 @@ export async function createCourse(payload) {
   });
 }
 export async function adjCourse(payload,cid) {
-  console.log(payload,cid)
   return request(`/api.farm/study/course/${cid}`, {
     method: 'PUT',
     data: payload,

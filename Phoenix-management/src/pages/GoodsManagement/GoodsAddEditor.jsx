@@ -51,28 +51,23 @@ const CheckboxGroup = Checkbox.Group;
 const { Step } = Steps;
 
 export const GoodsAddEditor = (props) => {
-  const [form] = Form.useForm();
-  const [fromSpec] = Form.useForm();
-  const [formAdj]  = Form.useForm();
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
-  const [fileVidoList, setfileVidoList] = useState(([JSON.parse(localStorage.getItem('fileVidoList'))] ?? []));
-  const [fileListAlot, setFileListAlot] = useState((JSON.parse(localStorage.getItem('FileListAlot')) ?? []));
   const {
     goodsArea, goodsSale,
     goodsClassChild, goodsClassFather,
     goodsModelsList, goodsModel,
   } = props;
+  const [form] = Form.useForm();
+  const [fromSpec] = Form.useForm();
+  const [formAdj]  = Form.useForm();
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
   const formRef = useRef(null);
   const formAdjRef = useRef(null);
   const [goodsDetails, setGoodsDetails] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
   const [adjSpec, setAdjSpec] = useState({});
-  const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
   const [adjVisible, setAdjVisible] = useState(false);
   const [AdjSpecName, setAdjSpecName] = useState([]);
-  const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
   const [submitGoods, setSubmitGoods] = useState({});
   const [goodsModels, setgoodsModels] = useState([]);
   const [templateId, setTemplateId] = useState(0);
@@ -80,6 +75,12 @@ export const GoodsAddEditor = (props) => {
   const [adjFileList, setAdjFileList] = useState(adjSpec.picture);
   const [adjIndex, setAdjIndex] = useState(-1);
   const [current, setCurrent] = useState(0);
+  const [richTextContent, setRichTextContent] = useState(localStorage.getItem('RichText'));
+  const [storeageGoods, setStoreageGoods] = useState((JSON.parse(localStorage.getItem('storage')) ?? {}));
+  const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
+  const [fileVidoList, setfileVidoList] = useState(([JSON.parse(localStorage.getItem('fileVidoList'))] ?? []));
+  const [fileListAlot, setFileListAlot] = useState((JSON.parse(localStorage.getItem('FileListAlot')) ?? []));
+  
   const ModelsName = (((goodsModel[0] || []).template || []).filter((arr) => {
     return arr.use !== false;
   }) || []).map((tem) => {

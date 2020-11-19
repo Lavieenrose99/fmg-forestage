@@ -43,12 +43,23 @@ const CourseDetails = (props) => {
     name: detailsInfo.cover,
     status: 'done', 
   }; 
+  const list = detailsInfo.pictures 
+    ? detailsInfo.pictures.map((arr, index) => {
+      return {
+        url: BASE_QINIU_URL + arr.picture,
+        uid: index,
+        name: arr.picture,
+        status: 'done', 
+      };
+    }) : [];
+    
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [qiniuToken, setQiniuToken] = useState('');
   const [session, setSession] = useState('');
   const [fileList, setFileList] = useState();
+  const [fileListAlot, setFileListAlot] = useState(list);
   const [richTextContent, setRichTextContent] = useState('');
   const [metionThings, setMetionThings] = useState('');
   const [courseArrange, setCourseArrange] = useState('');
@@ -56,6 +67,7 @@ const CourseDetails = (props) => {
   const [handleVisible, setHandleVisible] = useState(false);
   const [courseInfo, setCourseInfo] = useState({});
   const [is_put, setIs_put] = useState('');
+  //console.log(fileListAlot)
   useEffect(() => {
     if (form) {
       form.setFieldsValue({
@@ -85,6 +97,7 @@ const CourseDetails = (props) => {
     setRichTextContent(detailsInfo.detail);
     setIs_put(detailsInfo.is_put);
     setSession(fmgCourseListSession);
+    setFileListAlot(list);
     setFileList([PFile]);
   }, [detailsInfo]);
   const subscribeRichText = (text) => {
@@ -122,6 +135,37 @@ const CourseDetails = (props) => {
     };
     setFileList([fileItem]);
   };
+  const handleChangeAlot = ({ file  }) => {
+    const {
+      uid, name, type, thumbUrl, status, response = {},
+    } = file;
+    const fileItem = {
+      uid,
+      name,
+      type,
+      thumbUrl,
+      status,
+      response,
+      judege: (response.key || ''),
+      url: BASE_QINIU_URL + (response.key),
+    };
+
+    if (fileItem.judege.length !== 0) {
+      fileListAlot.pop();
+      fileListAlot.pop();
+      fileListAlot.push(fileItem);
+    } else if (fileItem.status !== 'error') {
+      fileListAlot.push(fileItem);
+    }
+    setFileListAlot([...fileListAlot]);
+  };
+  const onFileListAlot = (values) => {
+    fileListAlot.splice(values.uid, 1);
+    return false;
+  };
+  const onResetPicture = () => {
+    setFileListAlot(list);
+  };
   const onFinish = (values) => {
     const begin_time =  moment(values.begin_time).valueOf();
     const end_time = moment(values.end_time).valueOf();
@@ -129,6 +173,9 @@ const CourseDetails = (props) => {
     const detail = filterHTMLTag(richTextContent);
     const attention = filterHTMLTag(metionThings);
     const plan = filterHTMLTag(courseArrange);
+    const pictures = fileListAlot.map((arrFiles, index) => {
+      return { picture: arrFiles.judege, order: index };
+    });
     const basicInfoRaw = {
       begin_time,
       end_time,
@@ -136,6 +183,7 @@ const CourseDetails = (props) => {
       detail,
       attention,
       plan,
+      pictures,
     };
     
     const basicInfoUnion = Object.assign(values, basicInfoRaw);
@@ -165,7 +213,7 @@ const CourseDetails = (props) => {
       
     });
   };
- 
+  console.log(fileListAlot);
   return (
     <>
       <Drawer
@@ -422,6 +470,35 @@ const CourseDetails = (props) => {
              
                 </Form.Item>
               </Col>
+              <Col pull={2} span={12}>
+                <Form.Item
+                  label="课程轮播图"
+                  rules={[
+                    {
+                    //required: true,
+                    }
+                  ]}
+                >
+                  <>
+                    <span onClick={getUploadToken}>
+                      <Upload
+                        action={QINIU_SERVER}
+                        data={{
+                          token: qiniuToken,
+                          key: `picture-${Date.parse(new Date())}`,
+                        }}
+                        listType="picture-card"
+                        beforeUpload={getUploadToken}
+                        fileList={fileListAlot}
+                        onChange={handleChangeAlot}
+                        onRemove={onFileListAlot}
+                      >
+                        {fileListAlot.length >= 5 ? null : uploadButton}
+                      </Upload>
+                    </span>
+                  </>
+                </Form.Item>
+              </Col>
             </Row>
             <Divider>编辑课程详情</Divider>
             <Form.Item {...EditorLayout}>
@@ -465,6 +542,16 @@ const CourseDetails = (props) => {
                   icon={<StopTwoTone />}
                 >
                   重置
+                </Button>
+                <Button
+                  onClick={onResetPicture}
+                  type="primary"
+                  style={{
+                    margin: 20,
+                  }}
+                  icon={<StopTwoTone />}
+                >
+                  重置轮播
                 </Button>
               </Space>
             </div>
