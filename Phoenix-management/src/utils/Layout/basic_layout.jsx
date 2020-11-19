@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 17:34:19
- * @LastEditTime: 2020-11-17 23:23:44
+ * @LastEditTime: 2020-11-19 18:26:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/Layout/basic_layout.js
@@ -14,6 +14,11 @@ export const  EditorLayout = {
   wrapperCol: {
     offset: 4,
     //span: 8,
+  },
+};
+export const  EditorGoodsLayout = {
+  wrapperCol: {
+    offset: 1,
   },
 };
 

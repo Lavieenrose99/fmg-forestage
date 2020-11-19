@@ -18,7 +18,9 @@ import React, {
 } from 'react';
 import { get } from 'lodash';
 import RichTextEditor from '@/utils/RichTextEditor';
-import { layout, EditorLayout, uploadButton, tailLayout } from '@/utils/Layout/basic_layout.jsx';
+import {
+  layout, EditorGoodsLayout, uploadButton, tailLayout 
+} from '@/utils/Layout/basic_layout.jsx';
 import { filterHTMLTag } from '@/utils/adjust_picture';
 import  './index.less';
 
@@ -572,7 +574,7 @@ const GoodsAdj = (props) => {
           </Space>
         </div>
         <Divider>编辑商品详情</Divider>
-        <FormItem {...EditorLayout}>
+        <FormItem {...EditorGoodsLayout}>
           <RichTextEditor subscribeRichText={subscribeRichText} defaultText={richTextContent} />
         </FormItem>
         <Divider className="others-containter">其他属性</Divider>
