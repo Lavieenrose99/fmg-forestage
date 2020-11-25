@@ -10,8 +10,6 @@ import {
   Drawer
 } from 'antd';
 import PropTypes from 'prop-types';
-import { QINIU_SERVER, BASE_QINIU_URL } 
-  from '@/utils/Token';
 import {
   UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
 } from '@ant-design/icons';
@@ -24,6 +22,9 @@ import {
   couseSession 
 } from '@/utils/DataStore/course_table';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
+import { QINIU_SERVER, BASE_QINIU_URL, pictureSize } 
+  from '@/utils/Token';
+import ImgCrop from 'antd-img-crop'; 
 import RichTextEditor from '../RichTextEditor.jsx';
 import { filterHTMLTag } from '../adjust_picture';
 import { EditorLayout, uploadButton, layoutCourse } from '../Layout/basic_layout.jsx';
@@ -120,6 +121,11 @@ const CourseDetails = (props) => {
   };
   const getUploadToken = () => {
     getQiNiuToken();
+    return true;
+  };
+  const onFileList = () => {
+    setFileList([]);
+    return false;
   };
   const handleChange = ({ file  }) => {
     const {
@@ -206,14 +212,12 @@ const CourseDetails = (props) => {
   };
   const comfirmHandleCourse = () => {
     const finalData = { ...courseInfo, is_put };
-    console.log(finalData);
     props.dispatch({
       type: 'fmgCourse/AdjCourse',
       payload: { finalData, cid: id },
       
     });
   };
-  console.log(fileListAlot);
   return (
     <>
       <Drawer
@@ -451,20 +455,22 @@ const CourseDetails = (props) => {
                 >
                   <>
                     <span onClick={getUploadToken}>
-                      <Upload
-                        action={QINIU_SERVER}
-                        data={{
-                          token: qiniuToken,
-                          key: `picture-${Date.parse(new Date())}`,
-                        }}
-                        listType="picture-card"
-                        beforeUpload={getUploadToken}
-                        fileList={fileList}
-                        //onRemove={onFileList}
-                        onChange={handleChange}
-                      >
-                        {uploadButton}
-                      </Upload>
+                      <ImgCrop aspect={pictureSize.cover}>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={{
+                            token: qiniuToken,
+                            key: `picture-${Date.parse(new Date())}`,
+                          }}
+                          listType="picture-card"
+                          beforeUpload={getUploadToken}
+                          fileList={fileList}
+                          onRemove={onFileList}
+                          onChange={handleChange}
+                        >
+                          {uploadButton}
+                        </Upload>
+                      </ImgCrop>
                     </span>
                   </>
              
@@ -481,20 +487,22 @@ const CourseDetails = (props) => {
                 >
                   <>
                     <span onClick={getUploadToken}>
-                      <Upload
-                        action={QINIU_SERVER}
-                        data={{
-                          token: qiniuToken,
-                          key: `picture-${Date.parse(new Date())}`,
-                        }}
-                        listType="picture-card"
-                        beforeUpload={getUploadToken}
-                        fileList={fileListAlot}
-                        onChange={handleChangeAlot}
-                        onRemove={onFileListAlot}
-                      >
-                        {fileListAlot.length >= 5 ? null : uploadButton}
-                      </Upload>
+                      <ImgCrop grid aspect={pictureSize.rolling}>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={{
+                            token: qiniuToken,
+                            key: `picture-${Date.parse(new Date())}`,
+                          }}
+                          listType="picture-card"
+                          beforeUpload={getUploadToken}
+                          fileList={fileListAlot}
+                          onChange={handleChangeAlot}
+                          onRemove={onFileListAlot}
+                        >
+                          {fileListAlot.length >= 5 ? null : uploadButton}
+                        </Upload>
+                      </ImgCrop>
                     </span>
                   </>
                 </Form.Item>

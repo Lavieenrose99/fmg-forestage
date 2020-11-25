@@ -26,6 +26,7 @@ import {
 } from '@/utils/Layout/basic_layout.jsx';
 import { QINIU_SERVER, BASE_QINIU_URL } 
   from '@/utils/Token';
+import ImgCrop from 'antd-img-crop'; 
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import { filterHTMLTag } from '../../utils/adjust_picture';
 import '../../style/GoodsAddEditor.less';
@@ -208,6 +209,7 @@ export const GoodsAddEditor = (props) => {
   };
   const getUploadToken = () => {
     getQiNiuToken();
+    return true;
   };
   const handleChange = ({ file  }) => {
     const {
@@ -750,24 +752,26 @@ export const GoodsAddEditor = (props) => {
           >
             <>
               <span onClick={getUploadToken}>
-                <Upload
-                  action={QINIU_SERVER}
-                  data={{
-                    token: qiniuToken,
-                    key: `picture-${Date.parse(new Date())}`,
-                  }}
-                  showUploadList={false}
-                  listType="picture-card"
-                  beforeUpload={getUploadToken}
-                  onChange={handleChange}
-                >
-                  {fileList[0] ? <img
-                    src={fileList[0] 
-                      ? BASE_QINIU_URL + fileList[0].response.key : null}
-                    alt="avatar"
-                    style={{ width: '100%' }}
-                  /> :  uploadButton}
-                </Upload>
+                <ImgCrop grid>
+                  <Upload
+                    action={QINIU_SERVER}
+                    data={{
+                      token: qiniuToken,
+                      key: `picture-${Date.parse(new Date())}`,
+                    }}
+                    showUploadList={false}
+                    listType="picture-card"
+                    beforeUpload={getUploadToken}
+                    onChange={handleChange}
+                  >
+                    {fileList[0] ? <img
+                      src={fileList[0] 
+                        ? BASE_QINIU_URL + fileList[0].response.key : null}
+                      alt="avatar"
+                      style={{ width: '100%' }}
+                    /> :  uploadButton}
+                  </Upload>
+                </ImgCrop>
               </span>
             </>
            
@@ -783,21 +787,23 @@ export const GoodsAddEditor = (props) => {
           >
             <>
               <span onClick={getUploadToken}>
-                <Upload
-                  action={QINIU_SERVER}
-                  data={{
-                    token: qiniuToken,
-                    key: `picture-${Date.parse(new Date())}`,
-                  }}
-                  listType="picture-card"
-                  beforeUpload={getUploadToken}
-                  fileList={fileListAlot}
-                  onRemove={onFileListAlot}
-                  onPreview={handlePreview}
-                  onChange={handleChangeAlot}
-                >
-                  {fileListAlot.length >= 5 ? null : uploadButton}
-                </Upload>
+                <ImgCrop grid>
+                  <Upload
+                    action={QINIU_SERVER}
+                    data={{
+                      token: qiniuToken,
+                      key: `picture-${Date.parse(new Date())}`,
+                    }}
+                    listType="picture-card"
+                    beforeUpload={getUploadToken}
+                    fileList={fileListAlot}
+                    onRemove={onFileListAlot}
+                    onPreview={handlePreview}
+                    onChange={handleChangeAlot}
+                  >
+                    {fileListAlot.length >= 5 ? null : uploadButton}
+                  </Upload>
+                </ImgCrop>
               </span>
             </>
           </Form.Item>
@@ -1170,24 +1176,26 @@ export const GoodsAddEditor = (props) => {
                 >
                   <>
                     <span onClick={getUploadToken}>
-                      <Upload
-                        action={QINIU_SERVER}
-                        data={{
-                          token: qiniuToken,
-                          key: `spec-${Date.parse(new Date())}`,
-                        }}
-                        listType="picture-card"
-                        beforeUpload={getUploadToken}
-                        showUploadList={false}
-                        onPreview={handlePreview}
-                        onChange={handleChange}
-                      >
-                        {fileList[0] ? <img 
-                          src={BASE_QINIU_URL + fileList[0].response.key}
-                          alt="pictures"
-                          style={{ width: '100%' }}
-                        /> :  uploadButton}
-                      </Upload>
+                      <ImgCrop grid>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={{
+                            token: qiniuToken,
+                            key: `spec-${Date.parse(new Date())}`,
+                          }}
+                          listType="picture-card"
+                          beforeUpload={getUploadToken}
+                          showUploadList={false}
+                          onPreview={handlePreview}
+                          onChange={handleChange}
+                        >
+                          {fileList[0] ? <img 
+                            src={BASE_QINIU_URL + fileList[0].response.key}
+                            alt="pictures"
+                            style={{ width: '100%' }}
+                          /> :  uploadButton}
+                        </Upload>
+                      </ImgCrop>
                     </span>
                     <Modal
                       visible={previewVisible}

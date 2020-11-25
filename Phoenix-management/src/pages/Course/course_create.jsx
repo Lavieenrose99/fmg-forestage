@@ -6,7 +6,7 @@ import {
   Space, Table, Result, PageHeader, Checkbox, Row, Col
 } from 'antd';
 import {
-  UploadOutlined, SmileOutlined, StopTwoTone, PlusCircleTwoTone 
+  SmileOutlined, StopTwoTone, PlusCircleTwoTone 
 } from '@ant-design/icons';
 import moment  from 'moment';
 import { get } from 'lodash';
@@ -22,8 +22,9 @@ import {
 import { IconFont } from '@/utils/DataStore/icon_set.js';
 import PropTypes from 'prop-types';
 import { layoutCourse, EditorLayout, uploadButton } from '@/utils/Layout/basic_layout.jsx';
-import { QINIU_SERVER, BASE_QINIU_URL } 
+import { QINIU_SERVER, BASE_QINIU_URL, pictureSize } 
   from '@/utils/Token';
+import ImgCrop from 'antd-img-crop'; 
 import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import { filterHTMLTag } from '../../utils/adjust_picture';
 import '../../style/GoodsAddEditor.less';
@@ -101,8 +102,10 @@ export const GoodsAddEditor = (props) => {
       }
     );
   };
+  //看到其他的都要加true啊要不gettoken没用
   const getUploadToken = () => {
     getQiNiuToken();
+    return true;
   };
   const handleChange = ({ file  }) => {
     const {
@@ -505,24 +508,26 @@ export const GoodsAddEditor = (props) => {
                 >
                   <>
                     <span onClick={getUploadToken}>
-                      <Upload
-                        action={QINIU_SERVER}
-                        data={{
-                          token: qiniuToken,
-                          key: `picture-${Date.parse(new Date())}`,
-                        }}
-                        showUploadList={false}
-                        listType="picture-card"
-                        beforeUpload={getUploadToken}
-                        onChange={handleChange}
-                      >
-                        {fileList[0] ? <img
-                          src={fileList[0] 
-                            ? BASE_QINIU_URL + fileList[0].response.key : null}
-                          alt="avatar"
-                          style={{ width: '100%' }}
-                        /> :  uploadButton}
-                      </Upload>
+                      <ImgCrop aspect={pictureSize.rolling} grid>
+                        <Upload
+                          action={QINIU_SERVER}
+                          data={{
+                            token: qiniuToken,
+                            key: `picture-${Date.parse(new Date())}`,
+                          }}
+                          showUploadList={false}
+                          listType="picture-card"
+                          beforeUpload={getUploadToken}
+                          onChange={handleChange}
+                        >
+                          {fileList[0] ? <img
+                            src={fileList[0] 
+                              ? BASE_QINIU_URL + fileList[0].response.key : null}
+                            alt="avatar"
+                            style={{ width: '100%' }}
+                          /> :  uploadButton}
+                        </Upload>
+                      </ImgCrop>
                     </span>
                   </>
              

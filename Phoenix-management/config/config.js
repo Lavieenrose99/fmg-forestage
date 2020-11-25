@@ -199,12 +199,12 @@ export default defineConfig({
             name: '测试组件',
             icon: 'dashboard',
             routes: [
-              // {
-              //   path: '/page/test/table',
-              //   name: '数据统计',
-              //   icon: 'setting',
-              //   component: './Charts/test_charts',
-              // }
+              {
+                path: '/page/test/table',
+                name: '图片剪裁',
+                icon: 'setting',
+                component: './Test/test.jsx',
+              }
              
             ],
           },

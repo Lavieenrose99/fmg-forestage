@@ -3,6 +3,9 @@ import React, {
 }  from 'react';
 import { PlusSquareTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
+import ImgCrop from 'antd-img-crop';
+import { pictureSize } 
+  from '@/utils/Token';
 import {
   Form, Icon,
   Button, Select, 
@@ -90,6 +93,7 @@ const RollingPictures = (props) => {
   };
   const getUploadToken = () => {
     getQiNiuToken();
+    return true;
   };
   const uploadButton = (
     <div>
@@ -314,22 +318,24 @@ const RollingPictures = (props) => {
                       />
                       <Divider orientation="left" plain>轮播图片</Divider>
                       <span onClick={getQiNiuToken}>
-                        <Upload
-                          action={QINIU_SERVER}
-                          data={
+                        <ImgCrop grid aspect={pictureSize.home_rolling}>
+                          <Upload
+                            action={QINIU_SERVER}
+                            data={
              {
                token: qiniuToken,
                key: `icon-${Date.parse(new Date())}`,
              }
 }
-                          listType="picture-card"
-                          beforeUpload={getQiNiuToken}
-                          showUploadList={false}
+                            listType="picture-card"
+                            beforeUpload={getQiNiuToken}
+                            showUploadList={false}
                       //fileList={oriPicture}
-                          onChange={handleChangefile}
-                        >
-                          {oriPicture ?  <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
-                        </Upload>
+                            onChange={handleChangefile}
+                          >
+                            {oriPicture ?  <img src={BASE_QINIU_URL + oriPicture} alt="" style={{ height: 80, width: 80 }} /> : uploadButton}
+                          </Upload>
+                        </ImgCrop>
                       </span>
                       <Upload />
                     </Modal>
@@ -422,25 +428,27 @@ const RollingPictures = (props) => {
             >
               <>
                 <span onClick={getUploadToken}>
-                  <Upload
-                    action={QINIU_SERVER}
-                    data={{
-                      token: qiniuToken,
-                      key: `picture-${Date.parse(new Date())}`,
-                    }}
-                    showUploadList={false}
-                    listType="picture-card"
-                    beforeUpload={getUploadToken}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                  >
-                    {fileList[0] ? <img
-                      src={fileList[0] 
-                        ? BASE_QINIU_URL + fileList[0].response.key : null}
-                      alt="avatar"
-                      style={{ width: '100%' }}
-                    /> :  uploadButton}
-                  </Upload>
+                  <ImgCrop grid aspect={pictureSize.home_rolling} quality={1}>
+                    <Upload
+                      action={QINIU_SERVER}
+                      data={{
+                        token: qiniuToken,
+                        key: `picture-${Date.parse(new Date())}`,
+                      }}
+                      showUploadList={false}
+                      listType="picture-card"
+                      beforeUpload={getUploadToken}
+                      onPreview={handlePreview}
+                      onChange={handleChange}
+                    >
+                      {fileList[0] ? <img
+                        src={fileList[0] 
+                          ? BASE_QINIU_URL + fileList[0].response.key : null}
+                        alt="avatar"
+                        style={{ width: '100%' }}
+                      /> :  uploadButton}
+                    </Upload>
+                  </ImgCrop>
                 </span>
               </>
            
