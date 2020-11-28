@@ -190,6 +190,12 @@ export default defineConfig({
                 name: '课程标签',
                 icon: 'setting',
                 component: './Course/course_tags_setting',
+              },
+              {
+                path: '/page/study/preapply',
+                name: '预报名列表',
+                icon: 'setting',
+                component: './Course/pre_apply_coures',
               }
              
             ],

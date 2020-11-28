@@ -1,0 +1,244 @@
+Date : 2020-11-25 12:57:05
+Directory : /Users/ivancjz99/fmg-management/Phoenix-management/src
+Total : 162 files,  16279 codes, 486 comments, 983 blanks, all 17748 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| JavaScript React |         64 |     12,208 |        242 |        684 |     13,134 |
+| JavaScript       |         72 |      3,120 |        239 |        201 |      3,560 |
+| Less             |         23 |        729 |          5 |         81 |        815 |
+| HTML             |          1 |        199 |          0 |         16 |        215 |
+| JSON             |          1 |         22 |          0 |          1 |         23 |
+| XML              |          1 |          1 |          0 |          0 |          1 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                         | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                            |        162 |     16,279 |        486 |        983 |     17,748 |
+| assets                                                                                                       |          1 |          1 |          0 |          0 |          1 |
+| components                                                                                                   |         20 |      1,130 |         48 |        139 |      1,317 |
+| components/Authorized                                                                                        |          7 |        214 |         46 |         52 |        312 |
+| components/GlobalHeader                                                                                      |          4 |        456 |          0 |         43 |        499 |
+| components/HeaderDropdown                                                                                    |          2 |         22 |          0 |          6 |         28 |
+| components/HeaderSearch                                                                                      |          2 |        112 |          0 |          6 |        118 |
+| components/NoticeIcon                                                                                        |          4 |        324 |          1 |         30 |        355 |
+| components/PageLoading                                                                                       |          1 |          2 |          1 |          2 |          5 |
+| e2e                                                                                                          |          2 |         52 |          0 |          8 |         60 |
+| e2e/__mocks__                                                                                                |          1 |          1 |          0 |          1 |          2 |
+| layouts                                                                                                      |          5 |        273 |         15 |         38 |        326 |
+| locales                                                                                                      |         28 |        757 |          0 |         32 |        789 |
+| locales/en-US                                                                                                |          6 |        171 |          0 |          6 |        177 |
+| locales/pt-BR                                                                                                |          6 |        174 |          0 |          6 |        180 |
+| locales/zh-CN                                                                                                |          6 |        166 |          0 |          6 |        172 |
+| locales/zh-TW                                                                                                |          6 |        166 |          0 |          6 |        172 |
+| models                                                                                                       |         14 |      1,362 |         70 |         64 |      1,496 |
+| models/Bill                                                                                                  |          1 |        228 |          3 |          4 |        235 |
+| models/Course                                                                                                |          2 |        279 |          9 |          6 |        294 |
+| models/CreateGoods                                                                                           |          1 |        125 |          0 |          4 |        129 |
+| models/GoodsTags                                                                                             |          4 |        368 |          0 |         14 |        382 |
+| models/SettingsControls                                                                                      |          2 |        189 |          0 |         10 |        199 |
+| pages                                                                                                        |         48 |      9,867 |        111 |        502 |     10,480 |
+| pages/Bill                                                                                                   |          5 |      1,133 |          6 |         40 |      1,179 |
+| pages/Charts                                                                                                 |          1 |         36 |          1 |          4 |         41 |
+| pages/Course                                                                                                 |          8 |      1,415 |         15 |         51 |      1,481 |
+| pages/DashBoard                                                                                              |          2 |        134 |          4 |          5 |        143 |
+| pages/GoodsManagement                                                                                        |         13 |      5,378 |         47 |        262 |      5,687 |
+| pages/GoodsManagement/GoodsListTables                                                                        |          4 |      1,922 |         19 |         77 |      2,018 |
+| pages/GoodsManagement/GoodsModels                                                                            |          1 |        491 |          2 |         26 |        519 |
+| pages/GoodsManagement/GoodsTags                                                                              |          6 |      1,519 |         13 |        104 |      1,636 |
+| pages/IndexPages                                                                                             |          1 |         80 |          0 |          4 |         84 |
+| pages/Test                                                                                                   |          1 |         87 |         34 |         16 |        137 |
+| pages/settings_controls                                                                                      |          3 |        826 |          4 |         28 |        858 |
+| pages/user                                                                                                   |          9 |        503 |          0 |         66 |        569 |
+| pages/user/login                                                                                             |          9 |        503 |          0 |         66 |        569 |
+| pages/user/login/components                                                                                  |          7 |        368 |          0 |         50 |        418 |
+| pages/user/login/components/Login                                                                            |          7 |        368 |          0 |         50 |        418 |
+| services                                                                                                     |         12 |        434 |         45 |         32 |        511 |
+| services/Bill                                                                                                |          1 |         65 |          4 |          3 |         72 |
+| services/Course                                                                                              |          2 |        109 |         18 |          5 |        132 |
+| services/CreateGoods                                                                                         |          1 |         48 |          0 |          5 |         53 |
+| services/GoodsTags                                                                                           |          4 |        136 |          1 |          9 |        146 |
+| services/SettingsControls                                                                                    |          2 |         76 |          2 |          6 |         84 |
+| style                                                                                                        |          3 |        121 |          0 |          9 |        130 |
+| utils                                                                                                        |         25 |      2,095 |        163 |        128 |      2,386 |
+| utils/Course                                                                                                 |          2 |        700 |         13 |         25 |        738 |
+| utils/DataStore                                                                                              |          4 |        164 |          9 |          8 |        181 |
+| utils/Drawer                                                                                                 |          2 |        495 |          7 |         14 |        516 |
+| utils/Express                                                                                                |          2 |         60 |         22 |          4 |         86 |
+| utils/Layout                                                                                                 |          1 |         49 |          9 |          6 |         64 |
+| utils/Table                                                                                                  |          1 |         13 |          1 |          3 |         17 |
+| utils/pictureUploader                                                                                        |          3 |         85 |          0 |         14 |         99 |
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                                     | language         | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/assets/logo.svg                                       | XML              |          1 |          0 |          0 |          1 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/Authorized.jsx                  | JavaScript React |         19 |          0 |          3 |         22 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/AuthorizedRoute.jsx             | JavaScript React |         23 |          0 |          3 |         26 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/CheckPermissions.jsx            | JavaScript React |         47 |         10 |         16 |         73 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/PromiseRender.jsx               | JavaScript React |         65 |          3 |         11 |         79 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/Secured.jsx                     | JavaScript React |         33 |         27 |         11 |         71 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/index.jsx                       | JavaScript React |          8 |          0 |          2 |         10 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/renderAuthorize.js              | JavaScript       |         19 |          6 |          6 |         31 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/AvatarDropdown.jsx            | JavaScript React |         64 |          0 |          9 |         73 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/NoticeIconView.jsx            | JavaScript React |        138 |          0 |         19 |        157 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/RightContent.jsx              | JavaScript React |        156 |          0 |          8 |        164 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/index.less                    | Less             |         98 |          0 |          7 |        105 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderDropdown/index.jsx                   | JavaScript React |          8 |          0 |          3 |         11 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderDropdown/index.less                  | Less             |         14 |          0 |          3 |         17 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderSearch/index.jsx                     | JavaScript React |         83 |          0 |          4 |         87 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderSearch/index.less                    | Less             |         29 |          0 |          2 |         31 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/NoticeList.jsx                  | JavaScript React |         94 |          1 |          6 |        101 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/NoticeList.less                 | Less             |         96 |          0 |          8 |        104 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/index.jsx                       | JavaScript React |        104 |          0 |         10 |        114 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/index.less                      | Less             |         30 |          0 |          6 |         36 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/components/PageLoading/index.jsx                      | JavaScript React |          2 |          1 |          2 |          5 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/e2e/__mocks__/antd-pro-merge-less.js                  | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/e2e/baseLayout.e2e.js                                 | JavaScript       |         51 |          0 |          7 |         58 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/global.jsx                                            | JavaScript React |         85 |          4 |         14 |        103 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/global.less                                           | Less             |         45 |          1 |          9 |         55 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/BasicLayout.jsx                               | JavaScript React |        115 |         14 |         10 |        139 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/BlankLayout.jsx                               | JavaScript React |          3 |          0 |          3 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/SecurityLayout.jsx                            | JavaScript React |         39 |          1 |         10 |         50 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/UserLayout.jsx                                | JavaScript React |         55 |          0 |          4 |         59 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/UserLayout.less                               | Less             |         61 |          0 |         11 |         72 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US.js                                      | JavaScript       |         21 |          0 |          2 |         23 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/component.js                            | JavaScript       |          5 |          0 |          1 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/globalHeader.js                         | JavaScript       |         17 |          0 |          1 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/menu.js                                 | JavaScript       |         52 |          0 |          1 |         53 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/pwa.js                                  | JavaScript       |          6 |          0 |          1 |          7 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/settingDrawer.js                        | JavaScript       |         31 |          0 |          1 |         32 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/settings.js                             | JavaScript       |         60 |          0 |          1 |         61 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR.js                                      | JavaScript       |         19 |          0 |          2 |         21 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/component.js                            | JavaScript       |          5 |          0 |          1 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/globalHeader.js                         | JavaScript       |         18 |          0 |          1 |         19 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/menu.js                                 | JavaScript       |         52 |          0 |          1 |         53 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/pwa.js                                  | JavaScript       |          7 |          0 |          1 |          8 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/settingDrawer.js                        | JavaScript       |         32 |          0 |          1 |         33 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/settings.js                             | JavaScript       |         60 |          0 |          1 |         61 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN.js                                      | JavaScript       |         21 |          0 |          2 |         23 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/component.js                            | JavaScript       |          5 |          0 |          1 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/globalHeader.js                         | JavaScript       |         17 |          0 |          1 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/menu.js                                 | JavaScript       |         52 |          0 |          1 |         53 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/pwa.js                                  | JavaScript       |          6 |          0 |          1 |          7 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/settingDrawer.js                        | JavaScript       |         31 |          0 |          1 |         32 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/settings.js                             | JavaScript       |         55 |          0 |          1 |         56 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW.js                                      | JavaScript       |         19 |          0 |          2 |         21 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/component.js                            | JavaScript       |          5 |          0 |          1 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/globalHeader.js                         | JavaScript       |         17 |          0 |          1 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/menu.js                                 | JavaScript       |         52 |          0 |          1 |         53 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/pwa.js                                  | JavaScript       |          6 |          0 |          1 |          7 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/settingDrawer.js                        | JavaScript       |         31 |          0 |          1 |         32 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/settings.js                             | JavaScript       |         55 |          0 |          1 |         56 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/manifest.json                                         | JSON             |         22 |          0 |          1 |         23 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/Bill/bills_list.js                             | JavaScript       |        228 |          3 |          4 |        235 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/Course/course_tags.js                          | JavaScript       |        199 |          1 |          4 |        204 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/Course/couse_list.js                           | JavaScript       |         80 |          8 |          2 |         90 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/CreateGoods/CreateGoods.js                     | JavaScript       |        125 |          0 |          4 |        129 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodClassTags.js                     | JavaScript       |         96 |          0 |          3 |         99 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodSaleTags.js                      | JavaScript       |         70 |          0 |          3 |         73 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodsAreaTags.js                     | JavaScript       |         94 |          0 |          5 |         99 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodsModelsList.js                   | JavaScript       |        108 |          0 |          3 |        111 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/SettingsControls/icon_setting.js               | JavaScript       |         89 |          0 |          5 |         94 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/SettingsControls/rolling_controls.js           | JavaScript       |        100 |          0 |          5 |        105 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/global.js                                      | JavaScript       |        107 |          1 |          8 |        116 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/login.js                                       | JavaScript       |          0 |         56 |          9 |         65 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/setting.js                                     | JavaScript       |         22 |          0 |          6 |         28 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/models/user.js                                        | JavaScript       |         44 |          1 |          3 |         48 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/404.jsx                                         | JavaScript React |         16 |          0 |          3 |         19 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Authorized.jsx                                  | JavaScript React |         29 |          0 |          3 |         32 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/bills_list.jsx                             | JavaScript React |        724 |          2 |         18 |        744 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/bills_list.less                            | Less             |         39 |          1 |          1 |         41 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/check_list.jsx                             | JavaScript React |        279 |          3 |         16 |        298 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/check_list.less                            | Less             |          6 |          0 |          0 |          6 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/express_list.jsx                           | JavaScript React |         85 |          0 |          5 |         90 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Charts/test_charts.jsx                          | JavaScript React |         36 |          1 |          4 |         41 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_create.jsx                        | JavaScript React |        767 |          5 |         32 |        804 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_create.less                       | Less             |          0 |          0 |          1 |          1 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_list.jsx                          | JavaScript React |        322 |          7 |          8 |        337 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_list.less                         | Less             |          0 |          0 |          1 |          1 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_tags_setting.jsx                  | JavaScript React |        276 |          3 |          4 |        283 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_tags_setting.less                 | Less             |         18 |          0 |          0 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/pre_apply_coures.jsx                     | JavaScript React |         32 |          0 |          4 |         36 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/pre_apply_course.less                    | Less             |          0 |          0 |          1 |          1 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/DashBoard/index.jsx                             | JavaScript React |        127 |          3 |          5 |        135 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/DashBoard/index.less                            | Less             |          7 |          1 |          0 |          8 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsAddEditor.jsx              | JavaScript React |      1,441 |         13 |         53 |      1,507 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTable.jsx              | JavaScript React |          5 |          0 |          2 |          7 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/GoodsAdj.jsx    | JavaScript React |        680 |          7 |         14 |        701 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/TemplateAdj.jsx | JavaScript React |        653 |         12 |         28 |        693 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/index.jsx       | JavaScript React |        534 |          0 |         30 |        564 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/index.less      | Less             |         55 |          0 |          5 |         60 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsModels/GoodsModelsList.jsx | JavaScript React |        491 |          2 |         26 |        519 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsAreaTags.jsx     | JavaScript React |        376 |          3 |         23 |        402 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassIndex.jsx   | JavaScript React |         31 |          0 |          7 |         38 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassList.jsx    | JavaScript React |        449 |          4 |         26 |        479 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassTags.jsx    | JavaScript React |        359 |          4 |         22 |        385 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsSaleTags.jsx     | JavaScript React |        271 |          2 |         19 |        292 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsTagsIndex.jsx    | JavaScript React |         33 |          0 |          7 |         40 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/IndexPages/Index.jsx                            | JavaScript React |         80 |          0 |          4 |         84 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/LoginPage.less                                  | Less             |          7 |          0 |          0 |          7 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Test/test.jsx                                   | JavaScript React |         87 |         34 |         16 |        137 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/document.ejs                                    | HTML             |        199 |          0 |         16 |        215 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/loginPage.jsx                                   | JavaScript React |         24 |          0 |          4 |         28 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/icon_setting.jsx              | JavaScript React |        339 |          2 |         10 |        351 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/rolling_picture_index.jsx     | JavaScript React |         18 |          0 |          3 |         21 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/rolling_picture_setting.jsx   | JavaScript React |        469 |          2 |         15 |        486 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginContext.jsx    | JavaScript React |          3 |          0 |          2 |          5 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginItem.jsx       | JavaScript React |        120 |          0 |         20 |        140 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginSubmit.jsx     | JavaScript React |         14 |          0 |          4 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginTab.jsx        | JavaScript React |         29 |          0 |          7 |         36 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/index.jsx           | JavaScript React |         90 |          0 |          6 |         96 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/index.less          | Less             |         41 |          0 |          9 |         50 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/map.jsx             | JavaScript React |         71 |          0 |          2 |         73 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/index.jsx                            | JavaScript React |         95 |          0 |         10 |        105 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/style.less                           | Less             |         40 |          0 |          6 |         46 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/service-worker.js                                     | JavaScript       |         35 |         29 |          7 |         71 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/Bill/bills_list.js                           | JavaScript       |         65 |          4 |          3 |         72 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/Course/course_list.js                        | JavaScript       |         42 |          8 |          2 |         52 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/Course/course_tags.js                        | JavaScript       |         67 |         10 |          3 |         80 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/CreateGoods/CreateGoods.js                   | JavaScript       |         48 |          0 |          5 |         53 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodClassTags.js                   | JavaScript       |         38 |          0 |          2 |         40 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodSaleTags.js                    | JavaScript       |         32 |          0 |          2 |         34 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodsAreaTags.js                   | JavaScript       |         33 |          1 |          3 |         37 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodsModesList.js                  | JavaScript       |         33 |          0 |          2 |         35 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/SettingsControls/icon_controls.js            | JavaScript       |         38 |          1 |          3 |         42 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/SettingsControls/rolling_controls.js         | JavaScript       |         38 |          1 |          3 |         42 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/login.js                                     | JavaScript       |          0 |         10 |          2 |         12 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/services/user.js                                      | JavaScript       |          0 |         10 |          2 |         12 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/style/Draw.less                                       | Less             |         26 |          0 |          4 |         30 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/style/GoodsAddEditor.less                             | Less             |         77 |          0 |          5 |         82 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/style/GoodsTagsIndex.less                             | Less             |         18 |          0 |          0 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Authorized.js                                   | JavaScript       |          9 |          6 |          5 |         20 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Course/course_details_drawer.jsx                | JavaScript React |        693 |          5 |         23 |        721 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Course/course_table.js                          | JavaScript       |          7 |          8 |          2 |         17 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/bills_data_set.js                     | JavaScript       |         50 |          0 |          1 |         51 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/course_table.jsx                      | JavaScript React |         49 |          1 |          2 |         52 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/data_goods.js                         | JavaScript       |         61 |          0 |          3 |         64 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/icon_set.js                           | JavaScript       |          4 |          8 |          2 |         14 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Drawer/delivery_saving.jsx                      | JavaScript React |        136 |          1 |          7 |        144 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Drawer/details_drawer.jsx                       | JavaScript React |        359 |          6 |          7 |        372 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Express/Express.js                              | JavaScript       |         40 |         22 |          3 |         65 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Express/mock_data.js                            | JavaScript       |         20 |          0 |          1 |         21 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Layout/basic_layout.jsx                         | JavaScript React |         49 |          9 |          6 |         64 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/RichTextEditor.jsx                              | JavaScript React |        167 |         38 |         12 |        217 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Table/withPure.js                               | JavaScript       |         13 |          1 |          3 |         17 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Token.js                                        | JavaScript       |          7 |          8 |          3 |         18 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/adjust_picture.js                               | JavaScript       |          7 |         15 |          1 |         23 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/authority.js                                    | JavaScript       |         43 |          3 |         11 |         57 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/noused_code_store.jsx                           | JavaScript React |         82 |         12 |          4 |         98 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/pictureUploader.jsx             | JavaScript React |         66 |          0 |         10 |         76 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/pictureUploader.less            | Less             |          8 |          0 |          1 |          9 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/picture_cutting.jsx             | JavaScript React |         11 |          0 |          3 |         14 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/request.js                                      | JavaScript       |         41 |         11 |          6 |         58 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.js                                        | JavaScript       |         44 |          7 |          9 |         60 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.less                                      | Less             |         14 |          2 |          1 |         17 |
+| /Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.test.js                                   | JavaScript       |        115 |          0 |          2 |        117 |
+| Total                                                                                                        |                  |     16,279 |        486 |        983 |     17,748 |
++--------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

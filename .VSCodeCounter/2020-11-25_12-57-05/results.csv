@@ -1,0 +1,164 @@
+"filename", "language", "JavaScript", "JavaScript React", "Less", "JSON", "XML", "HTML", "comment", "blank", "total"
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/assets/logo.svg", "XML", 0, 0, 0, 0, 1, 0, 0, 0, 1
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/Authorized.jsx", "JavaScript React", 0, 19, 0, 0, 0, 0, 0, 3, 22
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/AuthorizedRoute.jsx", "JavaScript React", 0, 23, 0, 0, 0, 0, 0, 3, 26
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/CheckPermissions.jsx", "JavaScript React", 0, 47, 0, 0, 0, 0, 10, 16, 73
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/PromiseRender.jsx", "JavaScript React", 0, 65, 0, 0, 0, 0, 3, 11, 79
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/Secured.jsx", "JavaScript React", 0, 33, 0, 0, 0, 0, 27, 11, 71
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/index.jsx", "JavaScript React", 0, 8, 0, 0, 0, 0, 0, 2, 10
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/Authorized/renderAuthorize.js", "JavaScript", 19, 0, 0, 0, 0, 0, 6, 6, 31
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/AvatarDropdown.jsx", "JavaScript React", 0, 64, 0, 0, 0, 0, 0, 9, 73
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/NoticeIconView.jsx", "JavaScript React", 0, 138, 0, 0, 0, 0, 0, 19, 157
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/RightContent.jsx", "JavaScript React", 0, 156, 0, 0, 0, 0, 0, 8, 164
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/GlobalHeader/index.less", "Less", 0, 0, 98, 0, 0, 0, 0, 7, 105
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderDropdown/index.jsx", "JavaScript React", 0, 8, 0, 0, 0, 0, 0, 3, 11
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderDropdown/index.less", "Less", 0, 0, 14, 0, 0, 0, 0, 3, 17
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderSearch/index.jsx", "JavaScript React", 0, 83, 0, 0, 0, 0, 0, 4, 87
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/HeaderSearch/index.less", "Less", 0, 0, 29, 0, 0, 0, 0, 2, 31
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/NoticeList.jsx", "JavaScript React", 0, 94, 0, 0, 0, 0, 1, 6, 101
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/NoticeList.less", "Less", 0, 0, 96, 0, 0, 0, 0, 8, 104
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/index.jsx", "JavaScript React", 0, 104, 0, 0, 0, 0, 0, 10, 114
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/NoticeIcon/index.less", "Less", 0, 0, 30, 0, 0, 0, 0, 6, 36
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/components/PageLoading/index.jsx", "JavaScript React", 0, 2, 0, 0, 0, 0, 1, 2, 5
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/e2e/__mocks__/antd-pro-merge-less.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 1, 2
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/e2e/baseLayout.e2e.js", "JavaScript", 51, 0, 0, 0, 0, 0, 0, 7, 58
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/global.jsx", "JavaScript React", 0, 85, 0, 0, 0, 0, 4, 14, 103
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/global.less", "Less", 0, 0, 45, 0, 0, 0, 1, 9, 55
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/BasicLayout.jsx", "JavaScript React", 0, 115, 0, 0, 0, 0, 14, 10, 139
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/BlankLayout.jsx", "JavaScript React", 0, 3, 0, 0, 0, 0, 0, 3, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/SecurityLayout.jsx", "JavaScript React", 0, 39, 0, 0, 0, 0, 1, 10, 50
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/UserLayout.jsx", "JavaScript React", 0, 55, 0, 0, 0, 0, 0, 4, 59
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/layouts/UserLayout.less", "Less", 0, 0, 61, 0, 0, 0, 0, 11, 72
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US.js", "JavaScript", 21, 0, 0, 0, 0, 0, 0, 2, 23
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/component.js", "JavaScript", 5, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/globalHeader.js", "JavaScript", 17, 0, 0, 0, 0, 0, 0, 1, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/menu.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 1, 53
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/pwa.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/settingDrawer.js", "JavaScript", 31, 0, 0, 0, 0, 0, 0, 1, 32
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/en-US/settings.js", "JavaScript", 60, 0, 0, 0, 0, 0, 0, 1, 61
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR.js", "JavaScript", 19, 0, 0, 0, 0, 0, 0, 2, 21
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/component.js", "JavaScript", 5, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/globalHeader.js", "JavaScript", 18, 0, 0, 0, 0, 0, 0, 1, 19
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/menu.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 1, 53
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/pwa.js", "JavaScript", 7, 0, 0, 0, 0, 0, 0, 1, 8
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/settingDrawer.js", "JavaScript", 32, 0, 0, 0, 0, 0, 0, 1, 33
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/pt-BR/settings.js", "JavaScript", 60, 0, 0, 0, 0, 0, 0, 1, 61
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN.js", "JavaScript", 21, 0, 0, 0, 0, 0, 0, 2, 23
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/component.js", "JavaScript", 5, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/globalHeader.js", "JavaScript", 17, 0, 0, 0, 0, 0, 0, 1, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/menu.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 1, 53
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/pwa.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/settingDrawer.js", "JavaScript", 31, 0, 0, 0, 0, 0, 0, 1, 32
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-CN/settings.js", "JavaScript", 55, 0, 0, 0, 0, 0, 0, 1, 56
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW.js", "JavaScript", 19, 0, 0, 0, 0, 0, 0, 2, 21
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/component.js", "JavaScript", 5, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/globalHeader.js", "JavaScript", 17, 0, 0, 0, 0, 0, 0, 1, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/menu.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 1, 53
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/pwa.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/settingDrawer.js", "JavaScript", 31, 0, 0, 0, 0, 0, 0, 1, 32
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/locales/zh-TW/settings.js", "JavaScript", 55, 0, 0, 0, 0, 0, 0, 1, 56
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/manifest.json", "JSON", 0, 0, 0, 22, 0, 0, 0, 1, 23
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/Bill/bills_list.js", "JavaScript", 228, 0, 0, 0, 0, 0, 3, 4, 235
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/Course/course_tags.js", "JavaScript", 199, 0, 0, 0, 0, 0, 1, 4, 204
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/Course/couse_list.js", "JavaScript", 80, 0, 0, 0, 0, 0, 8, 2, 90
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/CreateGoods/CreateGoods.js", "JavaScript", 125, 0, 0, 0, 0, 0, 0, 4, 129
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodClassTags.js", "JavaScript", 96, 0, 0, 0, 0, 0, 0, 3, 99
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodSaleTags.js", "JavaScript", 70, 0, 0, 0, 0, 0, 0, 3, 73
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodsAreaTags.js", "JavaScript", 94, 0, 0, 0, 0, 0, 0, 5, 99
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/GoodsTags/GoodsModelsList.js", "JavaScript", 108, 0, 0, 0, 0, 0, 0, 3, 111
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/SettingsControls/icon_setting.js", "JavaScript", 89, 0, 0, 0, 0, 0, 0, 5, 94
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/SettingsControls/rolling_controls.js", "JavaScript", 100, 0, 0, 0, 0, 0, 0, 5, 105
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/global.js", "JavaScript", 107, 0, 0, 0, 0, 0, 1, 8, 116
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/login.js", "JavaScript", 0, 0, 0, 0, 0, 0, 56, 9, 65
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/setting.js", "JavaScript", 22, 0, 0, 0, 0, 0, 0, 6, 28
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/models/user.js", "JavaScript", 44, 0, 0, 0, 0, 0, 1, 3, 48
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/404.jsx", "JavaScript React", 0, 16, 0, 0, 0, 0, 0, 3, 19
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Authorized.jsx", "JavaScript React", 0, 29, 0, 0, 0, 0, 0, 3, 32
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/bills_list.jsx", "JavaScript React", 0, 724, 0, 0, 0, 0, 2, 18, 744
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/bills_list.less", "Less", 0, 0, 39, 0, 0, 0, 1, 1, 41
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/check_list.jsx", "JavaScript React", 0, 279, 0, 0, 0, 0, 3, 16, 298
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/check_list.less", "Less", 0, 0, 6, 0, 0, 0, 0, 0, 6
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Bill/express_list.jsx", "JavaScript React", 0, 85, 0, 0, 0, 0, 0, 5, 90
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Charts/test_charts.jsx", "JavaScript React", 0, 36, 0, 0, 0, 0, 1, 4, 41
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_create.jsx", "JavaScript React", 0, 767, 0, 0, 0, 0, 5, 32, 804
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_create.less", "Less", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_list.jsx", "JavaScript React", 0, 322, 0, 0, 0, 0, 7, 8, 337
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_list.less", "Less", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_tags_setting.jsx", "JavaScript React", 0, 276, 0, 0, 0, 0, 3, 4, 283
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/course_tags_setting.less", "Less", 0, 0, 18, 0, 0, 0, 0, 0, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/pre_apply_coures.jsx", "JavaScript React", 0, 32, 0, 0, 0, 0, 0, 4, 36
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Course/pre_apply_course.less", "Less", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/DashBoard/index.jsx", "JavaScript React", 0, 127, 0, 0, 0, 0, 3, 5, 135
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/DashBoard/index.less", "Less", 0, 0, 7, 0, 0, 0, 1, 0, 8
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsAddEditor.jsx", "JavaScript React", 0, 1441, 0, 0, 0, 0, 13, 53, 1507
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTable.jsx", "JavaScript React", 0, 5, 0, 0, 0, 0, 0, 2, 7
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/GoodsAdj.jsx", "JavaScript React", 0, 680, 0, 0, 0, 0, 7, 14, 701
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/TemplateAdj.jsx", "JavaScript React", 0, 653, 0, 0, 0, 0, 12, 28, 693
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/index.jsx", "JavaScript React", 0, 534, 0, 0, 0, 0, 0, 30, 564
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsListTables/index.less", "Less", 0, 0, 55, 0, 0, 0, 0, 5, 60
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsModels/GoodsModelsList.jsx", "JavaScript React", 0, 491, 0, 0, 0, 0, 2, 26, 519
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsAreaTags.jsx", "JavaScript React", 0, 376, 0, 0, 0, 0, 3, 23, 402
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassIndex.jsx", "JavaScript React", 0, 31, 0, 0, 0, 0, 0, 7, 38
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassList.jsx", "JavaScript React", 0, 449, 0, 0, 0, 0, 4, 26, 479
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsClassTags.jsx", "JavaScript React", 0, 359, 0, 0, 0, 0, 4, 22, 385
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsSaleTags.jsx", "JavaScript React", 0, 271, 0, 0, 0, 0, 2, 19, 292
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/GoodsManagement/GoodsTags/GoodsTagsIndex.jsx", "JavaScript React", 0, 33, 0, 0, 0, 0, 0, 7, 40
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/IndexPages/Index.jsx", "JavaScript React", 0, 80, 0, 0, 0, 0, 0, 4, 84
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/LoginPage.less", "Less", 0, 0, 7, 0, 0, 0, 0, 0, 7
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/Test/test.jsx", "JavaScript React", 0, 87, 0, 0, 0, 0, 34, 16, 137
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/document.ejs", "HTML", 0, 0, 0, 0, 0, 199, 0, 16, 215
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/loginPage.jsx", "JavaScript React", 0, 24, 0, 0, 0, 0, 0, 4, 28
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/icon_setting.jsx", "JavaScript React", 0, 339, 0, 0, 0, 0, 2, 10, 351
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/rolling_picture_index.jsx", "JavaScript React", 0, 18, 0, 0, 0, 0, 0, 3, 21
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/settings_controls/rolling_picture_setting.jsx", "JavaScript React", 0, 469, 0, 0, 0, 0, 2, 15, 486
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginContext.jsx", "JavaScript React", 0, 3, 0, 0, 0, 0, 0, 2, 5
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginItem.jsx", "JavaScript React", 0, 120, 0, 0, 0, 0, 0, 20, 140
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginSubmit.jsx", "JavaScript React", 0, 14, 0, 0, 0, 0, 0, 4, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/LoginTab.jsx", "JavaScript React", 0, 29, 0, 0, 0, 0, 0, 7, 36
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/index.jsx", "JavaScript React", 0, 90, 0, 0, 0, 0, 0, 6, 96
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/index.less", "Less", 0, 0, 41, 0, 0, 0, 0, 9, 50
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/components/Login/map.jsx", "JavaScript React", 0, 71, 0, 0, 0, 0, 0, 2, 73
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/index.jsx", "JavaScript React", 0, 95, 0, 0, 0, 0, 0, 10, 105
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/pages/user/login/style.less", "Less", 0, 0, 40, 0, 0, 0, 0, 6, 46
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/service-worker.js", "JavaScript", 35, 0, 0, 0, 0, 0, 29, 7, 71
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/Bill/bills_list.js", "JavaScript", 65, 0, 0, 0, 0, 0, 4, 3, 72
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/Course/course_list.js", "JavaScript", 42, 0, 0, 0, 0, 0, 8, 2, 52
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/Course/course_tags.js", "JavaScript", 67, 0, 0, 0, 0, 0, 10, 3, 80
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/CreateGoods/CreateGoods.js", "JavaScript", 48, 0, 0, 0, 0, 0, 0, 5, 53
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodClassTags.js", "JavaScript", 38, 0, 0, 0, 0, 0, 0, 2, 40
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodSaleTags.js", "JavaScript", 32, 0, 0, 0, 0, 0, 0, 2, 34
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodsAreaTags.js", "JavaScript", 33, 0, 0, 0, 0, 0, 1, 3, 37
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/GoodsTags/GoodsModesList.js", "JavaScript", 33, 0, 0, 0, 0, 0, 0, 2, 35
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/SettingsControls/icon_controls.js", "JavaScript", 38, 0, 0, 0, 0, 0, 1, 3, 42
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/SettingsControls/rolling_controls.js", "JavaScript", 38, 0, 0, 0, 0, 0, 1, 3, 42
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/login.js", "JavaScript", 0, 0, 0, 0, 0, 0, 10, 2, 12
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/services/user.js", "JavaScript", 0, 0, 0, 0, 0, 0, 10, 2, 12
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/style/Draw.less", "Less", 0, 0, 26, 0, 0, 0, 0, 4, 30
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/style/GoodsAddEditor.less", "Less", 0, 0, 77, 0, 0, 0, 0, 5, 82
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/style/GoodsTagsIndex.less", "Less", 0, 0, 18, 0, 0, 0, 0, 0, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Authorized.js", "JavaScript", 9, 0, 0, 0, 0, 0, 6, 5, 20
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Course/course_details_drawer.jsx", "JavaScript React", 0, 693, 0, 0, 0, 0, 5, 23, 721
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Course/course_table.js", "JavaScript", 7, 0, 0, 0, 0, 0, 8, 2, 17
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/bills_data_set.js", "JavaScript", 50, 0, 0, 0, 0, 0, 0, 1, 51
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/course_table.jsx", "JavaScript React", 0, 49, 0, 0, 0, 0, 1, 2, 52
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/data_goods.js", "JavaScript", 61, 0, 0, 0, 0, 0, 0, 3, 64
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/DataStore/icon_set.js", "JavaScript", 4, 0, 0, 0, 0, 0, 8, 2, 14
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Drawer/delivery_saving.jsx", "JavaScript React", 0, 136, 0, 0, 0, 0, 1, 7, 144
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Drawer/details_drawer.jsx", "JavaScript React", 0, 359, 0, 0, 0, 0, 6, 7, 372
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Express/Express.js", "JavaScript", 40, 0, 0, 0, 0, 0, 22, 3, 65
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Express/mock_data.js", "JavaScript", 20, 0, 0, 0, 0, 0, 0, 1, 21
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Layout/basic_layout.jsx", "JavaScript React", 0, 49, 0, 0, 0, 0, 9, 6, 64
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/RichTextEditor.jsx", "JavaScript React", 0, 167, 0, 0, 0, 0, 38, 12, 217
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Table/withPure.js", "JavaScript", 13, 0, 0, 0, 0, 0, 1, 3, 17
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/Token.js", "JavaScript", 7, 0, 0, 0, 0, 0, 8, 3, 18
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/adjust_picture.js", "JavaScript", 7, 0, 0, 0, 0, 0, 15, 1, 23
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/authority.js", "JavaScript", 43, 0, 0, 0, 0, 0, 3, 11, 57
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/noused_code_store.jsx", "JavaScript React", 0, 82, 0, 0, 0, 0, 12, 4, 98
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/pictureUploader.jsx", "JavaScript React", 0, 66, 0, 0, 0, 0, 0, 10, 76
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/pictureUploader.less", "Less", 0, 0, 8, 0, 0, 0, 0, 1, 9
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/pictureUploader/picture_cutting.jsx", "JavaScript React", 0, 11, 0, 0, 0, 0, 0, 3, 14
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/request.js", "JavaScript", 41, 0, 0, 0, 0, 0, 11, 6, 58
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.js", "JavaScript", 44, 0, 0, 0, 0, 0, 7, 9, 60
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.less", "Less", 0, 0, 14, 0, 0, 0, 2, 1, 17
+"/Users/ivancjz99/fmg-management/Phoenix-management/src/utils/utils.test.js", "JavaScript", 115, 0, 0, 0, 0, 0, 0, 2, 117
+"Total", "-", 3120, 12208, 729, 22, 1, 199, 486, 983, 17748

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-11-19 09:27:12
+ * @LastEditTime: 2020-11-25 11:47:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -10,7 +10,8 @@ import { message } from 'antd';
 import { get } from 'lodash';
 import {
   getCourseList, MgetCourseEnity, 
-  createCourse, DelCourse, adjCourse
+  createCourse, DelCourse, adjCourse,
+  PreApplyList, MgetPreApplyList
 } from '@/services/Course/course_list';
   
 const fmgCourseModel = {
@@ -22,7 +23,7 @@ const fmgCourseModel = {
     * createCourse({ payload }, { call, put }) {
       const response = yield call(createCourse, payload);
       if (response) {
-        yield message.success('发货成功'); 
+        yield message.success('发布课程成功'); 
       } else {
         yield message.error('发布失败');
       }
@@ -37,8 +38,18 @@ const fmgCourseModel = {
         payload: raw,
       });
     },
+    * fetchApplyCourseList({ payload }, { call, put }) {
+      const response = yield call(PreApplyList, payload);
+      const infos = get(response, 'preApplys', []);
+      const ids = infos.map((arr) => { return arr.id; });
+      const raw = yield call(MgetPreApplyList, ids);
+      yield put({
+        type: 'saveApplyCourseList',
+        payload: raw,
+      });
+    },
     * AdjCourse({ payload }, { call }) {
-      const { finalData , cid } = payload;
+      const { finalData, cid } = payload;
       const reply  = yield call(adjCourse, finalData, cid);
       if (reply) {
         yield message.success('修改成功'); 
@@ -60,6 +71,12 @@ const fmgCourseModel = {
       return {
         ...state,
         courseList: payload,
+      };
+    },
+    saveApplyCourseList(state, { payload }) {
+      return {
+        ...state,
+        ApplycourseList: payload,
       };
     },
     savePageTotals(state, { payload }) {

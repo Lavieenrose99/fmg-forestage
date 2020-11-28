@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:36:22
- * @LastEditTime: 2020-11-19 10:07:28
+ * @LastEditTime: 2020-11-25 11:17:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Course/course_list.js
@@ -14,7 +14,7 @@ export async function createCourse(payload) {
     data: payload,
   });
 }
-export async function adjCourse(payload,cid) {
+export async function adjCourse(payload, cid) {
   return request(`/api.farm/study/course/${cid}`, {
     method: 'PUT',
     data: payload,
@@ -35,5 +35,17 @@ export async function MgetCourseEnity(payload) {
 export async function DelCourse(payload) {
   return request(`/api.farm/study/course/${payload}`, {
     method: 'DELETE',
+  });
+}
+export async function PreApplyList(payload) {
+  return request('/api.farm/study/course/pre_apply/list', {
+    method: 'GET',
+    params: payload,
+  });
+}
+export async function MgetPreApplyList(payload) {
+  return request('/api.farm/study/course/pre_apply/_mget', {
+    method: 'POST',
+    data: { ids: payload },
   });
 }
