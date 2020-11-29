@@ -4,16 +4,25 @@ import PropTypes from 'prop-types';
 import { connect, Link } from 'umi';
 import { get } from 'lodash';
 import {
-  Tag, Table, Modal, Space, Input, Select, Button, Switch
+  Tag, Table, Modal, Space, Input, Select, Button, Switch, List, Radio
 } from 'antd';
 import {
-  RedoOutlined, PlusCircleTwoTone
+  RedoOutlined, PlusCircleTwoTone, MessageOutlined, LikeOutlined, StarOutlined
 } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import  CourseDetails  from '@/utils/Course/Course_details_drawer.jsx';
+import { IconFont } from '@/utils/DataStore/icon_set.js';
+import { QINIU_SERVER, BASE_QINIU_URL, pictureSize } 
+  from '@/utils/Token';
 import './course_list.less';
 
 const { Option } = Select;
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 const CourseList = (props) => {
   const {
@@ -23,6 +32,7 @@ const CourseList = (props) => {
   const fmgCourseListFinal = fmgCourseList.map((arr, index) => {
     return { key: index, ...arr };
   });
+  const [showWays, setShowWays] = useState(1);
   const [detailsVisible, setDetailsVisible] = useState(false);
   const [selectThings, setSelect] = useState({
     name: '', place_tag: '', course_tag: '', kind: '', crowd: '', is_put: '', 
@@ -149,7 +159,7 @@ const CourseList = (props) => {
   return (
     <>
       <PageHeaderWrapper>
-        <div className="goods-list-container">
+        <div className="course-list-container">
           <Link to="/page/study/create_course">
             <Button
               type="primary"
@@ -161,6 +171,25 @@ const CourseList = (props) => {
               添加课程
             </Button>
           </Link>
+          <Radio.Group
+            defaultValue={showWays}
+            onChange={
+               
+                (e) => {
+                  setShowWays(e.target.value); 
+                }
+} 
+            style={{ float: 'right' }}
+          >
+            <Radio.Button value={1}>
+              <IconFont type="iconliebiao" style={{ marginRight: 4 }} />
+              列表
+            </Radio.Button>
+            <Radio.Button value={2}>
+              <IconFont type="iconbiaoge" style={{ marginRight: 4 }} />
+              表格
+            </Radio.Button>
+          </Radio.Group>
           <div className="goods-list-selector">
             <Space size="large">
               <span className="good-selector-items">
@@ -299,10 +328,118 @@ const CourseList = (props) => {
           </div>
          
         </div>
-        <Table
-          columns={courseList}
-          dataSource={fmgCourseListFinal}
-        />
+        {
+            showWays === 2
+              ? <Table
+                  columns={courseList}
+                  dataSource={fmgCourseListFinal}
+              />
+              :        <div className="course-list-container">
+                <List
+                  className="fmg-course-list-item"
+                  itemLayout="vertical"
+                  size="small"
+                  pagination={{
+                    onChange: (page) => {
+                      console.log(page);
+                    },
+                    pageSize: 1,
+                  }}
+                  dataSource={fmgCourseList}
+                  renderItem={(item) => {
+                    const courseTag = {
+                      type: '',
+                      area: '',
+                      class: '',
+                    };
+                    if (item.kind.length > 0 && couresTypeList.length > 0) {
+                      courseTag.type = (couresTypeList)
+                        .find((info) => info.id === item.kind[0]).name;
+                    } else {
+                      courseTag.type = '无'; 
+                    }
+                    if (item.place_tag.length > 0 && goodsArea.length > 0) {
+                      courseTag.area = (goodsArea)
+                        .find((info) => info.id === item.place_tag[0]).place;
+                    } else {
+                      courseTag.area = '无'; 
+                    }
+                    if (item.course_tag.length > 0 && couresTagsList.length > 0) {
+                      courseTag.class = (couresTagsList)
+                        .find((info) => info.id === item.course_tag[0]).name;
+                    } else {
+                      courseTag.class = '无'; 
+                    }
+              
+                    return (
+                      <List.Item
+                        key={item.title}
+                        actions={[
+                          <span
+                            onClick={() => {
+                              setDetails(item);
+                              setID(item.id);
+                              setDetailsVisible(!detailsVisible);
+                            }}
+                          >
+                            <IconFont 
+                              style={{ marginRight: 4 }}
+                              type="iconxiangqingchakan"
+                            />
+                            课程详情
+                          </span>,
+                          <span onClick={() => {
+                            Modal.confirm({
+                              mask: false,
+                              title: '凤鸣谷',
+                              content: '确认删除课程吗',
+                              okText: '确认',
+                              cancelText: '取消',
+                              onOk: () => { 
+                                props.dispatch({
+                                  type: 'fmgCourse/DelCourse',
+                                  payload: item.id, 
+                                });
+                              },
+                            }); 
+                          }}
+                          >
+                            <IconFont 
+                              style={{ marginRight: 4 }}
+                              type="iconshanchu"
+                            />
+                            删除
+                          </span>,
+                          <>
+                            <Tag color="blue">{courseTag.class}</Tag>
+                            <Tag color="magenta">{courseTag.type}</Tag>
+                            <Tag color="gold">{courseTag.area}</Tag>
+                          </>
+
+                        ]}
+                        extra={
+                          <img
+                            width={200}
+                            height={120}
+                            alt="logo"
+                            src={BASE_QINIU_URL + item.cover}
+                          />
+        }
+                      >
+                        <List.Item.Meta
+                          title={<a href={item.href}>{item.name}</a>}
+                          description={item.describe}
+                        />
+                        <div>
+                          <span>适合人群: </span>
+                          {item.crowd}
+                        </div>
+                      </List.Item>
+                    ); 
+                  }}
+                />
+              </div>
+}
         <CourseDetails
           show={detailsVisible} 
           changeStaus={setDetailsVisible}

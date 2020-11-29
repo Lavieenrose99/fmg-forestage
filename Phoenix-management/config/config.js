@@ -196,6 +196,12 @@ export default defineConfig({
                 name: '预报名列表',
                 icon: 'setting',
                 component: './Course/pre_apply_coures',
+              },
+              {
+                path: '/page/study/test',
+                name: '测试列表',
+                icon: 'setting',
+                component: './Course/test',
               }
              
             ],
