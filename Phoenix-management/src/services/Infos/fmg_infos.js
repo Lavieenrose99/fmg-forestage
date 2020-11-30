@@ -1,18 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 12:08:35
- * @LastEditTime: 2020-11-30 16:27:14
+ * @LastEditTime: 2020-11-30 18:56:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Infos/fmg_infos.js
- */
-/*
- * @Author: your name
- * @Date: 2020-11-04 10:36:22
- * @LastEditTime: 2020-11-25 11:17:42
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /fmg-management/Phoenix-management/src/services/Course/course_list.js
  */
 import request from '@/utils/request';
 

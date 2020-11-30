@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 13:09:25
- * @LastEditTime: 2020-11-30 16:37:31
+ * @LastEditTime: 2020-11-30 23:13:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Infos/fmg_infos.js
@@ -65,7 +65,6 @@ const fmgInfosModel = {
   },
   reducers: {
     saveInfosList(state, { payload }) {
-      console.log(payload);
       return {
         ...state,
         InfosList: payload,

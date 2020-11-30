@@ -9,16 +9,21 @@ import {
   PlusCircleTwoTone
 } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { MockInfos, MockInfosTags } from '@/utils/Express/mock_data';
+import {  MockInfosTags } from '@/utils/Express/mock_data';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
+import { BASE_QINIU_URL } 
+  from '@/utils/Token';
+import { filterHTMLStr } from '../../utils/adjust_picture';
 import FmgInfoCreator  from  './infos_create.jsx';
+import FmgInfoChange from './infos_change.jsx';
 import './infos_list.less';
 
 const InfosList = (props) => {
   const { InfosList } = props;
-  console.log(InfosList, props);
   const [infosTagsChecked, setInfosTagsChecked] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showChangeModal, setShowChangeModal] = useState(false);
+  const [changeItem, setChangeItem] = useState({});
   useEffect(() => {
     props.dispatch({
       type: 'fmgInfos/fetchInfosList',
@@ -80,7 +85,7 @@ const InfosList = (props) => {
             },
             pageSize: 5,
           }}
-          dataSource={MockInfos}
+          dataSource={InfosList}
           footer={
             <div>
               <b>凤鸣谷</b>
@@ -88,20 +93,33 @@ const InfosList = (props) => {
     }
           renderItem={(item) => (
             <List.Item
+              className="fmg-infos-item"
               key={item.title}
               extra={
                 <>
                   <Space size="large">
+          
+                    <img
+                      width={160}
+                      height={100}
+                      alt="logo"
+                      src={item.cover ? BASE_QINIU_URL + item.cover
+                        : 'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'}
+                    />
                     <span>
                       {moment(item.create_time * 1000)
                         .format('YYYY-MM-DD HH:mm:ss')}
                     </span>
                     <Tag color="red">热门</Tag>
                   </Space>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: 'right', marginTop: 20 }}>
                     <IconFont 
                       style={{ marginRight: 10 }}
                       type="iconxiangqingchakan"
+                      onClick={() => {
+                        setChangeItem(item);
+                        setShowChangeModal(true);
+                      }}
                     />
                     <IconFont
                       type="iconshanchu"
@@ -131,13 +149,24 @@ const InfosList = (props) => {
             >
               <List.Item.Meta
                 title={<a href={item.href}>{item.title}</a>}
-                description={item.content}
+                description={<span
+                  className="info-show-text"
+                  onClick={() => {
+                    setChangeItem(item);
+                    setShowChangeModal(true);
+                  }}
+                >
+                  {
+                  filterHTMLStr(item.content)
+}
+                </span>}
               />
             </List.Item>
           )}
         />
       </div>
       <FmgInfoCreator show={showAddModal} closeInfosModel={setShowAddModal} />
+      <FmgInfoChange show={showChangeModal} closeInfosModel={setShowChangeModal} />
     </PageHeaderWrapper>
   );
 };

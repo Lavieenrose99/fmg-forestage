@@ -186,16 +186,16 @@ export default defineConfig({
                 component: './Course/course_create.jsx',
               },
               {
-                path: '/page/study/tags',
-                name: '课程标签',
-                icon: 'setting',
-                component: './Course/course_tags_setting',
-              },
-              {
                 path: '/page/study/preapply',
                 name: '预报名列表',
                 icon: 'setting',
                 component: './Course/pre_apply_coures',
+              },
+              {
+                path: '/page/study/tags',
+                name: '课程标签',
+                icon: 'setting',
+                component: './Course/course_tags_setting',
               },
               {
                 path: '/page/study/test',

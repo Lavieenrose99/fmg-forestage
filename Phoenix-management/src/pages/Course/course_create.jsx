@@ -48,11 +48,10 @@ const { Option } = Select;
   
 const { Step } = Steps;
   
-export const GoodsAddEditor = (props) => {
+export const CourseAddEditor = (props) => {
   const {
-    goodsArea, goodsSale,
+    goodsArea,
     couresTagsList, couresTypeList,
-    goodsModelsList, goodsModel,
   } = props;
   const [form] = Form.useForm();
   const [fromSpec] = Form.useForm();
@@ -759,45 +758,26 @@ export const GoodsAddEditor = (props) => {
     
   );
 };
-GoodsAddEditor.propTypes = {
+CourseAddEditor.propTypes = {
   dispatch: PropTypes.func.isRequired,
   goodId: PropTypes.number,
   goodsArea: PropTypes.arrayOf({}),
-  goodsSale: PropTypes.arrayOf({}),
-  goodsClassFather: PropTypes.arrayOf({}),
-  goodsClassChild: PropTypes.arrayOf({}),
-  goodsModelsList: PropTypes.arrayOf({}),
   couresTagsList: PropTypes.arrayOf({}),
   couresTypeList: PropTypes.arrayOf({}),
 };
-GoodsAddEditor.defaultProps = {
+CourseAddEditor.defaultProps = {
   goodId: 0,
   goodsArea: [],
-  goodsSale: [],
-  goodsClassFather: [],
-  goodsClassChild: [],
-  goodsModelsList: [],
   couresTagsList: [],
   couresTypeList: [],
   
 };
   
 export default connect(({
-  goodsArea, goodsSale, goodsClass,
-  goodsModels, CreateGoods, couresTags,
+  goodsArea, couresTags,
 }) => ({
-  goodsModels,
-  goodsSale: get(goodsSale, 'tags', []),
   goodsArea: get(goodsArea, 'info', []),
-  goodsClassFather: get(goodsClass, 'tags', [])
-    .filter((arr) => { return arr.parent_id === 0; }),
-  goodsClassChild: get(goodsClass, 'tags', [])
-    .filter((arr) => { return arr.parent_id !== 0; }),
-  goodsModelsList: get(goodsModels, 'infos', ''),
-  goodsModel: get(goodsModels, 'info', {}),
-  goodId: CreateGoods.goodId,
-  GoodsAreaTags: goodsArea.GoodsAreaTags,
   couresTagsList: get(couresTags, 'tags', []),
   couresTypeList: get(couresTags, 'typeTags', []),
   
-}))(GoodsAddEditor);
+}))(CourseAddEditor);

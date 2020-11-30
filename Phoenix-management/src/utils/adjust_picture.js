@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-15 01:29:14
- * @LastEditTime: 2020-11-15 01:31:23
+ * @LastEditTime: 2020-11-30 21:48:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/adjust_picture.js
@@ -19,4 +19,14 @@ export const filterHTMLTag = (htmlstr) => {
   //在img标签的style里面增加css样式(这里增加的样式：display:block;max-width:100%;height:auto;border:5px solid red;)
   htmlstr = htmlstr.replace(regex2, '$2display:block;width:100%;height:auto;$3');
   return htmlstr;
+};
+//提取html文档中的文字
+export const filterHTMLStr = (str) => {
+  str.match(/\^+(?=<)/g);
+  let result = str.match(/[^>]+(?=<)/g);
+  result = result ? result.join(',') : '';
+  if (result.length === 0) {
+    result = '无文字信息请点击查看详情';
+  }
+  return result;
 };

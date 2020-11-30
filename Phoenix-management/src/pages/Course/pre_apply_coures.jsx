@@ -2,57 +2,22 @@ import React, { useEffect, useState } from 'react';
 import {
   Table, Input, Button, Space, Tag, DatePicker, Modal, Select, Popover
 } from 'antd';
-import moment from 'moment';
 import {
   RedoOutlined, PlusCircleTwoTone
 } from '@ant-design/icons';
 import { connect } from 'umi';
 import { get } from 'lodash';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { render } from 'react-dom';
+import { SessionDetails } from '@/utils/Course/apply_session';
+import PropTypes from 'prop-types';
 
 const { Option } = Select;
 
-const SessionDetails = (props) => {
-  const { infos } = props;
-  return (
-    <>
-      <div>
-        <span>开始时间:</span> 
-        {' '}
-        <span>
-          {moment(infos.begin_time)
-            .format('YYYY-MM-DD HH:mm:ss')}
-        </span>
-      </div>
-      <div>
-        <span>结束时间:</span> 
-        {' '}
-        <span>
-          {moment(infos.end_time)
-            .format('YYYY-MM-DD HH:mm:ss')}
-        </span>
-      </div>
-      <div>
-        <span>价格:</span> 
-        {' '}
-        <span>
-          {infos.money}
-        </span>
-      </div>
-      <div>
-        <span>人数限制:</span> 
-        {' '}
-        <span>
-          {infos.people_limit}
-        </span>
-      </div>
-    </>
-  );
-};
 const PreApplyCoureslist = (props) => {
-  const { ApplycourseList, fmgCourseList } = props;
-  console.log(ApplycourseList, fmgCourseList);
+  const {
+    ApplycourseList, fmgCourseList, goodsArea,
+    couresTagsList, couresTypeList, 
+  } = props;
 
   useEffect(() => {
     props.dispatch({
@@ -106,19 +71,43 @@ const PreApplyCoureslist = (props) => {
               <span>
                 课程标签: 
               </span>
-              <Input className="goods-selector-name" />
+              <Select className="goods-selector-name">
+                {
+                  couresTagsList.map((tags) => {
+                    return (
+                      <Option value={tags.id}>{tags.name}</Option>
+                    );
+                  })
+                }
+              </Select>
             </span>
             <span className="good-selector-items">
               <span>
                 种类标签: 
               </span>
-              <Input className="goods-selector-name" />
+              <Select className="goods-selector-name">
+                {
+                  couresTypeList.map((tags) => {
+                    return (
+                      <Option value={tags.id}>{tags.name}</Option>
+                    );
+                  })
+                }
+              </Select>
             </span>
             <span className="good-selector-items">
               <span>
                 属地标签: 
               </span>
-              <Input className="goods-selector-name" />
+              <Select className="goods-selector-name">
+                {
+                  goodsArea.map((tags) => {
+                    return (
+                      <Option value={tags.id}>{tags.place}</Option>
+                    );
+                  })
+                }
+              </Select>
             </span>
             <Button
               type="primary"
@@ -137,9 +126,28 @@ const PreApplyCoureslist = (props) => {
   );
 };
 
+PreApplyCoureslist.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  goodId: PropTypes.number,
+  goodsArea: PropTypes.arrayOf({}),
+  couresTagsList: PropTypes.arrayOf({}),
+  couresTypeList: PropTypes.arrayOf({}),
+};
+PreApplyCoureslist.defaultProps = {
+  goodId: 0,
+  goodsArea: [],
+  couresTagsList: [],
+  couresTypeList: [],
+  
+};
 export default connect(({
   fmgCourse,
+  couresTags,
+  goodsArea,
 }) => ({
   fmgCourseList: get(fmgCourse, 'courseList', []),
   ApplycourseList: get(fmgCourse, 'ApplycourseList', []),
+  couresTagsList: get(couresTags, 'tags', []),
+  couresTypeList: get(couresTags, 'typeTags', []),
+  goodsArea: get(goodsArea, 'info', []),
 }))(PreApplyCoureslist);
