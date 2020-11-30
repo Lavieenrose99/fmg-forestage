@@ -207,6 +207,19 @@ export default defineConfig({
             ],
           },
           {
+            path: '/page/infos',
+            name: '资讯模块',
+            icon: 'notification',
+            routes: [
+              {
+                path: '/page/infos/_list',
+                name: '资讯列表',
+                component: './Infos/infos_list',
+              }
+             
+            ],
+          },
+          {
             path: '/page/test',
             name: '测试组件',
             icon: 'dashboard',

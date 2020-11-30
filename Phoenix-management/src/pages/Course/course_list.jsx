@@ -7,12 +7,12 @@ import {
   Tag, Table, Modal, Space, Input, Select, Button, Switch, List, Radio
 } from 'antd';
 import {
-  RedoOutlined, PlusCircleTwoTone, MessageOutlined, LikeOutlined, StarOutlined
+  RedoOutlined, PlusCircleTwoTone
 } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import  CourseDetails  from '@/utils/Course/Course_details_drawer.jsx';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
-import { QINIU_SERVER, BASE_QINIU_URL, pictureSize } 
+import {  BASE_QINIU_URL } 
   from '@/utils/Token';
 import './course_list.less';
 
