@@ -38,27 +38,5 @@ export const expressList =  [{
       expressCompany[num] ? expressCompany[num].name : null 
     );
   },
-},
-// {
-//   title: '订单状态',
-//   key: 'invoice_status',
-//   dataIndex: 'invoice_status',
-//   render: (text) => {
-//     let t = '';
-//     if (text === '1') {
-//       t = '未支付';
-//     } else if (text === 2) {
-//       t = '待发货';
-//     } else if (text === 3) {
-//       t = '待收获';
-//     } else if (text === 4) {
-//       t = '待评价';
-//     } else if (text === 5) {
-//       t = '已完成';
-//     }
-//     return (
-//       t
-//     );
-//   },
-// }
+}
 ];

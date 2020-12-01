@@ -10,7 +10,7 @@ import { expressCompany } from '@/utils/Express/Express';
 import '@/style/Draw.less';
 
 const { Option } = Select;
-const DescriptionItem = ({ title, content }) => (
+export const DescriptionItem = ({ title, content }) => (
   <div className="site-description-item-profile-wrapper">
     <p className="site-description-item-profile-p-label">
       {title}

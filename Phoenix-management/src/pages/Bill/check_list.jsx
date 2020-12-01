@@ -8,7 +8,6 @@ import {
 import { connect } from 'umi';
 import { get } from 'lodash';
 import request from '@/utils/request';
-import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import {
   SearchOutlined, StopTwoTone, DownloadOutlined, 

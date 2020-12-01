@@ -79,7 +79,7 @@ const InfosList = (props) => {
         <List
           className="fmg-infos-items"
           itemLayout="vertical"
-          size="large"
+          size="default"
           pagination={{
             onChange: (page) => {
             },
@@ -95,13 +95,46 @@ const InfosList = (props) => {
             <List.Item
               className="fmg-infos-item"
               key={item.title}
+              actions={[
+                <IconFont 
+                  style={{ marginRight: 10 }}
+                  type="iconxiangqingchakan"
+                  onClick={() => {
+                    setChangeItem(item);
+                    setShowChangeModal(true);
+                  }}
+                />,
+                <IconFont
+                  type="iconshanchu"
+                  style={{ margin: 10 }}
+                  onClick={
+                () => {
+                  Modal.confirm({
+                    mask: false,
+                    title: '凤鸣谷',
+                    content: '确认删除资讯吗',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk: () => {
+                      props.dispatch({
+                        type: 'fmgInfos/DelInfos',
+                        payload: item.id,
+                      }); 
+                    },
+                  }); 
+                }
+            }
+                />
+           
+              ]}
               extra={
                 <>
                   <Space size="large">
           
                     <img
-                      width={160}
-                      height={100}
+                      style={{ marginTop: 20 }}
+                      width={180}
+                      height={120}
                       alt="logo"
                       src={item.cover ? BASE_QINIU_URL + item.cover
                         : 'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'}
@@ -111,43 +144,14 @@ const InfosList = (props) => {
                         .format('YYYY-MM-DD HH:mm:ss')}
                     </span>
                     <Tag color="red">热门</Tag>
+                    <div style={{ textAlign: 'right' }} />
                   </Space>
-                  <div style={{ textAlign: 'right', marginTop: 20 }}>
-                    <IconFont 
-                      style={{ marginRight: 10 }}
-                      type="iconxiangqingchakan"
-                      onClick={() => {
-                        setChangeItem(item);
-                        setShowChangeModal(true);
-                      }}
-                    />
-                    <IconFont
-                      type="iconshanchu"
-                      style={{ margin: 10 }}
-                      onClick={
-                        () => {
-                          Modal.confirm({
-                            mask: false,
-                            title: '凤鸣谷',
-                            content: '确认删除资讯吗',
-                            okText: '确认',
-                            cancelText: '取消',
-                            onOk: () => {
-                              props.dispatch({
-                                type: 'fmgInfos/DelInfos',
-                                payload: item.id,
-                              }); 
-                            },
-                          }); 
-                        }
-                    }
-                    />
-                   
-                  </div>
+                 
                 </>
         }
             >
               <List.Item.Meta
+                className="fmg-infos-item-meta"
                 title={<a href={item.href}>{item.title}</a>}
                 description={<span
                   className="info-show-text"

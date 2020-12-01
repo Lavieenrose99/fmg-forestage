@@ -71,6 +71,7 @@ const FmgInfoChange = (props) => {
             },
           });
           localStorage.removeItem('infos');
+          localStorage.removeItem('FileList');
           closeInfosModel(false);
         }}
       >

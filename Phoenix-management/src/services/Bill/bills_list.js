@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-09-17 23:56:19
+ * @LastEditTime: 2020-12-01 21:26:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /fmg-management/Phoenix-management/src/services/Bill/bills_list.js
+ */
 import request from '@/utils/request';
 
 // 订单旧接口
@@ -26,6 +34,39 @@ export async function checkBillsList(stime, etime) {
   return request('/api.farm/pay/bill', {
     method: 'POST',
     data: { time_start: stime, time_end: etime },
+  });
+}
+//待退款订单列表
+export async function getRefundList(payload) {
+  return request('/api.farm/exchange/list', {
+    method: 'GET',
+    params: payload,
+  });
+}
+//待退款订单mget
+export async function mGetRefundList(payload) {
+  return request('/api.farm/exchange/mget', {
+    method: 'POST',
+    data: { ids: payload },
+  });
+}
+//批准退款
+export async function putExchangeStatus(payload) {
+  return request(`/api.farm/exchange/pmt/${payload}`, {
+    method: 'PUT',
+    data: { status: 2 },
+  });
+}
+export async function putRejectStatus(payload) {
+  return request(`/api.farm/exchange/pmt/${payload}`, {
+    method: 'PUT',
+    data: { status: 4 },
+  });
+}
+//退款接口 /pay/refund/:eid
+export async function DoRefund(payload) {
+  return request(`/api.farm/pay/refund/${payload}`, {
+    method: 'GET',
   });
 }
 export async function putBillsStatus(payload) {

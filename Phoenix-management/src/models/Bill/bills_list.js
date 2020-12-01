@@ -10,7 +10,12 @@ import {
   getExpressList,
   getExpressMget,
   putBillsStatus,
-  checkBillsList
+  checkBillsList,
+  getRefundList,
+  mGetRefundList,
+  putExchangeStatus,
+  putRejectStatus,
+  DoRefund
 
 } from '@/services/Bill/bills_list';
 import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
@@ -31,6 +36,7 @@ const GoodsClassModel = {
         payload: ids,
       });
     },
+    //快递
     * fetchExpressList({ payload }, { call, put }) {
       const response = yield call(getExpressList, payload);
       const infos = get(response, 'delivery', []);
@@ -50,6 +56,54 @@ const GoodsClassModel = {
         type: 'saveExpressEnity',
         payload: response,
       });
+    },
+    //退款
+    * fetchRefundList({ payload }, { call, put }) {
+      const response = yield call(getRefundList, payload);
+      const infos = get(response, 'refunds', []);
+      const ids = infos.map((arr) => { return arr.id; });
+      
+      yield put({
+        type: 'fetchRefundEntity',
+        payload: ids,
+      });
+    },
+    * fetchRefundEntity({ payload }, { call, put }) {  
+      const response = yield call(mGetRefundList, payload);
+      const userIdSet = [...new Set(response.map((arr) => {
+        return arr.account_id;
+      }))];
+      const accountInfo = yield call(MgetAccountList, userIdSet);
+      const account = accountInfo.map((info, index) => {
+        return { ...info, account_id: userIdSet[index] };
+      });
+      yield put({
+        type: 'saveRefundEnity',
+        payload: response,
+      });
+      yield put({
+        type: 'saveAccountCList',
+        payload: account,
+      });
+    },
+    * PleaseRefund({ payload }, { call }) {
+      const raw =  yield call(putExchangeStatus, payload);
+      const response = yield call(DoRefund, payload);
+      console.log(response);
+      if (raw.id !== 0) {
+        message.info('退款成功');
+      } else {
+        message.info('退款失败！');
+      }
+    },
+    * RejectRefund({ payload }, { call }) {
+      const raw =  yield call(putRejectStatus, payload);
+      console.log(raw);
+      if (raw.id !== 0) {
+        message.info('拒绝退款成功');
+      } else {
+        message.info('请求失败！');
+      }
     },
     * sendDelivery({ payload }, { call }) {
       const raw =  yield call(postDelivery, payload.delievry);
@@ -180,6 +234,12 @@ const GoodsClassModel = {
       return {
         ...state,
         ExpressInfos: payload,
+      };
+    },
+    saveRefundEnity(state, { payload }) {
+      return {
+        ...state,
+        RefundInfos: payload,
       };
     },
     saveChildGoods(state, { payload }) {

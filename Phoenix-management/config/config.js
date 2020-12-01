@@ -153,9 +153,9 @@ export default defineConfig({
               },
               {
                 path: '/page/goodspayment/handle_list',
-                name: '售后订单 ',
+                name: '退货订单 ',
                 icon: 'smile',
-                component: './Bill/check_list',
+                component: './Refund/refund_list',
               //authority: ['admin'],
               },
               {
