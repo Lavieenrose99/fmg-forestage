@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 13:09:25
- * @LastEditTime: 2020-11-30 23:13:17
+ * @LastEditTime: 2020-12-02 10:53:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Infos/fmg_infos.js
@@ -46,8 +46,9 @@ const fmgInfosModel = {
       });
     },
     * AdjInfos({ payload }, { call }) {
-      const { finalData, cid } = payload;
-      const reply  = yield call(adjInfos, finalData, cid);
+      console.log(payload)
+      const { finalData, Iid } = payload;
+      const reply  = yield call(adjInfos, finalData, Iid);
       if (reply) {
         yield message.success('修改成功'); 
       } else {

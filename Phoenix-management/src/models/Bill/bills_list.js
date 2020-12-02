@@ -98,7 +98,6 @@ const GoodsClassModel = {
     },
     * RejectRefund({ payload }, { call }) {
       const raw =  yield call(putRejectStatus, payload);
-      console.log(raw);
       if (raw.id !== 0) {
         message.info('拒绝退款成功');
       } else {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-01 13:56:57
- * @LastEditTime: 2020-12-01 21:00:23
+ * @LastEditTime: 2020-12-02 00:51:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/Refund/refund_table.js
@@ -21,7 +21,7 @@ export const RefundListTable =  [
   {
     title: '退款单号',
     dataIndex: 'out_refund_no',
-    width: '25%',
+    width: '22%',
     key: 'out_refund_no',
   }, {
     title: '用户名',

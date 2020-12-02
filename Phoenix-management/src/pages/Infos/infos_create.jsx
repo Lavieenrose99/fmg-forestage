@@ -11,8 +11,10 @@ import RichTextEditor from '../../utils/RichTextEditor.jsx';
 import { filterHTMLTag } from '../../utils/adjust_picture';
 
 const FmgInfoChange = (props) => {
+  const { TextArea } = Input;
   const { show, closeInfosModel } = props;
   const [infosTitle, setInfosTitle] = useState('');
+  const [infosPreSeem, setInfosPreSeem] = useState('');
   const [previewImage, setPreviewImage] = useState('');
   const [qiniuToken, setQiniuToken] = useState('');
   const [fileList, setFileList] = useState(([JSON.parse(localStorage.getItem('FileList'))] ?? []));
@@ -91,11 +93,30 @@ const FmgInfoChange = (props) => {
             />
           </div>
           <div className="fmg-infos-creator-title">
+            <span style={{
+              position: 'fixed',
+            }}
+            >
+              资讯摘要:
+              {' '}
+            </span>
+            <TextArea
+              style={{
+                width: '50vw',
+                marginLeft: 80,
+                marginBottom: 10, 
+              }}
+              onChange={(e) => {
+                setInfosPreSeem(e.target.value);
+              }}
+            />
+          </div>
+          <div className="fmg-infos-creator-title">
             <span  style={{
               display: 'inline-flex',
             }}
             >
-              资讯标题:
+              资讯封面:
               {' '}
             </span>
             <div

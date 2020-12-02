@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 12:08:35
- * @LastEditTime: 2020-11-30 18:56:23
+ * @LastEditTime: 2020-12-02 10:52:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Infos/fmg_infos.js
@@ -15,8 +15,8 @@ export async function createInfos(payload) {
   });
 }
 
-export async function adjInfos(payload, cid) {
-  return request(`/api.farm/news/info/put/nid:${cid}`, {
+export async function adjInfos(payload, Iid) {
+  return request(`/api.farm/news/info/put/${Iid}`, {
     method: 'PUT',
     data: payload,
   });

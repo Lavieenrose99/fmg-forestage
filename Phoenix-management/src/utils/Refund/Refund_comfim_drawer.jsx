@@ -14,7 +14,7 @@ import { DescriptionItem } from '../Drawer/details_drawer.jsx';
 
 const RefundComfirm = (props) => {
   const { show, closeDrawer, billsInfos } = props;
-  const pictures = billsInfos.picturess ? JSON.parse(billsInfos.pictures) : [1, 1, 1, 1, 1];
+  const pictures = billsInfos.pictures ? JSON.parse(billsInfos.pictures) : [1, 1, 1, 1, 1];
   return (
     <Drawer
       width={640}
@@ -114,7 +114,7 @@ const RefundComfirm = (props) => {
           <DescriptionItem
             title="退货方式" 
             content={RefundWays.find((item) => item.id === billsInfos.return_mode)
-              ? RefundWays.find((item) => item.id === billsInfos.return_mode).type : '无'}
+              ? RefundWays.find((item) => item.id === billsInfos.return_mode).way : '无'}
           />
         </Col>
         <Col span={12}>

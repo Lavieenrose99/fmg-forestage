@@ -170,7 +170,11 @@ const InfosList = (props) => {
         />
       </div>
       <FmgInfoCreator show={showAddModal} closeInfosModel={setShowAddModal} />
-      <FmgInfoChange show={showChangeModal} closeInfosModel={setShowChangeModal} />
+      <FmgInfoChange
+        show={showChangeModal} 
+        closeInfosModel={setShowChangeModal}
+        infos={changeItem}
+      />
     </PageHeaderWrapper>
   );
 };

@@ -1,5 +1,5 @@
 import {
-  Table, Space, Button, Input
+  Table, Space, Button, Input, Avatar
 } from 'antd';
 import React, { useState, useEffect } from 'react';
 import request from '@/utils/request';
@@ -9,6 +9,7 @@ import {
   RefundListTable
 } from '@/utils/Refund/refund_table.jsx';
 import  RefundComfirm  from '@/utils/Refund/Refund_comfim_drawer.jsx';
+import { IconFont } from '@/utils/DataStore/icon_set.js';
 import { get } from 'lodash';
 import Highlighter from 'react-highlight-words';
 import {
@@ -17,11 +18,39 @@ import {
 
 const FmgRefundList = (props) => {
   const { RefundList, cAccount } = props;
+  console.log(cAccount);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [checkRefundInfo, setCheckRefundInfo] = useState({});
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-
+  const userAtom = {
+    title: '用户',
+    dataIndex: 'account_id',
+    width: '10%',
+    key: 'id',
+    render: (id) => {
+      const user = cAccount.find((item) => item.id === id)
+        ? cAccount.find((item) => item.id === id) : null;
+      if (user) {
+        return (
+          <>
+            <Avatar src={user.avator} />
+            <span style={{ marginLeft: 10 }}>
+              {user.nickname}
+            </span>
+          </>
+        );
+      }
+      return (
+        <>
+          <Avatar>没注册</Avatar>
+          <span style={{ marginLeft: 10 }}>
+            无该用户
+          </span>
+        </>
+      );
+    },
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -61,7 +90,7 @@ const FmgRefundList = (props) => {
         </Space>
       </div>
     ),
-    filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined, fontSize: 20 }} />,
+    filterIcon: (filtered) => <IconFont type="iconsousuo" style={{ color: filtered ? '#1890ff' : undefined, fontSize: 20 }} />,
     onFilter: (value, record) => (record[dataIndex]
       ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
       : ''),
@@ -90,6 +119,8 @@ const FmgRefundList = (props) => {
       },
     });
   }, []);
+  RefundListTable[1] = userAtom;
+  console.log(RefundListTable, userAtom);
   RefundListTable[0] = { ...RefundListTable[0], ...getColumnSearchProps('out_refund_no') };
   
   //一般的table记得分开抽象，需要处理的table再组合
