@@ -18,7 +18,9 @@ const PreApplyCoureslist = (props) => {
     ApplycourseList, fmgCourseList, goodsArea,
     couresTagsList, couresTypeList, 
   } = props;
-
+  //课程标签
+  const [courseId, setCourseId] = useState(0);
+ 
   useEffect(() => {
     props.dispatch({
       type: 'fmgCourse/fetchApplyCourseList',
@@ -27,6 +29,18 @@ const PreApplyCoureslist = (props) => {
     props.dispatch({
       type: 'fmgCourse/fetchCourseList',
       payload: { limit: 99, page: 1 },
+    });
+    props.dispatch({
+      type: 'couresTags/fetchCourseTags',
+      payload: { limit: 99, page: 1 },
+    });
+    props.dispatch({
+      type: 'couresTags/fetchTypeCourseTags',
+      payload: { limit: 99, page: 1 },
+    });
+    props.dispatch({
+      type: 'goodsArea/fetchAreaTags',
+      payload: { page: 1, limit: 99 },
     });
   }, []);
   const preApplyTable = [
@@ -49,7 +63,7 @@ const PreApplyCoureslist = (props) => {
         return (
           <Popover content={<SessionDetails infos={sessionInfo} />} title="场次详情">
             <a>
-              {`${courseName}第${sessionInfo.id}期`}
+              {`${courseName}第${sessionInfo ? sessionInfo.id : null}期`}
             </a>
           </Popover>
         );
@@ -69,15 +83,18 @@ const PreApplyCoureslist = (props) => {
           <Space size="large">
             <span className="good-selector-items">
               <span>
-                课程标签: 
+                报名课程: 
               </span>
               <Select className="goods-selector-name">
                 {
-                  couresTagsList.map((tags) => {
-                    return (
-                      <Option value={tags.id}>{tags.name}</Option>
-                    );
-                  })
+                  // ApplycourseList.map((tags) => {
+                  //   const courseName = fmgCourseList.find((item) => item.id === tags.id)
+                  //     ? fmgCourseList.find((item) => item.id === tags.id).name : '课程已删除';
+                  //     new 
+                  //   return (
+                  //     <Option value={tags.id}>{courseName}</Option>
+                  //   );
+                  // })
                 }
               </Select>
             </span>

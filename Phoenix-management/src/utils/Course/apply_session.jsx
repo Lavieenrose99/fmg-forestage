@@ -3,8 +3,9 @@ import moment from 'moment';
 
 export const SessionDetails = (props) => {
   const { infos } = props;
-  return (
-    <>
+  console.log(infos);
+  return infos 
+    ? <>
       <div>
         <span>开始时间:</span> 
         {' '}
@@ -35,6 +36,5 @@ export const SessionDetails = (props) => {
           {infos.people_limit}
         </span>
       </div>
-    </>
-  );
+    </> : null;
 };

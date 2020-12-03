@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Drawer, Row, Col, Button, Tag, Modal 
+  Drawer, Row, Col, Button, Tag, Modal, Avatar 
 } from 'antd';
 import {
   RefundReason, RefundSevice, RefundWays, RefundStatus
@@ -13,8 +13,12 @@ import { get } from 'lodash';
 import { DescriptionItem } from '../Drawer/details_drawer.jsx';
 
 const RefundComfirm = (props) => {
-  const { show, closeDrawer, billsInfos } = props;
+  const {
+    show, closeDrawer, billsInfos, cAccount, 
+  } = props;
   const pictures = billsInfos.pictures ? JSON.parse(billsInfos.pictures) : [1, 1, 1, 1, 1];
+  const user = cAccount.find((item) => item.id === billsInfos.account_id)
+    ? cAccount.find((item) => item.id === billsInfos.account_id) : { nickname: '用户', avator: '' };
   return (
     <Drawer
       width={640}
@@ -82,7 +86,17 @@ const RefundComfirm = (props) => {
         <Col span={20}><DescriptionItem title="退款单号" content={billsInfos.out_refund_no} /></Col>
       </Row>
       <Row>
-        <Col span={12}><DescriptionItem title="用户名" content={billsInfos.account_id} /></Col>
+        <Col span={12}>
+          <DescriptionItem
+            title="用户"
+            content={<>
+              <Avatar src={user.avator} />
+              <span style={{ marginLeft: 10 }}>
+                {user.nickname}
+              </span>
+            </>}
+          />
+        </Col>
         <Col span={12}><DescriptionItem title="地址信息" content={billsInfos.address_id} /></Col>
       </Row>
       <Row>
@@ -170,6 +184,7 @@ const RefundComfirm = (props) => {
   );
 };
 
-export default connect(({ fmgInfos }) => ({
+export default connect(({ fmgInfos, BillsListBack }) => ({
   InfosList: get(fmgInfos, 'InfosList', []),
+  cAccount: get(BillsListBack, 'cAccount', []),
 }))(RefundComfirm);

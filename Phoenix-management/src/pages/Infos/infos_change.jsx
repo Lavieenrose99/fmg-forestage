@@ -30,6 +30,7 @@ const FmgInfoCreator = (props) => {
     setFmgInfos(text);
   };
   useEffect(() => {
+    setInfosPreSeem(infos.desc)
     setInfosTitle(infos.title);
     setFmgInfos(infos.content);
     setFileList([PFile]);
@@ -115,6 +116,7 @@ const FmgInfoCreator = (props) => {
               {' '}
             </span>
             <TextArea
+              value={infosPreSeem}
               style={{
                 width: '50vw',
                 marginLeft: 80,

@@ -69,11 +69,13 @@ const FmgInfoChange = (props) => {
             payload: {
               title: infosTitle,
               content: filterHTMLTag(fmginfos),
+              desc: infosPreSeem,
               cover: fileList[0].response.key,
             },
           });
           localStorage.removeItem('infos');
           localStorage.removeItem('FileList');
+          setFmgInfos('')
           closeInfosModel(false);
         }}
       >

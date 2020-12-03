@@ -18,7 +18,6 @@ import {
 
 const FmgRefundList = (props) => {
   const { RefundList, cAccount } = props;
-  console.log(cAccount);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [checkRefundInfo, setCheckRefundInfo] = useState({});
   const [searchText, setSearchText] = useState('');

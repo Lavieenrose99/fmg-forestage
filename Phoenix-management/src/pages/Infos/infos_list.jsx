@@ -32,21 +32,18 @@ const InfosList = (props) => {
   }, []);
   return (
     <PageHeaderWrapper>
-      <div className="course-list-container">
-        <Button
-          type="primary"
-          style={{
-            margin: 20,
-          }}
-          onClick={() => {
-            setShowAddModal(true);
-          }}
-          icon={<PlusCircleTwoTone />}
-        >
-          添加资讯
-        </Button>
-       
-      </div>
+      <Button
+        type="primary"
+        style={{
+          margin: 20,
+        }}
+        onClick={() => {
+          setShowAddModal(true);
+        }}
+        icon={<PlusCircleTwoTone />}
+      >
+        添加资讯
+      </Button>
       <div className="Goods-Class-Tags-selector">
           
         {
