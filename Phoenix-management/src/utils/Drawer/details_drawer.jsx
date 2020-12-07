@@ -19,6 +19,7 @@ export const DescriptionItem = ({ title, content }) => (
     {content}
   </div>
 );
+
 const DetailsDrawer = (props) => {
   const {
     show, data, clickShow, address, oid, dispatch,

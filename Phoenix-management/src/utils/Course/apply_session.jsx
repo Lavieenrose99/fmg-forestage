@@ -3,7 +3,6 @@ import moment from 'moment';
 
 export const SessionDetails = (props) => {
   const { infos } = props;
-  console.log(infos);
   return infos 
     ? <>
       <div>
@@ -38,3 +37,28 @@ export const SessionDetails = (props) => {
       </div>
     </> : null;
 };
+//PreApplyCancel = 1  // 撤销
+//NoApply   = 2  // 预报名
+//Apply = 4 //已报名
+export const PreApplyStatus = [{
+  id: 1,
+  name: '撤销',
+}, {
+  id: 2,
+  name: '预报名',
+}, {
+  id: 4,
+  name: '已报名',
+}];
+export const ApplyStatus = [
+  {
+    id: 1,
+    name: '未支付',
+  }, {
+    id: 2,
+    name: '已支付',
+  }, {
+    id: 4,
+    name: '已取消',
+  }
+];

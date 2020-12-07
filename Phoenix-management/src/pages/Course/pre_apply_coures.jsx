@@ -8,7 +8,7 @@ import {
 import { connect } from 'umi';
 import { get } from 'lodash';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { SessionDetails } from '@/utils/Course/apply_session';
+import { SessionDetails, PreApplyStatus } from '@/utils/Course/apply_session';
 import PropTypes from 'prop-types';
 
 const { Option } = Select;
@@ -20,6 +20,8 @@ const PreApplyCoureslist = (props) => {
   } = props;
   //课程标签
   const [courseId, setCourseId] = useState(0);
+  const [applyer, setApplyer] = useState(0);
+  const [applyStatus, setApplyStatus] = useState(0);
  
   useEffect(() => {
     props.dispatch({
@@ -83,24 +85,7 @@ const PreApplyCoureslist = (props) => {
           <Space size="large">
             <span className="good-selector-items">
               <span>
-                报名课程: 
-              </span>
-              <Select className="goods-selector-name">
-                {
-                  // ApplycourseList.map((tags) => {
-                  //   const courseName = fmgCourseList.find((item) => item.id === tags.id)
-                  //     ? fmgCourseList.find((item) => item.id === tags.id).name : '课程已删除';
-                  //     new 
-                  //   return (
-                  //     <Option value={tags.id}>{courseName}</Option>
-                  //   );
-                  // })
-                }
-              </Select>
-            </span>
-            <span className="good-selector-items">
-              <span>
-                种类标签: 
+                报名人: 
               </span>
               <Select className="goods-selector-name">
                 {
@@ -114,13 +99,62 @@ const PreApplyCoureslist = (props) => {
             </span>
             <span className="good-selector-items">
               <span>
-                属地标签: 
+                报名课程: 
               </span>
-              <Select className="goods-selector-name">
+              <Select
+                className="goods-selector-name"
+                onChange={
+                (e) => {
+                  setCourseId(e);
+                  props.dispatch({
+                    type: 'fmgCourse/fetchApplyCourseList',
+                    payload: {
+                      page: 1,
+                      limit: 99,
+                      course_id: e,
+                      author_id: applyer,
+                      status: applyStatus, 
+                    }, 
+                  });
+                }
+              }
+              >
                 {
-                  goodsArea.map((tags) => {
+                  fmgCourseList.map((tags) => {
                     return (
-                      <Option value={tags.id}>{tags.place}</Option>
+                      <Option value={tags.id}>{tags.name}</Option>
+                    );
+                  })
+                }
+              </Select>
+            </span>
+            <span className="good-selector-items">
+              <span>
+                报名状态: 
+              </span>
+              <Select
+                className="goods-selector-name"
+                onChange={
+                (e) => {
+                  setApplyStatus(e);
+                  props.dispatch({
+                    type: 'fmgCourse/fetchApplyCourseList',
+                    payload: {
+                      page: 1,
+                      limit: 99,
+                      course_id: courseId,
+                      author_id: applyer,
+                      status: e, 
+                    }, 
+                  });
+                }
+              }
+              
+              >
+                {
+                  PreApplyStatus.map((tags) => {
+                    return (
+                      <Option value={tags.id}>{tags.name}</Option>
                     );
                   })
                 }

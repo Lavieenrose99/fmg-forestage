@@ -19,6 +19,7 @@ import {
 
 } from '@/services/Bill/bills_list';
 import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
+import { yellow } from 'chalk';
   
 const GoodsClassModel = {
   namespace: 'BillsListBack',
@@ -88,8 +89,7 @@ const GoodsClassModel = {
     },
     * PleaseRefund({ payload }, { call }) {
       const raw =  yield call(putExchangeStatus, payload);
-      const response = yield call(DoRefund, payload);
-      console.log(response);
+      yield call(DoRefund, payload);
       if (raw.id !== 0) {
         message.info('退款成功');
       } else {
@@ -102,6 +102,23 @@ const GoodsClassModel = {
         message.info('拒绝退款成功');
       } else {
         message.info('请求失败！');
+      }
+    },
+    * RefundGoods({ payload }, { call, put }) {
+      const raw =  yield call(MgetBillsList, payload);
+      yield put({
+        type: 'saveRefundBills',
+        payload: raw[0],
+      });
+      if (raw.length > 0) {
+        const goodsList  = raw[0].order_detail.map((infos) => {
+          return infos.goods_id;
+        });
+        const ids = Array.from(new Set(goodsList));
+        yield put({
+          type: 'fetchChildGoodsList',
+          payload: ids,
+        });
       }
     },
     * sendDelivery({ payload }, { call }) {
@@ -215,6 +232,12 @@ const GoodsClassModel = {
       return {
         ...state,
         List: payload,
+      };
+    },
+    saveRefundBills(state, { payload }) {
+      return {
+        ...state,
+        ReBillList: payload,
       };
     },
     saveChecklist(state, { payload }) {

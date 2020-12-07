@@ -2,7 +2,6 @@ import {
   Table, Space, Button, Input, Avatar
 } from 'antd';
 import React, { useState, useEffect } from 'react';
-import request from '@/utils/request';
 import { connect } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
@@ -15,6 +14,7 @@ import Highlighter from 'react-highlight-words';
 import {
   SearchOutlined
 } from '@ant-design/icons';
+import  './refund_list.less';
 
 const FmgRefundList = (props) => {
   const { RefundList, cAccount } = props;
@@ -32,21 +32,25 @@ const FmgRefundList = (props) => {
         ? cAccount.find((item) => item.id === id) : null;
       if (user) {
         return (
-          <>
-            <Avatar src={user.avator} />
+          <div className="fmg-refund-user-container">
+            <span>
+              <Avatar src={user.avator} />
+            </span>
             <span style={{ marginLeft: 10 }}>
               {user.nickname}
             </span>
-          </>
+          </div>
         );
       }
       return (
-        <>
-          <Avatar>没注册</Avatar>
+        <div className="fmg-refund-user-container">
+          <span>
+            <Avatar>没注册</Avatar>
+          </span>
           <span style={{ marginLeft: 10 }}>
             无该用户
           </span>
-        </>
+        </div>
       );
     },
   };
@@ -119,7 +123,6 @@ const FmgRefundList = (props) => {
     });
   }, []);
   RefundListTable[1] = userAtom;
-  console.log(RefundListTable, userAtom);
   RefundListTable[0] = { ...RefundListTable[0], ...getColumnSearchProps('out_refund_no') };
   
   //一般的table记得分开抽象，需要处理的table再组合

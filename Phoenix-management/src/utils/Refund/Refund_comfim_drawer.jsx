@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Drawer, Row, Col, Button, Tag, Modal, Avatar 
+  Drawer, Row, Col, Button, Tag, Modal, Avatar, Table
 } from 'antd';
 import {
-  RefundReason, RefundSevice, RefundWays, RefundStatus
+  RefundReason, RefundSevice, RefundWays, RefundStatus, RefundGoodsList
 } from '@/utils/Refund/refund_table.jsx';
 import { BASE_QINIU_URL } 
   from '@/utils/Token';
@@ -14,11 +14,34 @@ import { DescriptionItem } from '../Drawer/details_drawer.jsx';
 
 const RefundComfirm = (props) => {
   const {
-    show, closeDrawer, billsInfos, cAccount, 
+    show, closeDrawer,
+    billsInfos, cAccount, GoodsList, ReBillslist,
   } = props;
-  const pictures = billsInfos.pictures ? JSON.parse(billsInfos.pictures) : [1, 1, 1, 1, 1];
+  const pictures = billsInfos.pictures ? JSON.parse(billsInfos.pictures) 
+    : [{ picture: 'picture-1605170911000' }];
   const user = cAccount.find((item) => item.id === billsInfos.account_id)
     ? cAccount.find((item) => item.id === billsInfos.account_id) : { nickname: '用户', avator: '' };
+  useEffect(() => {
+    props.dispatch({
+      type: 'BillsListBack/RefundGoods',
+      payload: [billsInfos.order_detail_id],
+    });
+  }, [billsInfos]);
+  // console.log(GoodsList, ReBillslist);
+  const ReBillsGoods = ReBillslist.order_detail ? ReBillslist.order_detail.map((list) => {
+    const Goods =  GoodsList.find((item) => item.id === list.goods_id);
+    console.log(list)
+    const specifications =  GoodsList.find((item) => item.id === list.goods_id) 
+      ? {
+        ...GoodsList.find((item) => item.id === list.goods_id)
+          .specification.find((item) => {
+            return item.id === list.goods_specification_id;
+          }),
+        num: list.purchase_qty, 
+      } : null;
+    const GoodsInfos = Goods ? Object.assign(Goods, { specifications }) : {};
+    return GoodsInfos;
+  }) : null;
   return (
     <Drawer
       width={640}
@@ -163,6 +186,20 @@ const RefundComfirm = (props) => {
         </Col>
       </Row>
       <Row>
+        <Col span={24}>
+          <DescriptionItem
+            title="商品详情"
+            content={<Table
+              columns={RefundGoodsList} 
+              dataSource={ReBillsGoods}
+              pagination={{
+                pageSize: 2,
+              }}
+            />}
+          />
+        </Col>
+      </Row>
+      <Row>
         <strong span={20}>上传图片: </strong>
       </Row>
       <Row style={{ marginTop: 20 }}>
@@ -170,7 +207,7 @@ const RefundComfirm = (props) => {
             pictures.map((url) => {
               return <Col span={8}>
                 <img
-                  src={`${BASE_QINIU_URL}picture-1606823732000`}
+                  src={`${BASE_QINIU_URL}${url.picture}`}
                   alt="img" 
                   style={{ marginLeft: 20, marginBottom: 20 }}
                   width={180}
@@ -187,4 +224,6 @@ const RefundComfirm = (props) => {
 export default connect(({ fmgInfos, BillsListBack }) => ({
   InfosList: get(fmgInfos, 'InfosList', []),
   cAccount: get(BillsListBack, 'cAccount', []),
+  GoodsList: get(BillsListBack, 'ChildGoods', []),
+  ReBillslist: get(BillsListBack, 'ReBillList', []),
 }))(RefundComfirm);

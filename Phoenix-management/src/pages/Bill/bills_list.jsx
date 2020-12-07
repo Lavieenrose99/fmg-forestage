@@ -561,7 +561,6 @@ const BillsList = (props) => {
       <PageHeader
         title="商品订单管理"
         style={{ backgroundColor: 'white' }} 
-       
         footer={
           <>
             <div className="goods-bills-container">
