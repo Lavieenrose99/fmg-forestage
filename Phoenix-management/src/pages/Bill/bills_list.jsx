@@ -34,7 +34,6 @@ const BillsList = (props) => {
   const [changeVisible, setChangeVisible] = useState(false);
   const [account, setAccount] = useState(Account);
   const [showDrawer, setshowDrawer] = useState(false);
-  const [data, setData] = useState([]);
   const [selectName, setSelectName] = useState('');
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [childOrderDetails, setChildOrderDetails] = useState([]);
@@ -48,13 +47,17 @@ const BillsList = (props) => {
   const [childBillsId, setChildBillsId] = useState({});
   const  [pageSize, setPageSize] = useState(10);
   const  [pageCurrent, setpageCurrent] = useState(1);
+  const [childBillsInfos, setChildBillsInfos] = useState({});
 
   const MainListColumBreak = MainListBreak.map((arr, index) => {
     return {
       ...arr, key: index,
     };
   });
-
+  const clickShow = () => {
+    const show = showDrawer;
+    setshowDrawer(!show);
+  };
   const onExpand = (_, record) => {
     const ChildOrders = List.filter((info) => {
       return info.test_order.id === record.id;
@@ -194,6 +197,7 @@ const BillsList = (props) => {
         dataIndex: 'order_status',
         key: 'name',
         render: (text, record) => {
+          console.log(record);
           let t = '';
           let exstatus = 'Processing';
           if (text === 1) {
@@ -283,19 +287,32 @@ const BillsList = (props) => {
         dataIndex: 'operation',
         key: 'operation',
         render: (_, record) => {
+          const mark = {};
           const ids = {
             orderNum: record.order_num,
             ooid: record.test_order.id,
             oid: record.id,
           };
+          if (record.tracking_id) {
+            mark.text = '查看物流';
+            mark.id = 1;
+          } else {
+            mark.text = '快递发货';
+            mark.id = 2;
+          }
           return (
             <Space size="middle">
               <a onClick={() => {
-                setChildrenDrawer(!childrenDrawer);
-                setChildBillsId(ids); 
+                if (mark.id === 2) {
+                  setChildrenDrawer(!childrenDrawer);
+                  setChildBillsId(ids); 
+                } else {
+                  setshowDrawer(!showDrawer);
+                  setChildBillsInfos(record)
+                }
               }}
               >
-                快递发货
+                {mark.text}
               </a>
             </Space>
           );
@@ -319,6 +336,13 @@ const BillsList = (props) => {
         ifShow={childrenDrawer}
         setVisibleChild={setChildrenDrawer} 
         orderId={childBillsId}
+      />
+      <DetailsDrawer
+        show={showDrawer}
+        data={childBillsInfos}
+        clickShow={clickShow} 
+        address={Address}
+        oid={orderId}
       />
     </>;
   };
@@ -388,45 +412,7 @@ const BillsList = (props) => {
     });
     setSelectAccSta(e);
   };
-  const clickShow = () => {
-    const show = showDrawer;
-    setshowDrawer(!show);
-  };
-  const cancel = () => {
-    setEditingKey('');
-  };
-  const getInfos = (arr, aid, oid) => {
-    props.dispatch({
-      type: 'BillsListBack/fetchBillAddress',
-      payload: aid,
-    });
-    setData(arr);
-    setOrderId(oid);
-    setshowDrawer(true);
-  };
-  const sendGoods = (aid, record) => {
-    setChangeVisible(true);
-    props.dispatch({
-      type: 'BillsListBack/fetchBillAddress',
-      payload: aid,
-    });
-    formExpress.setFieldsValue({
-      recManName: Address.name ?? '',
-      recManMobile: Address.phone ?? '',
-      recManPrintAddr: (Address.province_name
-         + Address.city_name + Address.district_name + Address.detail) ?? '',
-      weight: record.weight ?? 0,
-      remark: record.message ?? '',
-    });
-  };
-
   const columns = [
-    {
-      title: '订单号',
-      dataIndex: 'order_num',
-      key: 1,
-      width: '20%',
-    },
     {
       title: '订单号',
       dataIndex: 'orderfatherUni',
@@ -437,7 +423,7 @@ const BillsList = (props) => {
       title: '用户名',
       dataIndex: 'account_id',
       key: 'order_num',
-      width: '10%',
+      width: '15%',
       render: (id) => {
         const user = Account.find((item) => item.id === id)
           ? Account.find((item) => item.id === id) : null;
@@ -469,8 +455,8 @@ const BillsList = (props) => {
       title: '订单类型',
       dataIndex: 'status',
       key: 'order_num',
-      width: '8%',
-      render: (text, record) => {
+      width: '10%',
+      render: (text) => {
         let t = '';
         const exstatus = 'processing';
         if (text === 2) {
@@ -511,6 +497,17 @@ const BillsList = (props) => {
       },
     },
     {
+      title: '总优惠',
+      key: 'order_num',
+      dataIndex: 'total_coupon',
+      width: '10%',
+      render: (divide) => {
+        return (
+          divide / 100
+        );
+      },
+    },
+    {
       title: '实付款',
       key: 'order_num',
       dataIndex: 'total_order_amount',
@@ -534,29 +531,6 @@ const BillsList = (props) => {
           </span>
         </>
       ),
-    },
-    {
-      title: '操作',
-      key: 'order_num',
-      dataIndex: 'operation',
-      width: '40%',
-      render: (_, record) => {
-        return (
-          <Space size="large">
-            {record.delivery === 1
-              ? <a disabled={editingKey !== ''} onClick={() => sendGoods(record.address_id, record)}>
-                快递发货
-              </a> : null}
-            {
-              <a onClick={() => getInfos(record.child_order,
-                record.address_id, record.order_num)}
-              >
-                详细信息
-              </a>
-              }
-          </Space>
-        );
-      },
     }
   ];
   const mergedColumnsUni = columns.filter((col) => {
@@ -686,14 +660,6 @@ const BillsList = (props) => {
           </>
 }
       /> 
-    
-      <DetailsDrawer
-        show={showDrawer}
-        data={data}
-        clickShow={clickShow} 
-        address={Address}
-        oid={orderId}
-      />
     </Form>
     
   );
