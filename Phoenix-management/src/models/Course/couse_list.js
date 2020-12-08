@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-11-25 11:47:59
+ * @LastEditTime: 2020-12-08 15:52:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -13,6 +13,7 @@ import {
   createCourse, DelCourse, adjCourse,
   PreApplyList, MgetPreApplyList
 } from '@/services/Course/course_list';
+import { MgetAccountList } from '@/services/Bill/bills_list';
   
 const fmgCourseModel = {
   namespace: 'fmgCourse',
@@ -38,15 +39,25 @@ const fmgCourseModel = {
         payload: raw,
       });
     },
-    * fetchApplyCourseList({ payload }, { call, put }) {
+    * fetchApplyCourseList({ payload }, { call, put, take }) {
       const response = yield call(PreApplyList, payload);
       const infos = get(response, 'preApplys', []);
       const ids = infos.map((arr) => { return arr.id; });
       const raw = yield call(MgetPreApplyList, ids);
+      const userIdSet = [...new Set(raw.map((arr) => {
+        return arr.account_id;
+      }))];
+      const accountInfo = yield call(MgetAccountList, userIdSet);
+      //复习一下saga
+      yield put({
+        type: 'BillsListBack/saveAccountList',
+        payload: accountInfo,
+      });
       yield put({
         type: 'saveApplyCourseList',
         payload: raw,
       });
+      //yield take('BillsListBack/saveAccountList/@@end');
     },
     * AdjCourse({ payload }, { call }) {
       const { finalData, cid } = payload;

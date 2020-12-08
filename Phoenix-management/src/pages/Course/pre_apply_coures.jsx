@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table, Input, Button, Space, Tag, DatePicker, Modal, Select, Popover
+  Table, Input, Button, Space, Avatar, Select, Popover
 } from 'antd';
 import {
   RedoOutlined, PlusCircleTwoTone
@@ -16,13 +16,12 @@ const { Option } = Select;
 const PreApplyCoureslist = (props) => {
   const {
     ApplycourseList, fmgCourseList, goodsArea,
-    couresTagsList, couresTypeList, 
+    couresTagsList, couresTypeList, Account,
   } = props;
   //课程标签
   const [courseId, setCourseId] = useState(0);
   const [applyer, setApplyer] = useState(0);
   const [applyStatus, setApplyStatus] = useState(0);
- 
   useEffect(() => {
     props.dispatch({
       type: 'fmgCourse/fetchApplyCourseList',
@@ -47,7 +46,36 @@ const PreApplyCoureslist = (props) => {
   }, []);
   const preApplyTable = [
     { 
-      title: '报名用户', dataIndex: 'account_id', 
+      title: '用户',
+      dataIndex: 'account_id',
+      width: '10%',
+      key: 'id',
+      render: (id) => {
+        const user = Account.find((item) => item.id === id)
+          ? Account.find((item) => item.id === id) : null;
+        if (user) {
+          return (
+            <div className="fmg-refund-user-container">
+              <span>
+                <Avatar src={user.avator} />
+              </span>
+              <span style={{ marginLeft: 10 }}>
+                {user.nickname}
+              </span>
+            </div>
+          );
+        }
+        return (
+          <div className="fmg-refund-user-container">
+            <span>
+              <Avatar>没注册</Avatar>
+            </span>
+            <span style={{ marginLeft: 10 }}>
+              无该用户
+            </span>
+          </div>
+        );
+      },
     },
     { 
       title: '联系人', dataIndex: 'name', 
@@ -195,10 +223,12 @@ export default connect(({
   fmgCourse,
   couresTags,
   goodsArea,
+  BillsListBack,
 }) => ({
   fmgCourseList: get(fmgCourse, 'courseList', []),
   ApplycourseList: get(fmgCourse, 'ApplycourseList', []),
   couresTagsList: get(couresTags, 'tags', []),
   couresTypeList: get(couresTags, 'typeTags', []),
   goodsArea: get(goodsArea, 'info', []),
+  Account: get(BillsListBack, 'Account', []),
 }))(PreApplyCoureslist);

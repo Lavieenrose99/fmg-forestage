@@ -29,7 +29,6 @@ const RefundComfirm = (props) => {
       payload: [billsInfos.child_order_id],
     });
   }, [billsInfos]);
-  console.log(cAccount, Address);
   const ReBillsGoods = ReBillslist.order_detail ? ReBillslist.order_detail.map((list) => {
     const Goods =  GoodsList.find((item) => item.id === list.goods_id);
     const specifications =  GoodsList.find((item) => item.id === list.goods_id) 

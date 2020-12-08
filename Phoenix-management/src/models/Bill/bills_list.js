@@ -19,7 +19,6 @@ import {
 
 } from '@/services/Bill/bills_list';
 import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
-import { yellow } from 'chalk';
   
 const GoodsClassModel = {
   namespace: 'BillsListBack',
@@ -86,7 +85,6 @@ const GoodsClassModel = {
         type: 'saveAccountCList',
         payload: account,
       });
-      
     },
     * PleaseRefund({ payload }, { call }) {
       const raw =  yield call(putExchangeStatus, payload);
