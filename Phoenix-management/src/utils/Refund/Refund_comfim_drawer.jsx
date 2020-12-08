@@ -10,6 +10,7 @@ import { BASE_QINIU_URL }
 import moment from 'moment';
 import { connect } from 'umi';
 import { get } from 'lodash';
+import Zmage from 'react-zmage';
 import { DescriptionItem } from '../Drawer/details_drawer.jsx';
 
 const RefundComfirm = (props) => {
@@ -207,7 +208,7 @@ const RefundComfirm = (props) => {
         {
             pictures.map((url) => {
               return <Col span={8}>
-                <img
+                <Zmage
                   src={`${BASE_QINIU_URL}${url.picture}`}
                   alt="img" 
                   style={{ marginLeft: 20, marginBottom: 20 }}
