@@ -86,6 +86,7 @@ const GoodsClassModel = {
         type: 'saveAccountCList',
         payload: account,
       });
+      
     },
     * PleaseRefund({ payload }, { call }) {
       const raw =  yield call(putExchangeStatus, payload);
@@ -118,6 +119,10 @@ const GoodsClassModel = {
         yield put({
           type: 'fetchChildGoodsList',
           payload: ids,
+        });
+        yield put({
+          type: 'fetchBillAddress',
+          payload: raw[0].address_id,
         });
       }
     },

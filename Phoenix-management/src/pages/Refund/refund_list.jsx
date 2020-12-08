@@ -131,13 +131,21 @@ const FmgRefundList = (props) => {
     {
       title: '操作',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a onClick={() => { setCheckRefundInfo(record); setVisibleDrawer(true); }}>
-            处理退款
-          </a>
-        </Space>
-      ),
+      render: (_, record) => {
+        let str;
+        if (record.status === 2 || record.status === 8) {
+          str = '查看订单';
+        } else {
+          str = '处理订单';
+        }
+        return (
+          <Space size="middle">
+            <a onClick={() => { setCheckRefundInfo(record); setVisibleDrawer(true); }}>
+              {str}
+            </a>
+          </Space>
+        );
+      },
     }
   ];
   return (

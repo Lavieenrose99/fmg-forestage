@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-01 13:56:57
- * @LastEditTime: 2020-12-08 00:02:45
+ * @LastEditTime: 2020-12-08 09:01:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/Refund/refund_table.js
@@ -127,7 +127,7 @@ export const RefundGoodsList = [
       <span>
         *
         {
-      info.num
+     info ? info.num : null
 }
       </span>
     ),
@@ -140,7 +140,7 @@ export const RefundGoodsList = [
     render: (info) => (
       <span>
         {
-      info.cost_price / 100
+      info ? info.cost_price / 100 : null
 }
       </span>
     ),
@@ -153,7 +153,7 @@ export const RefundGoodsList = [
     render: (info) => (
       <span>
         {
-      info.price / 100
+      info ? info.price / 100 : null
 }
       </span>
     ),
@@ -166,7 +166,7 @@ export const RefundGoodsList = [
     render: (info) => (
       <span>
         {
-      info.price / 100 * info.num
+     info ? info.price / 100 * info.num : null
 }
       </span>
     ),

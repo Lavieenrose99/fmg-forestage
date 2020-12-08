@@ -15,7 +15,8 @@ import { DescriptionItem } from '../Drawer/details_drawer.jsx';
 const RefundComfirm = (props) => {
   const {
     show, closeDrawer,
-    billsInfos, cAccount, GoodsList, ReBillslist,
+    billsInfos, cAccount, GoodsList,
+    ReBillslist, Address,
   } = props;
   const pictures = billsInfos.pictures ? JSON.parse(billsInfos.pictures) 
     : [{ picture: 'picture-1605170911000' }];
@@ -24,13 +25,12 @@ const RefundComfirm = (props) => {
   useEffect(() => {
     props.dispatch({
       type: 'BillsListBack/RefundGoods',
-      payload: [billsInfos.order_detail_id],
+      payload: [billsInfos.child_order_id],
     });
   }, [billsInfos]);
-  // console.log(GoodsList, ReBillslist);
+  console.log(cAccount, Address);
   const ReBillsGoods = ReBillslist.order_detail ? ReBillslist.order_detail.map((list) => {
     const Goods =  GoodsList.find((item) => item.id === list.goods_id);
-    console.log(list)
     const specifications =  GoodsList.find((item) => item.id === list.goods_id) 
       ? {
         ...GoodsList.find((item) => item.id === list.goods_id)
@@ -120,11 +120,12 @@ const RefundComfirm = (props) => {
             </>}
           />
         </Col>
-        <Col span={12}><DescriptionItem title="地址信息" content={billsInfos.address_id} /></Col>
-      </Row>
-      <Row>
-        <Col span={12}><DescriptionItem title="订单ID" content={billsInfos.order_id} /></Col>
-        <Col span={12}><DescriptionItem title="子订单ID" content={billsInfos.child_order_id} /></Col>
+        <Col span={12}>
+          <DescriptionItem
+            title="地址信息" 
+            content={<>{`${Address.province_name + Address.city_name + Address.district_name + Address.detail}`}</>}
+          />
+        </Col>
       </Row>
       <Row>
         <Col span={12}><DescriptionItem title="订单金额" content={billsInfos.total_fee / 100} /></Col>
@@ -226,4 +227,5 @@ export default connect(({ fmgInfos, BillsListBack }) => ({
   cAccount: get(BillsListBack, 'cAccount', []),
   GoodsList: get(BillsListBack, 'ChildGoods', []),
   ReBillslist: get(BillsListBack, 'ReBillList', []),
+  Address: get(BillsListBack, 'Address', []),
 }))(RefundComfirm);
