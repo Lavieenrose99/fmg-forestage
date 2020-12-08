@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   Table, Input, DatePicker,
   Form, PageHeader, Space, Select, 
-  Button, Badge, Tabs, Avatar
+  Button, Badge, Avatar
 } from 'antd';
 import {
   RedoOutlined, MinusCircleTwoTone, 
@@ -23,7 +23,6 @@ import PropTypes from 'prop-types';
 const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const { TabPane } = Tabs;
 
 const BillsList = (props) => {
   const {
@@ -47,6 +46,8 @@ const BillsList = (props) => {
   const [childUnionInfo, setChildUnionInfo] = useState([]);
   const [childrenDrawer, setChildrenDrawer]  = useState(false);
   const [childBillsId, setChildBillsId] = useState({});
+  const  [pageSize, setPageSize] = useState(10);
+  const  [pageCurrent, setpageCurrent] = useState(1);
 
   const MainListColumBreak = MainListBreak.map((arr, index) => {
     return {
@@ -110,8 +111,8 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1,
-        limit: 99,
+        page: pageCurrent,
+        limit: pageSize,
         username: selectName,
         name: selectAccGname,
         status: selectAccSta,
@@ -325,7 +326,7 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1, limit: 99, 
+        page: pageCurrent, limit: pageSize, 
       },
     });
   }, []);
@@ -338,8 +339,8 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1,
-        limit: 99,
+        page: pageCurrent,
+        limit: pageSize,
       },
     });
   };
@@ -365,8 +366,8 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1,
-        limit: 99,
+        page: pageCurrent,
+        limit: pageSize,
         username: selectName,
         name: e.target.value,
         status: selectAccSta,
@@ -378,8 +379,8 @@ const BillsList = (props) => {
     props.dispatch({
       type: 'BillsListBack/fetchBillsList',
       payload: {
-        page: 1,
-        limit: 99,
+        page: pageCurrent,
+        limit: pageSize,
         username: selectName,
         account_id: selectAccGname,
         status: e,
@@ -664,8 +665,20 @@ const BillsList = (props) => {
               columns={mergedColumnsUni}
               rowClassName="editable-row"
               pagination={{
-                onChange: cancel,
                 total: pageTotals,
+                pageSize,
+                onShowSizeChange: (current, size) => {
+                  setPageSize(size);
+                },
+                onChange: (page, size) => {
+                  setpageCurrent(page);
+                  props.dispatch({
+                    type: 'BillsListBack/fetchBillsList',
+                    payload: {
+                      page, limit: size, 
+                    },
+                  });
+                },
                 showTotal: (total) => `共 ${total} 条`,
               }}
             />
