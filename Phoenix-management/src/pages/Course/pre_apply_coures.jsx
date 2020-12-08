@@ -19,13 +19,19 @@ const PreApplyCoureslist = (props) => {
     couresTagsList, couresTypeList, Account,
   } = props;
   //课程标签
-  const [courseId, setCourseId] = useState(0);
-  const [applyer, setApplyer] = useState(0);
-  const [applyStatus, setApplyStatus] = useState(0);
+  const [courseId, setCourseId] = useState('');
+  const [applyer, setApplyer] = useState('');
+  const [applyStatus, setApplyStatus] = useState('');
   useEffect(() => {
     props.dispatch({
       type: 'fmgCourse/fetchApplyCourseList',
-      payload: { page: 1, limit: 99 }, 
+      payload: {
+        page: 1,
+        limit: 99,
+        course_id: courseId,
+        author_id: applyer,
+        status: applyStatus, 
+      }, 
     });
     props.dispatch({
       type: 'fmgCourse/fetchCourseList',
@@ -46,7 +52,7 @@ const PreApplyCoureslist = (props) => {
   }, []);
   const preApplyTable = [
     { 
-      title: '用户',
+      title: '报名用户',
       dataIndex: 'account_id',
       width: '10%',
       key: 'id',
@@ -115,15 +121,26 @@ const PreApplyCoureslist = (props) => {
               <span>
                 报名人: 
               </span>
-              <Select className="goods-selector-name">
-                {
-                  couresTypeList.map((tags) => {
-                    return (
-                      <Option value={tags.id}>{tags.name}</Option>
-                    );
-                  })
+              <Input
+                className="goods-selector-name"
+                onChange={
+                (e) => {
+                  const { id } = Account.find((item) => item.nickname === e.target.value)
+                    ? Account.find((item) => item.nickname === e.target.value) : { id: 0 };
+                  setApplyer(id);
+                  props.dispatch({
+                    type: 'fmgCourse/fetchApplyCourseList',
+                    payload: {
+                      page: 1,
+                      limit: 99,
+                      course_id: courseId,
+                      author_id: id,
+                      status: applyStatus, 
+                    }, 
+                  });
                 }
-              </Select>
+              }
+              />
             </span>
             <span className="good-selector-items">
               <span>
@@ -190,6 +207,23 @@ const PreApplyCoureslist = (props) => {
             </span>
             <Button
               type="primary"
+              onClick={
+                () => {
+                  setCourseId();
+                  setApplyStatus();
+                  setApplyer();
+                  props.dispatch({
+                    type: 'fmgCourse/fetchApplyCourseList',
+                    payload: {
+                      page: 1,
+                      limit: 99,
+                      course_id: '',
+                      author_id: '',
+                      status: '', 
+                    }, 
+                  });
+                }
+              }
               style={{
                 marginLeft: 20,
               }} 
@@ -207,13 +241,11 @@ const PreApplyCoureslist = (props) => {
 
 PreApplyCoureslist.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  goodId: PropTypes.number,
   goodsArea: PropTypes.arrayOf({}),
   couresTagsList: PropTypes.arrayOf({}),
   couresTypeList: PropTypes.arrayOf({}),
 };
 PreApplyCoureslist.defaultProps = {
-  goodId: 0,
   goodsArea: [],
   couresTagsList: [],
   couresTypeList: [],

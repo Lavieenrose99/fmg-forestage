@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-12-08 15:52:47
+ * @LastEditTime: 2020-12-08 16:50:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -42,7 +42,8 @@ const fmgCourseModel = {
     * fetchApplyCourseList({ payload }, { call, put, take }) {
       const response = yield call(PreApplyList, payload);
       const infos = get(response, 'preApplys', []);
-      const ids = infos.map((arr) => { return arr.id; });
+      const ids = yield infos.map((arr) => { return arr.id; });
+      console.log(ids)
       const raw = yield call(MgetPreApplyList, ids);
       const userIdSet = [...new Set(raw.map((arr) => {
         return arr.account_id;
