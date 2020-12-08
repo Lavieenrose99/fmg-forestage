@@ -35,6 +35,10 @@ const GoodsClassModel = {
         type: 'getBillslistEntity',
         payload: ids,
       });
+      yield put({
+        type: 'savePageTotals',
+        payload: totals,
+      });
     },
     //快递
     * fetchExpressList({ payload }, { call, put }) {
@@ -145,26 +149,27 @@ const GoodsClassModel = {
       const fatherBills = [...new Set(response.map((arr) => {
         return { ...arr.test_order, orderfatherUni: arr.order_num };
       }))];
-      const idSetBreak = [];
-      const idSet = [];
-      const fatherBillsUniBreak = fatherBills.filter((arr, index, record) => {
-        if (index !== 0) {
-          //将每一次的id存入数组当中
-          idSetBreak.push(record[index - 1].id); 
-        }
-        return  (
-          idSetBreak.indexOf(arr.id) === -1 && arr.status === 1
-        );
-      });
-      const fatherBillsUni = fatherBills.filter((arr, index, record) => {
-        if (index !== 0) {
-          //将每一次的id存入数组当中
-          idSet.push(record[index - 1].id); 
-        }
-        return  (
-          idSet.indexOf(arr.id) === -1 && arr.status === 2
-        );
-      });
+      //在models不区分拆分和不拆分
+      // const idSetBreak = [];
+      // const idSet = [];
+      // const fatherBillsUniBreak = fatherBills.filter((arr, index, record) => {
+      //   if (index !== 0) {
+      //     //将每一次的id存入数组当中
+      //     idSetBreak.push(record[index - 1].id); 
+      //   }
+      //   return  (
+      //     idSetBreak.indexOf(arr.id) === -1 && arr.status === 1
+      //   );
+      // });
+      // const fatherBillsUni = fatherBills.filter((arr, index, record) => {
+      //   if (index !== 0) {
+      //     //将每一次的id存入数组当中
+      //     idSet.push(record[index - 1].id); 
+      //   }
+      //   return  (
+      //     idSet.indexOf(arr.id) === -1 && arr.status === 2
+      //   );
+      // });
       const accountInfo = yield call(MgetAccountList, userIdSet);
       const account = accountInfo.map((info, index) => {
         return { ...info, account_id: userIdSet[index] };
@@ -179,11 +184,7 @@ const GoodsClassModel = {
       });
       yield put({
         type: 'saveAccountMainListBreak',
-        payload: fatherBillsUniBreak,
-      });
-      yield put({
-        type: 'saveAccountMainList',
-        payload: fatherBillsUni,
+        payload: fatherBills,
       });
     },
     * fetchBillAddress({ payload }, { call, put }) {

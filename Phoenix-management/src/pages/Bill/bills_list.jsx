@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   Table, Input, DatePicker,
   Form, PageHeader, Space, Select, 
-  Button, Badge, Tabs
+  Button, Badge, Tabs, Avatar
 } from 'antd';
 import {
   RedoOutlined, MinusCircleTwoTone, 
@@ -24,15 +24,10 @@ const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
-const layout = {
-  labelCol: {
-    span: 7,
-  },
-};
 
 const BillsList = (props) => {
   const {
-    List, MainListBreak, Address, Account, MainList, ChildGoods,
+    List, MainListBreak, Address, Account, MainList, ChildGoods, pageTotals,
   } = props;
   const [form] = Form.useForm();
   const [formExpress] = Form.useForm();
@@ -52,11 +47,7 @@ const BillsList = (props) => {
   const [childUnionInfo, setChildUnionInfo] = useState([]);
   const [childrenDrawer, setChildrenDrawer]  = useState(false);
   const [childBillsId, setChildBillsId] = useState({});
-  const MainListColumUni = MainList.map((arr, index) => {
-    return {
-      ...arr, key: index,
-    };
-  });
+
   const MainListColumBreak = MainListBreak.map((arr, index) => {
     return {
       ...arr, key: index,
@@ -445,13 +436,31 @@ const BillsList = (props) => {
       title: '用户名',
       dataIndex: 'account_id',
       key: 'order_num',
-      width: '8%',
-      render: (text) => {
-        const username = account.find((acc) => acc.account_id === text) 
-          ? account.find((acc) => acc.account_id === text).nickname
-          : '无';
+      width: '10%',
+      render: (id) => {
+        const user = Account.find((item) => item.id === id)
+          ? Account.find((item) => item.id === id) : null;
+        if (user) {
+          return (
+            <div className="fmg-refund-user-container">
+              <span>
+                <Avatar src={user.avator} />
+              </span>
+              <span style={{ marginLeft: 10 }}>
+                {user.nickname}
+              </span>
+            </div>
+          );
+        }
         return (
-          username
+          <div className="fmg-refund-user-container">
+            <span>
+              <Avatar>没注册</Avatar>
+            </span>
+            <span style={{ marginLeft: 10 }}>
+              无该用户
+            </span>
+          </div>
         );
       },
     },
@@ -552,9 +561,6 @@ const BillsList = (props) => {
   const mergedColumnsUni = columns.filter((col) => {
     return col.key !== 1;
   });
-  const mergedColumns = columns.filter((col) => {
-    return col.key !== 2;
-  });
   
   return (
     <Form form={form} component={false}>
@@ -642,67 +648,28 @@ const BillsList = (props) => {
                 />
               </div>
             </div>
-            <Tabs defaultActiveKey="1" centered>
-              <TabPane
-                key="1"
-                tab={
-                  <span>
-                    <IconFont type="iconhebing" />
-                    未拆分
-                  </span>
-              }
-              >
-                <Table
-                  bordered
-                  expandable={{
-                    expandedRowRender,
-                    defaultExpandAllRows: false,  
-                    expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
-                      <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                    ) : (
-                      <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                    )),
-                    onExpand,
-                  }}
-                  dataSource={MainListColumUni}
-                  columns={mergedColumnsUni}
-                  rowClassName="editable-row"
-                  pagination={{
-                    onChange: cancel,
-                  }}
-                />
-              </TabPane>
-              <TabPane
-                tab={
-                  <span>
-                    <IconFont type="iconfenli" />
-                    已拆分
-                  </span>
-              }
-                key="2"
-              >
-                <Table
-                  bordered
-                  expandable={{
-                    expandedRowRender,
-                    defaultExpandAllRows: false,  
-                    expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
-                      <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                    ) : (
-                      <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
-                    )),
-                    onExpand,
-                  }}
-                  dataSource={MainListColumBreak}
-                  columns={mergedColumns}
-                  rowClassName="editable-row"
-                  pagination={{
-                    onChange: cancel,
-                  }}
-                />
-              </TabPane>
-            </Tabs>
-        
+            <Table
+              bordered
+              expandable={{
+                expandedRowRender,
+                defaultExpandAllRows: false,  
+                expandIcon: ({ expanded, onExpand, record }) => (expanded ? (
+                  <MinusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                ) : (
+                  <PlusCircleTwoTone onClick={(e) => onExpand(record, e)} />
+                )),
+                onExpand,
+              }}
+              dataSource={MainListColumBreak}
+              columns={mergedColumnsUni}
+              rowClassName="editable-row"
+              pagination={{
+                onChange: cancel,
+                total: pageTotals,
+                showTotal: (total) => `共 ${total} 条`,
+              }}
+            />
+             
           </>
 }
       /> 
@@ -720,12 +687,10 @@ const BillsList = (props) => {
 };
 BillsList.propTypes = {
   List: PropTypes.arrayOf({}),
-  Details: PropTypes.arrayOf({}),
   Address: PropTypes.arrayOf({}),
 };
 BillsList.defaultProps = {
   List: [],
-  Details: [],
   Address: [],
 };
 
@@ -739,4 +704,5 @@ export default  connect(({
   Address: get(BillsListBack, 'Address', {}),
   Account: get(BillsListBack, 'Account', []),
   ChildGoods: get(BillsListBack, 'ChildGoods', []),
+  pageTotals: get(BillsListBack, 'total', []),
 }))(BillsList);

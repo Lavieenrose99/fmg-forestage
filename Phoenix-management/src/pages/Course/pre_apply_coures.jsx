@@ -9,6 +9,7 @@ import { connect } from 'umi';
 import { get } from 'lodash';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { SessionDetails, PreApplyStatus } from '@/utils/Course/apply_session';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 
 const { Option } = Select;
@@ -54,7 +55,7 @@ const PreApplyCoureslist = (props) => {
     { 
       title: '报名用户',
       dataIndex: 'account_id',
-      width: '10%',
+      width: '15%',
       key: 'id',
       render: (id) => {
         const user = Account.find((item) => item.id === id)
@@ -84,11 +85,12 @@ const PreApplyCoureslist = (props) => {
       },
     },
     { 
-      title: '联系人', dataIndex: 'name', 
+      title: '联系人', dataIndex: 'name', width: '10%',
     },
     {
       title: '报名课程',
       dataIndex: 'course_id',
+      width: '15%',
       render: (data, record) => {
         const courseName = fmgCourseList.find((item) => item.id === data)
           ? fmgCourseList.find((item) => item.id === data).name : '课程已删除';
@@ -104,12 +106,25 @@ const PreApplyCoureslist = (props) => {
           </Popover>
         );
       },
-    }, 
-    {
-      title: '电话号码', dataIndex: 'phone',
     },
     {
       title: '报名人数', dataIndex: 'people',
+    },
+    {
+      title: '电话号码', dataIndex: 'phone',
+    },
+   
+    {
+      title: '报名时间',
+      dataIndex: 'create_time',
+      render: (time) => (
+        <>
+          <span>
+            {moment(time * 1000)
+              .format('YYYY-MM-DD HH:mm:ss')}
+          </span>
+        </>
+      ),
     }
   ];
   return (
