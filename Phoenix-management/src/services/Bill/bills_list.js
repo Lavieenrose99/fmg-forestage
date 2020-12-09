@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-09-17 23:56:19
- * @LastEditTime: 2020-12-01 21:26:07
+ * @LastEditTime: 2020-12-09 11:07:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Bill/bills_list.js
@@ -108,5 +108,13 @@ export async function postDelivery(payload) {
   return request('/api.farm/delivery/info', {
     method: 'POST',
     data: payload,
+  });
+}
+
+//获取全部用户
+export async function getAllUserList(payload) {
+  return request('/api.farm/account/info/list', {
+    method: 'GET',
+    params: payload,
   });
 }

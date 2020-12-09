@@ -15,7 +15,8 @@ import {
   mGetRefundList,
   putExchangeStatus,
   putRejectStatus,
-  DoRefund
+  DoRefund,
+  getAllUserList
 
 } from '@/services/Bill/bills_list';
 import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
@@ -139,8 +140,13 @@ const GoodsClassModel = {
     },
     * getBillslistEntity({ payload }, { call, put }) {
       const raw = yield call(MgetBillsList, payload);
+      const usernum = yield call(getAllUserList, { limit: 999, page: 1 });
+      const { accounts } = usernum;
       const response = raw.filter((info) => {
         return info.account_id !== 0;
+      });
+      const responseAll = accounts.map((info) => {
+        return info.id;
       });
       //将选出去重复后的总订单id
       const userIdSet = [...new Set(response.map((arr) => {
@@ -170,9 +176,9 @@ const GoodsClassModel = {
       //     idSet.indexOf(arr.id) === -1 && arr.status === 2
       //   );
       // });
-      const accountInfo = yield call(MgetAccountList, userIdSet);
+      const accountInfo = yield call(MgetAccountList, responseAll);
       const account = accountInfo.map((info, index) => {
-        return { ...info, account_id: userIdSet[index] };
+        return { ...info, account_id: info.id };
       });
       yield put({
         type: 'saveBillsList',
