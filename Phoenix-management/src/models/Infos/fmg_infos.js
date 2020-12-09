@@ -18,7 +18,9 @@ import { message } from 'antd';
 import { get } from 'lodash';
 import {
   getInfosList, MgetInfosEnity, 
-  createInfos, DelInfos, adjInfos
+  createInfos, DelInfos, adjInfos, 
+  createInfosTags, getInfosTagsList,
+  MgetInfosTagsEnity, InfosTagsDel
 } from '@/services/Infos/fmg_infos';
   
 const fmgInfosModel = {
@@ -34,6 +36,24 @@ const fmgInfosModel = {
       } else {
         yield message.error('发布失败');
       }
+    },
+    * createInfosTags({ payload }, { call, put }) {
+      const response = yield call(createInfosTags, payload);
+      if (response) {
+        yield message.success('创建标签成功'); 
+      } else {
+        yield message.error('闯将标签失败');
+      }
+    },
+    * fetchInfosTagsList({ payload }, { call, put }) {
+      const response = yield call(getInfosTagsList, payload);
+      const infos = get(response, 'news', []);
+      const ids = infos.map((arr) => { return arr.id; });
+      const raw = yield call(MgetInfosTagsEnity, ids);
+      yield put({
+        type: 'saveInfosTagsList',
+        payload: raw,
+      });
     },
     * fetchInfosList({ payload }, { call, put }) {
       const response = yield call(getInfosList, payload);
@@ -73,6 +93,11 @@ const fmgInfosModel = {
     savePageTotals(state, { payload }) {
       return {
         total: payload,
+      };
+    },
+    saveInfosTagsList(state, { payload }) {
+      return {
+        TagsInfosList: payload,
       };
     },
   },

@@ -16,17 +16,23 @@ import { BASE_QINIU_URL }
 import { filterHTMLStr } from '../../utils/adjust_picture';
 import FmgInfoCreator  from  './infos_create.jsx';
 import FmgInfoChange from './infos_change.jsx';
+import FmgInfosTagsCreator from './infos_tags.jsx';
 import './infos_list.less';
 
 const InfosList = (props) => {
-  const { InfosList } = props;
+  const { InfosList, TagsList } = props;
   const [infosTagsChecked, setInfosTagsChecked] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [addInfosTags, setAddInfosTags] = useState(false);
   const [showChangeModal, setShowChangeModal] = useState(false);
   const [changeItem, setChangeItem] = useState({});
   useEffect(() => {
     props.dispatch({
       type: 'fmgInfos/fetchInfosList',
+      payload: { limit: 99, page: 1 },
+    });
+    props.dispatch({
+      type: 'fmgInfos/fetchInfosTagsList',
       payload: { limit: 99, page: 1 },
     });
   }, []);
@@ -45,6 +51,13 @@ const InfosList = (props) => {
         添加资讯
       </Button>
       <div className="Goods-Class-Tags-selector">
+        <IconFont
+          type="icontianjia1"
+          className="info-plus-icon"
+          onClick={() => {
+            setAddInfosTags(true);
+          }}
+        />
           
         {
          
@@ -172,10 +185,12 @@ const InfosList = (props) => {
         closeInfosModel={setShowChangeModal}
         infos={changeItem}
       />
+      <FmgInfosTagsCreator showModal={addInfosTags} close={setAddInfosTags} />
     </PageHeaderWrapper>
   );
 };
 
 export default connect(({ fmgInfos }) => ({
   InfosList: get(fmgInfos, 'InfosList', []),
+  TagsList: get(fmgInfos, 'TagsInfosList', []), 
 }))(InfosList);
