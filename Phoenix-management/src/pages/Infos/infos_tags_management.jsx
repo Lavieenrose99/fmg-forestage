@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Input, Tag } from 'antd';
+import { Modal, Alert, Tag } from 'antd';
 import { connect } from 'umi';
 import { get } from 'lodash';
 
@@ -18,8 +18,16 @@ const FmgInfosTagsHandler = (props) => {
         });
       }}
     >
-      <span style={{ marginBottom: 5, display: 'block' }}>标签名称: </span>
-      {
+      <div onClick={
+          () => {
+            setIfDel(0);
+            setIfDel(false);
+          }
+      }
+      >
+        <Alert type="info" message="单击删除" style={{ marginTop: 20 }} />
+        <span style={{ marginBottom: 5, display: 'block' }}>标签名称: </span>
+        {
           infos.map((tags) => {
             return (
               <Tag
@@ -36,12 +44,28 @@ const FmgInfosTagsHandler = (props) => {
                     console.log('end');
                   }
               }
+                onClose={() => {
+                  Modal.confirm({
+                    mask: false,
+                    title: '凤鸣谷',
+                    content: '确认删除标签吗',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk: () => {
+                      props.dispatch({
+                        type: 'fmgInfos/DelInfosTags',
+                        payload: delId,
+                      }); 
+                    },
+                  });
+                }}
               >
                 {tags.name}
               </Tag>
             );
           })
       }
+      </div>
     </Modal>
   );
 };

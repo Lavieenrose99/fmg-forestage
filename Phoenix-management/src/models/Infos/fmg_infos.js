@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 13:09:25
- * @LastEditTime: 2020-12-08 14:42:54
+ * @LastEditTime: 2020-12-09 16:04:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Infos/fmg_infos.js
@@ -76,6 +76,14 @@ const fmgInfosModel = {
     },
     * DelInfos({ payload }, { call }) {
       const reply  = yield call(DelInfos, payload);
+      if (reply) {
+        yield message.success('删除成功'); 
+      } else {
+        yield message.error('删除失败');
+      }
+    },
+    * DelInfosTags({ payload }, { call }) {
+      const reply  = yield call(InfosTagsDel, payload);
       if (reply) {
         yield message.success('删除成功'); 
       } else {
