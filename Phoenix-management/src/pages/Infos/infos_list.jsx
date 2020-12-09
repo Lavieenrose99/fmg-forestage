@@ -9,7 +9,6 @@ import {
   PlusCircleTwoTone
 } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import {  MockInfosTags } from '@/utils/Express/mock_data';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
 import { BASE_QINIU_URL } 
   from '@/utils/Token';
@@ -17,6 +16,7 @@ import { filterHTMLStr } from '../../utils/adjust_picture';
 import FmgInfoCreator  from  './infos_create.jsx';
 import FmgInfoChange from './infos_change.jsx';
 import FmgInfosTagsCreator from './infos_tags.jsx';
+import FmgInfosTagsHandler from './infos_tags_management.jsx'; 
 import './infos_list.less';
 
 const InfosList = (props) => {
@@ -25,6 +25,7 @@ const InfosList = (props) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addInfosTags, setAddInfosTags] = useState(false);
   const [showChangeModal, setShowChangeModal] = useState(false);
+  const [showMagementModal, setShowMagementModal] = useState(false);
   const [changeItem, setChangeItem] = useState({});
   useEffect(() => {
     props.dispatch({
@@ -50,6 +51,18 @@ const InfosList = (props) => {
       >
         添加资讯
       </Button>
+      <Button
+        type="primary"
+        style={{
+          margin: 20,
+        }}
+        onClick={() => {
+          setShowMagementModal(true);
+        }}
+        icon={<IconFont type="iconguanli" />}
+      >
+        标签管理
+      </Button>
       <div className="Goods-Class-Tags-selector">
         <IconFont
           type="icontianjia1"
@@ -69,8 +82,9 @@ const InfosList = (props) => {
           </Tag.CheckableTag>
 }
         {
-          MockInfosTags.map((arr) => {
+          TagsList.map((arr) => {
             return <Tag.CheckableTag
+              closable
               checked={infosTagsChecked === arr.id}
               onChange={() => {
                 setInfosTagsChecked(arr.id); 
@@ -83,7 +97,7 @@ const InfosList = (props) => {
           })
       
 }
-       
+        
       </div>
       <div className="fmg-infos-container">
         <List
@@ -184,6 +198,11 @@ const InfosList = (props) => {
         show={showChangeModal} 
         closeInfosModel={setShowChangeModal}
         infos={changeItem}
+      />
+      <FmgInfosTagsHandler
+        show={showMagementModal} 
+        close={setShowMagementModal}
+        infos={TagsList}
       />
       <FmgInfosTagsCreator showModal={addInfosTags} close={setAddInfosTags} />
     </PageHeaderWrapper>

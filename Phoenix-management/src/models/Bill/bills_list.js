@@ -149,9 +149,9 @@ const GoodsClassModel = {
         return info.id;
       });
       //将选出去重复后的总订单id
-      const userIdSet = [...new Set(response.map((arr) => {
-        return arr.account_id;
-      }))];
+      // const userIdSet = [...new Set(response.map((arr) => {
+      //   return arr.account_id;
+      // }))];
       const fatherBills = [...new Set(response.map((arr) => {
         return { ...arr.test_order, orderfatherUni: arr.order_num };
       }))];
