@@ -331,8 +331,8 @@ const CourseList = (props) => {
         {
             showWays === 2
               ? <Table
-                  columns={courseList}
-                  dataSource={fmgCourseListFinal}
+                columns={courseList}
+                dataSource={fmgCourseListFinal}
               />
               :        <div className="course-list-container">
                 <List

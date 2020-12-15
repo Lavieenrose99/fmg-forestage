@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-04 10:34:03
- * @LastEditTime: 2020-12-08 17:05:38
+ * @LastEditTime: 2020-12-14 23:21:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Course/couse_list.js
@@ -11,7 +11,8 @@ import { get } from 'lodash';
 import {
   getCourseList, MgetCourseEnity, 
   createCourse, DelCourse, adjCourse,
-  PreApplyList, MgetPreApplyList
+  PreApplyList, MgetPreApplyList, ApplyList,
+  MgetApplyList
 } from '@/services/Course/course_list';
 import { MgetAccountList } from '@/services/Bill/bills_list';
   
@@ -39,7 +40,7 @@ const fmgCourseModel = {
         payload: raw,
       });
     },
-    * fetchApplyCourseList({ payload }, { call, put, take }) {
+    * fetchApplyCourseList({ payload }, { call, put }) {
       const response = yield call(PreApplyList, payload);
       const infos = get(response, 'preApplys', []);
       const ids = yield infos.map((arr) => { return arr.id; });
@@ -55,6 +56,26 @@ const fmgCourseModel = {
       });
       yield put({
         type: 'saveApplyCourseList',
+        payload: raw,
+      });
+      //yield take('BillsListBack/saveAccountList/@@end');
+    },
+    * fetchRealApplyCourseList({ payload }, { call, put }) {
+      const response = yield call(ApplyList, payload);
+      const infos = get(response, 'applys', []);
+      const ids = yield infos.map((arr) => { return arr.id; });
+      const raw = yield call(MgetApplyList, ids);
+      const userIdSet = [...new Set(raw.map((arr) => {
+        return arr.account_id;
+      }))];
+      const accountInfo = yield call(MgetAccountList, userIdSet);
+      //复习一下saga
+      yield put({
+        type: 'BillsListBack/saveAccountList',
+        payload: accountInfo,
+      });
+      yield put({
+        type: 'saveRealApplyCourseList',
         payload: raw,
       });
       //yield take('BillsListBack/saveAccountList/@@end');
@@ -88,6 +109,12 @@ const fmgCourseModel = {
       return {
         ...state,
         ApplycourseList: payload,
+      };
+    },
+    saveRealApplyCourseList(state, { payload }) {
+      return {
+        ...state,
+        ApplyRealcourseList: payload,
       };
     },
     savePageTotals(state, { payload }) {
