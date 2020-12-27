@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 13:09:25
- * @LastEditTime: 2020-12-09 16:04:48
+ * @LastEditTime: 2020-12-21 12:17:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/models/Infos/fmg_infos.js
@@ -100,11 +100,13 @@ const fmgInfosModel = {
     },
     savePageTotals(state, { payload }) {
       return {
+        ...state,
         total: payload,
       };
     },
     saveInfosTagsList(state, { payload }) {
       return {
+        ...state,
         TagsInfosList: payload,
       };
     },

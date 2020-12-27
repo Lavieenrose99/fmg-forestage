@@ -343,7 +343,7 @@ const CourseList = (props) => {
                     onChange: (page) => {
                       console.log(page);
                     },
-                    pageSize: 1,
+                    pageSize: 5,
                   }}
                   dataSource={fmgCourseList}
                   renderItem={(item) => {

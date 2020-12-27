@@ -308,7 +308,7 @@ const BillsList = (props) => {
                   setChildBillsId(ids); 
                 } else {
                   setshowDrawer(!showDrawer);
-                  setChildBillsInfos(record)
+                  setChildBillsInfos(record);
                 }
               }}
               >
@@ -414,13 +414,19 @@ const BillsList = (props) => {
   };
   const columns = [
     {
-      title: '订单号',
+      title: <span>
+        <IconFont type="icondingdan1" />
+        订单
+      </span>,
       dataIndex: 'orderfatherUni',
       key: 2,
       width: '20%',
     },
     {
-      title: '用户名',
+      title: <span>
+        <IconFont type="iconyonghu" />
+        用户
+      </span>,
       dataIndex: 'account_id',
       key: 'order_num',
       width: '15%',

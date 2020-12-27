@@ -86,7 +86,7 @@ class GoodsModelsList extends React.PureComponent {
       visible: false,
       changeVisible: false,
       page: 1,
-      limit: 5,
+      limit: 10,
     };
     this.InputTemplateTitle = this.InputTemplateTitle.bind(this);
   }
@@ -125,10 +125,10 @@ class GoodsModelsList extends React.PureComponent {
     this.setState({
       current,
     });
-    const { dispatch } = this.props;
+    const { dispatch, limit } = this.props;
     dispatch({
       type: 'goodsModels/fetchModelsTags',
-      payload: { page: current, limit: 5 }, 
+      payload: { page: current, limit: 10  }, 
     });
   }
 
@@ -338,7 +338,7 @@ class GoodsModelsList extends React.PureComponent {
    const { dispatch } = this.props;
    dispatch({
      type: 'goodsModels/fetchModels',
-     payload: { page: 1, limit: 5  }, 
+     payload: { page: 1, limit: 10  }, 
    });
  };
 
@@ -355,7 +355,7 @@ class GoodsModelsList extends React.PureComponent {
    const paginationProps = {
      showQuickJumper: false,
      showTotal: () => `共${ModelsTotal}条`,
-     pageSize,
+     pageSize : 10,
      current,
      onChange: (current) => this.changePage(current),
    };

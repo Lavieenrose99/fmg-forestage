@@ -27,6 +27,7 @@ const InfosList = (props) => {
   const [showChangeModal, setShowChangeModal] = useState(false);
   const [showMagementModal, setShowMagementModal] = useState(false);
   const [changeItem, setChangeItem] = useState({});
+  console.log(InfosList)
   useEffect(() => {
     props.dispatch({
       type: 'fmgInfos/fetchInfosList',
