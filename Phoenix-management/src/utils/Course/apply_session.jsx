@@ -58,7 +58,16 @@ export const ApplyStatus = [
     id: 2,
     name: '已支付',
   }, {
+    id: 3,
+    name: '已完成',
+  }, {
     id: 4,
     name: '已取消',
+  }, {
+    id: 5,
+    name: '退款中',
+  }, {
+    id: 6,
+    name: '已退款',
   }
 ];

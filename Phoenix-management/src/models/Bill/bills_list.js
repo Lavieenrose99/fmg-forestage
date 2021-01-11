@@ -16,7 +16,8 @@ import {
   putExchangeStatus,
   putRejectStatus,
   DoRefund,
-  getAllUserList
+  getAllUserList,
+  DoCourseRefund
 
 } from '@/services/Bill/bills_list';
 import { MgetGoods } from '@/services/CreateGoods/CreateGoods';
@@ -94,6 +95,15 @@ const GoodsClassModel = {
     * PleaseRefund({ payload }, { call }) {
       const raw =  yield call(putExchangeStatus, payload);
       yield call(DoRefund, payload);
+      if (raw.id !== 0) {
+        message.info('退款成功');
+      } else {
+        message.info('退款失败！');
+      }
+    },
+    //课程退款
+    * PleaseCourseRefund({ payload }, { call }) {
+      const raw =  yield call(DoCourseRefund, payload);
       if (raw.id !== 0) {
         message.info('退款成功');
       } else {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-15 18:11:30
- * @LastEditTime: 2020-12-15 16:13:50
+ * @LastEditTime: 2021-01-11 15:56:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/Course/course_table.js
@@ -32,9 +32,13 @@ export const ApplyColumn = [
       if (info === 1) {
         color = 'volcano';
       } else if (info === 2) {
+        color = 'orange';
+      } else if (info === 3) {
         color = 'green';
-      } else if (info === 4) {
+      } else if (info === 5) {
         color = 'red';
+      } else if (info === 4) {
+        color = '';
       } else {
         color = '#87d068';
       }

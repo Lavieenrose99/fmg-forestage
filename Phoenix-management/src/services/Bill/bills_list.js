@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-09-17 23:56:19
- * @LastEditTime: 2020-12-09 11:07:41
+ * @LastEditTime: 2021-01-11 16:18:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Bill/bills_list.js
@@ -66,6 +66,11 @@ export async function putRejectStatus(payload) {
 //退款接口 /pay/refund/:eid
 export async function DoRefund(payload) {
   return request(`/api.farm/pay/refund/${payload}`, {
+    method: 'GET',
+  });
+}
+export async function DoCourseRefund(payload) {
+  return request(`/api.farm/pay/apply/refund/${payload}`, {
     method: 'GET',
   });
 }

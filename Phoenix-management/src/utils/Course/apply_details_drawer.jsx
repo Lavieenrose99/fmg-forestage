@@ -45,6 +45,7 @@ const CourseApplyDrawer = (props) => {
             取消
           </Button>
           <Button
+            disabled={billsInfos?.status!==5}
             type="primary"
             onClick={() => {
               Modal.confirm({
@@ -55,7 +56,7 @@ const CourseApplyDrawer = (props) => {
                 cancelText: '取消',
                 onOk: () => {
                   props.dispatch({
-                    type: 'BillsListBack/PleaseRefund',
+                    type: 'BillsListBack/PleaseCourseRefund',
                     payload: billsInfos.id,
                   }); 
                 },
@@ -65,6 +66,7 @@ const CourseApplyDrawer = (props) => {
             批准
           </Button>
           <Button
+            disabled
             type="dashed"
             danger
             style={{ float: 'left' }}
