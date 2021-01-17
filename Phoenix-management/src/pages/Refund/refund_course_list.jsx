@@ -81,7 +81,7 @@ const RefundCoureslist = (props) => {
               <Avatar>没注册</Avatar>
             </span>
             <span style={{ marginLeft: 10 }}>
-              无该用户
+              用户注销
             </span>
           </div>
         );

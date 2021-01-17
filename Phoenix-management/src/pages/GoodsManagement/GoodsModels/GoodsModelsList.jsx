@@ -65,7 +65,6 @@ class GoodsModelsList extends React.PureComponent {
         render: (text, record) => (
           <>
             <Space size="large">
-              <a>查看商品</a>
               <a onClick={() => this.handleChange(text, record)}>修改</a>
               <a onClick={() => this.comfirmDelArea(text)}>删除</a>
             </Space>

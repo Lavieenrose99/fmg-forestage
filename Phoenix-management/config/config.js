@@ -144,13 +144,13 @@ export default defineConfig({
                 component: './Bill/bills_list',
               //authority: ['admin'],
               },
-              {
-                path: '/page/goodspayment/express_list',
-                name: '快递查询',
-                icon: 'smile',
-                component: './Bill/express_list',
-              //authority: ['admin'],
-              },
+              // {
+              //   path: '/page/goodspayment/express_list',
+              //   name: '快递查询',
+              //   icon: 'smile',
+              //   component: './Bill/express_list',
+              // //authority: ['admin'],
+              // },
               {
                 path: '/page/goodspayment/handle_list',
                 name: '退货订单（商品） ',
@@ -209,13 +209,13 @@ export default defineConfig({
                 name: '课程标签',
                 icon: 'setting',
                 component: './Course/course_tags_setting',
-              },
-              {
-                path: '/page/study/test',
-                name: '测试列表',
-                icon: 'setting',
-                component: './Course/test',
               }
+              // {
+              //   path: '/page/study/test',
+              //   name: '测试列表',
+              //   icon: 'setting',
+              //   component: './Course/test',
+              // }
              
             ],
           },
@@ -232,20 +232,20 @@ export default defineConfig({
              
             ],
           },
-          {
-            path: '/page/test',
-            name: '测试组件',
-            icon: 'dashboard',
-            routes: [
-              {
-                path: '/page/test/table',
-                name: '图片剪裁',
-                icon: 'setting',
-                component: './Test/test.jsx',
-              }
+          // {
+          //   path: '/page/test',
+          //   name: '测试组件',
+          //   icon: 'dashboard',
+          //   routes: [
+          //     {
+          //       path: '/page/test/table',
+          //       name: '图片剪裁',
+          //       icon: 'setting',
+          //       component: './Test/test.jsx',
+          //     }
              
-            ],
-          },
+          //   ],
+          // },
           {
             component: './404',
           }

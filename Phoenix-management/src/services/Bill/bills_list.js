@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-09-17 23:56:19
- * @LastEditTime: 2021-01-11 16:18:58
+ * @LastEditTime: 2021-01-18 00:57:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/services/Bill/bills_list.js
@@ -58,9 +58,9 @@ export async function putExchangeStatus(payload) {
   });
 }
 export async function putRejectStatus(payload) {
-  return request(`/api.farm/exchange/pmt/${payload}`, {
+  return request(`/api.farm/exchange/pmt/${payload.id}`, {
     method: 'PUT',
-    data: { status: 4 },
+    data: { status: 4, reason_desc: payload.text },
   });
 }
 //退款接口 /pay/refund/:eid

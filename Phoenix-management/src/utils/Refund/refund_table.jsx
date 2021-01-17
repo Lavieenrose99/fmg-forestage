@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-01 13:56:57
- * @LastEditTime: 2020-12-08 09:01:54
+ * @LastEditTime: 2021-01-17 23:33:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /fmg-management/Phoenix-management/src/utils/Refund/refund_table.js
@@ -78,7 +78,7 @@ export const RefundListTable =  [
     },
   },
   {
-    title: '创建时间',
+    title: '下单时间',
     dataIndex: 'create_time',
     key: 'update_time',
     render: (text) => {

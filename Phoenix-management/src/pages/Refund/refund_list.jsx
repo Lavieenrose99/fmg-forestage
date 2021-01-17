@@ -16,10 +16,13 @@ import {
 } from '@ant-design/icons';
 import  './refund_list.less';
 
+const { Search } = Input;
+
 const FmgRefundList = (props) => {
   const { RefundList, cAccount } = props;
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [checkRefundInfo, setCheckRefundInfo] = useState({});
+  const [useId, setUserId] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const userAtom = {
@@ -48,7 +51,7 @@ const FmgRefundList = (props) => {
             <Avatar>没注册</Avatar>
           </span>
           <span style={{ marginLeft: 10 }}>
-            无该用户
+            用户注销
           </span>
         </div>
       );
@@ -133,16 +136,23 @@ const FmgRefundList = (props) => {
       key: 'action',
       render: (_, record) => {
         let str;
+        let type;
         if (record.status === 2 || record.status === 8) {
           str = '查看订单';
+          type = 'primary';
         } else {
           str = '处理订单';
+          type = 'dashed';
         }
         return (
           <Space size="middle">
-            <a onClick={() => { setCheckRefundInfo(record); setVisibleDrawer(true); }}>
+            <Button
+              danger={str !== '查看订单'}
+              type={type} 
+              onClick={() => { setCheckRefundInfo(record); setVisibleDrawer(true); }}
+            >
               {str}
-            </a>
+            </Button>
           </Space>
         );
       },
@@ -150,6 +160,30 @@ const FmgRefundList = (props) => {
   ];
   return (
     <PageHeaderWrapper>
+      <div className="account-list-search">
+        <Search
+          onChange={(e) => {
+            setUserId(e.target.value);
+          }}
+          onSearch={() => {
+            const user = cAccount.find((item) => item.nickname === useId)
+              ? cAccount.find((item) => item.nickname === useId).id : null;
+            props.dispatch({
+              type: 'BillsListBack/fetchRefundList',
+              payload: {
+                limit: 99,
+                page: 1,
+                author_id: user,
+              },
+            });
+          }}
+          size="large"
+          placeholder="输入买家昵称"
+          enterButton="搜索"
+          style={{ width: 400, margin: '18px 0' }}
+        />
+        <div />
+      </div>
       <Table columns={columns} dataSource={RefundList} />
       <RefundComfirm
         show={visibleDrawer}

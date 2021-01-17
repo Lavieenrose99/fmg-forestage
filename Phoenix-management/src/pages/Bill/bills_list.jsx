@@ -7,7 +7,7 @@ import moment from 'moment';
 import {
   Table, Input, DatePicker,
   Form, PageHeader, Space, Select, 
-  Button, Badge, Avatar
+  Button, Badge, Avatar, Tag
 } from 'antd';
 import {
   RedoOutlined, MinusCircleTwoTone, 
@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 
 const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
 const { Option } = Select;
+const { Search } = Input;
 const { RangePicker } = DatePicker;
 
 const BillsList = (props) => {
@@ -29,8 +30,6 @@ const BillsList = (props) => {
     List, MainListBreak, Address, Account, MainList, ChildGoods, pageTotals,
   } = props;
   const [form] = Form.useForm();
-  const [formExpress] = Form.useForm();
-  const formRef = useRef(null);
   const [changeVisible, setChangeVisible] = useState(false);
   const [account, setAccount] = useState(Account);
   const [showDrawer, setshowDrawer] = useState(false);
@@ -40,7 +39,7 @@ const BillsList = (props) => {
   const [selectAccGname, setSelectAccGname] = useState('');
   const [selectAccSta, setSelectAccSta]  = useState('');
   const [orderId, setOrderId] = useState('');
-  const [editingKey, setEditingKey] = useState('');
+  const [userId, setUserId] = useState(0);
   const [childGoodsIdArr, setChildGoodsIdArr] = useState([]);
   const [childUnionInfo, setChildUnionInfo] = useState([]);
   const [childrenDrawer, setChildrenDrawer]  = useState(false);
@@ -196,8 +195,7 @@ const BillsList = (props) => {
         title: '订单状态',
         dataIndex: 'order_status',
         key: 'name',
-        render: (text, record) => {
-          console.log(record);
+        render: (text) => {
           let t = '';
           let exstatus = 'Processing';
           if (text === 1) {
@@ -296,24 +294,30 @@ const BillsList = (props) => {
           if (record.tracking_id) {
             mark.text = '查看物流';
             mark.id = 1;
-          } else {
+          } else if (record.delivery === 1) {
             mark.text = '快递发货';
             mark.id = 2;
+          } else {
+            mark.id = 3;
+            mark.text = '自提取货';
           }
           return (
             <Space size="middle">
-              <a onClick={() => {
-                if (mark.id === 2) {
-                  setChildrenDrawer(!childrenDrawer);
-                  setChildBillsId(ids); 
-                } else {
-                  setshowDrawer(!showDrawer);
-                  setChildBillsInfos(record);
-                }
-              }}
-              >
-                {mark.text}
-              </a>
+              {
+             mark.id === 3 ? <Tag color="green">{mark.text}</Tag>
+               : <a onClick={() => {
+                 if (mark.id === 2 && record.delivery !== 4) {
+                   setChildrenDrawer(!childrenDrawer);
+                   setChildBillsId(ids); 
+                 } else {
+                   setshowDrawer(!showDrawer);
+                   setChildBillsInfos(record);
+                 }
+               }}
+               >
+                 {mark.text}
+               </a>
+}
             </Space>
           );
         },
@@ -367,24 +371,6 @@ const BillsList = (props) => {
         limit: pageSize,
       },
     });
-  };
-  const selectUserName = (e) => {
-    const auId = account.filter((arr) => {
-      return arr.nickname === e.target.value;
-    }).length !== 0
-      ? account.filter((arr) => {
-        return arr.nickname === e.target.value;
-      })[0].account_id : null;
-    props.dispatch({
-      type: 'BillsListBack/fetchBillsList',
-      payload: {
-        page: 1,
-        limit: 99,
-        author_id: auId,
-        name: selectAccGname, 
-      },
-    });
-    setSelectName(e.target.value);
   };
   const selectAccountId = (e) => {
     props.dispatch({
@@ -451,7 +437,7 @@ const BillsList = (props) => {
               <Avatar>没注册</Avatar>
             </span>
             <span style={{ marginLeft: 10 }}>
-              无该用户
+              用户注销
             </span>
           </div>
         );
@@ -555,17 +541,6 @@ const BillsList = (props) => {
                 <Space size="large">
                   <span className="good-selector-items">
                     <span>
-                      用户名称: 
-                    </span>
-                    <Input
-                      className="goods-selector-name" 
-                      value={selectName}
-                      onChange={selectUserName}
-                      placeholder="请输入用户名称"
-                    />
-                  </span>
-                  <span className="good-selector-items">
-                    <span>
                       商品名称: 
                     </span>
                     <Input
@@ -596,14 +571,29 @@ const BillsList = (props) => {
                       }
                     </Select>
                   </span>
-
-                  <Button
-                    type="primary"
-                    onClick={reloadSelector}
-                    icon={<RedoOutlined />}
-                  >
-                    清空
-                  </Button>
+                  <Search
+                    onChange={(e) => {
+                      setUserId(e.target.value);
+                    }}
+                    onSearch={() => {
+                      const user = account.find((item) => item.nickname === userId)
+                        ? account.find((item) => item.nickname === userId).id : null;
+                      setUserId(user);
+                      props.dispatch({
+                        type: 'BillsListBack/fetchBillsList',
+                        payload: {
+                          page: pageCurrent,
+                          limit: pageSize,
+                          author_id: user,
+                          name: selectAccGname, 
+                        },
+                      });
+                    }}
+                    placeholder="输入买家昵称"
+                    enterButton="搜索"
+                    style={{ width: 200 }}
+                  />
+                  
                 </Space>
               </div>
               <div className="bills-date-selector">
@@ -627,6 +617,14 @@ const BillsList = (props) => {
                   showTime 
                   onChange={filterTimePicker}
                 />
+                <Button
+                  style={{  marginLeft: 30 }}
+                  type="primary"
+                  onClick={reloadSelector}
+                  icon={<RedoOutlined />}
+                >
+                  清空
+                </Button>
               </div>
             </div>
             <Table
@@ -655,7 +653,10 @@ const BillsList = (props) => {
                   props.dispatch({
                     type: 'BillsListBack/fetchBillsList',
                     payload: {
-                      page, limit: size, 
+                      page,
+                      limit: size, 
+                      author_id: userId,
+                      name: selectAccGname,
                     },
                   });
                 },
