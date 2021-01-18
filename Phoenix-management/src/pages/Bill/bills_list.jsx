@@ -213,6 +213,13 @@ const BillsList = (props) => {
           } else if (text === 5) {
             t = '已完成';
             exstatus = 'success';
+          } else if (text === 9) {
+            t = '待提货';
+          } else if (text === 8) {
+            t = '售后完成';
+          } else if (text === 7) {
+            t = '售后处理中';
+            exstatus = 'warning';
           } else {
             t = '已取消';
             exstatus = 'warning';
@@ -297,7 +304,7 @@ const BillsList = (props) => {
           } else if (record.delivery === 1) {
             mark.text = '快递发货';
             mark.id = 2;
-          } else {
+          } else if (record.order_status === 9) {
             mark.id = 3;
             mark.text = '自提取货';
           }
@@ -305,18 +312,21 @@ const BillsList = (props) => {
             <Space size="middle">
               {
              mark.id === 3 ? <Tag color="green">{mark.text}</Tag>
-               : <a onClick={() => {
-                 if (mark.id === 2 && record.delivery !== 4) {
-                   setChildrenDrawer(!childrenDrawer);
-                   setChildBillsId(ids); 
-                 } else {
-                   setshowDrawer(!showDrawer);
-                   setChildBillsInfos(record);
-                 }
-               }}
+               : <Button
+                 disabled={record.order_status === 6 || 8}
+                 type="primary"
+                 onClick={() => {
+                   if (mark.id === 2 && record.delivery !== 4) {
+                     setChildrenDrawer(!childrenDrawer);
+                     setChildBillsId(ids); 
+                   } else {
+                     setshowDrawer(!showDrawer);
+                     setChildBillsInfos(record);
+                   }
+                 }}
                >
                  {mark.text}
-               </a>
+               </Button>
 }
             </Space>
           );

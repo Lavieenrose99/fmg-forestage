@@ -1,11 +1,11 @@
 import {
-  Table, Space, Button, Input, Avatar
+  Table, Space, Button, Input, Avatar, Select, Tag
 } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
-  RefundListTable
+  RefundListTable, RefundStatus
 } from '@/utils/Refund/refund_table.jsx';
 import  RefundComfirm  from '@/utils/Refund/Refund_comfim_drawer.jsx';
 import { IconFont } from '@/utils/DataStore/icon_set.js';
@@ -17,12 +17,15 @@ import {
 import  './refund_list.less';
 
 const { Search } = Input;
+const { Option } = Select;
 
 const FmgRefundList = (props) => {
   const { RefundList, cAccount } = props;
   const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [checkRefundInfo, setCheckRefundInfo] = useState({});
   const [useId, setUserId] = useState(0);
+  const [RefundStatuss, setRefundStatuss] = useState(0);
+  const [out_trade_no, setOut_trade_no] = useState(undefined);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const userAtom = {
@@ -62,6 +65,7 @@ const FmgRefundList = (props) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys, selectedKeys, confirm, clearFilters, 
@@ -161,6 +165,56 @@ const FmgRefundList = (props) => {
   return (
     <PageHeaderWrapper>
       <div className="account-list-search">
+        <Select
+          style={{
+            width: 120, margin: '18px 0', marginLeft: 200, float: 'left', 
+          }}
+          placeholder="选择订单状态"
+          onChange={
+            (e) => {
+              setRefundStatuss(e);
+              props.dispatch({
+                type: 'BillsListBack/fetchRefundList',
+                payload: {
+                  limit: 99,
+                  page: 1,
+                  author_id: useId,
+                  out_trade_no,
+                  status: e,
+                },
+              });
+            }
+            
+          }
+        >
+          {
+              [{ id: 0, status: '全部' }, ...RefundStatus].map((item) => {
+                return <Option value={item.id}><Tag>{item.status}</Tag></Option>;
+              })
+            }
+        </Select>
+        <Search
+          onChange={(e) => {
+            setOut_trade_no(e.target.value);
+          }}
+          onSearch={() => {
+            const user = cAccount.find((item) => item.nickname === useId)
+              ? cAccount.find((item) => item.nickname === useId).id : null;
+            props.dispatch({
+              type: 'BillsListBack/fetchRefundList',
+              payload: {
+                limit: 99,
+                page: 1,
+                author_id: user,
+                out_trade_no,
+                status: RefundStatuss,
+              },
+            });
+          }}
+          placeholder="输入订单号"
+          enterButton="搜索"
+          style={{ width: 400, margin: '18px 0' }}
+        />
         <Search
           onChange={(e) => {
             setUserId(e.target.value);
@@ -174,14 +228,19 @@ const FmgRefundList = (props) => {
                 limit: 99,
                 page: 1,
                 author_id: user,
+                out_trade_no,
+                status: RefundStatuss,
+
               },
             });
           }}
-          size="large"
           placeholder="输入买家昵称"
           enterButton="搜索"
-          style={{ width: 400, margin: '18px 0' }}
+          style={{
+            width: 200, margin: '18px 0', marginRight: 200, float: 'right', 
+          }}
         />
+    
         <div />
       </div>
       <Table columns={columns} dataSource={RefundList} />

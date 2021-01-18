@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-02 19:44:16
+ * @LastEditTime: 2021-01-18 18:44:10
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /fmg-management/Phoenix-management/src/utils/DataStore/bills_data_set.js
+ */
 export const TimeFilter = [
   {
     time: '全部时间',
@@ -46,5 +54,14 @@ export const StatusSet = [
   }, {
     title: '已取消',
     value: 6,
+  }, {
+    title: '申请售后',
+    value: 7,
+  }, {
+    title: '售后完成',
+    value: 8,
+  }, {
+    title: '待提货',
+    value: 9,
   }
 ];
