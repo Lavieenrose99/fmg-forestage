@@ -298,10 +298,10 @@ const BillsList = (props) => {
             ooid: record.test_order.id,
             oid: record.id,
           };
-          if (record.tracking_id) {
+          if (record.tracking_id && record.order_status !== 9) {
             mark.text = '查看物流';
             mark.id = 1;
-          } else if (record.delivery === 1) {
+          } else if (record.order_status === 2 || record.order_status === 1) {
             mark.text = '快递发货';
             mark.id = 2;
           } else if (record.order_status === 9) {
@@ -313,7 +313,7 @@ const BillsList = (props) => {
               {
              mark.id === 3 ? <Tag color="green">{mark.text}</Tag>
                : <Button
-                 disabled={record.order_status === 6 || 8}
+                 disabled={record.order_status === 1}
                  type="primary"
                  onClick={() => {
                    if (mark.id === 2 && record.delivery !== 4) {
