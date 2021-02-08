@@ -8,7 +8,7 @@
  */
 
 export const QINIU_SERVER = 'https://upload-z2.qiniup.com';
-export const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+export const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
 
 export  const pictureSize = {
   rolling: 16 / 9,

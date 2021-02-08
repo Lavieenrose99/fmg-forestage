@@ -41,7 +41,7 @@ const CourseList = (props) => {
               cover={
                 <img
                   alt="example"
-                  src="http://qiniu.daosuan.net/picture-1604563323000"
+                  src="http://qiniu.fmg.net.cn/picture-1604563323000"
                 />
     }
               actions={[
@@ -51,7 +51,7 @@ const CourseList = (props) => {
               ]}
             >
               {/* <Meta
-                // avatar={<Avatar src="http://qiniu.daosuan.net/picture-1604559696000" />}
+                // avatar={<Avatar src="http://qiniu.fmg.net.cn/picture-1604559696000" />}
                 title={list.name}
                 description={<strong>{list.describe}</strong>}
               /> */}

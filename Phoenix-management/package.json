@@ -60,6 +60,7 @@
     "@types/lodash.debounce": "^4.0.6",
     "ant-design-pro": "^1.4.4",
     "antd": "^4.4.0",
+    "chicken-design": "1.0.5",
     "antd-img-crop": "^3.13.2",
     "axios": "^0.20.0",
     "bizcharts": "^3.5.9",

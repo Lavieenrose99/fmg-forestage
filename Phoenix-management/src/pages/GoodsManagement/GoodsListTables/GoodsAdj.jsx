@@ -48,7 +48,7 @@ const GoodsAdj = (props) => {
     getwaysChanger = [1, 2, 4];
   }
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
-  const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+  const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
   const list = info.pictures.map((arr, index) => {
     return {
       url: BASE_QINIU_URL + arr.picture,

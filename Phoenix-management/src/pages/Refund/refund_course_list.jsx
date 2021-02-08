@@ -8,7 +8,7 @@ import {
 import { connect } from 'umi';
 import { get } from 'lodash';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { SessionDetails, PreApplyStatus } from '@/utils/Course/apply_session';
+import { SessionDetails } from '@/utils/Course/apply_session';
 import { ApplyColumn } from '@/utils/Course/course_table.jsx';
 import  CourseApplyDrawer   from '@/utils/Course/apply_details_drawer.jsx';
 import PropTypes from 'prop-types';

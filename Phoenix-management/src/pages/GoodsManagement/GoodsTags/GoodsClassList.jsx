@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { PlusCircleTwoTone, UploadOutlined } from '@ant-design/icons';
 import '../../../style/GoodsTagsIndex.less';
 
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
 const QINIU_SERVER = 'http://upload-z2.qiniup.com';
 const uploadButton = (
   <div>

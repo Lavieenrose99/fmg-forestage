@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect, useRef
 }  from 'react';
-import { HeartTwoTone, SmileTwoTone, UploadOutlined } from '@ant-design/icons';
+import {  UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
 import {
   Form, Icon,
@@ -16,7 +16,6 @@ import { get } from 'lodash';
 import { QINIU_SERVER, BASE_QINIU_URL } 
   from '@/utils/Token';
 
-const { Option, OptGroup } = Select;
 const { Column, ColumnGroup } = Table;
 const { TabPane } = Tabs;
   

@@ -20,7 +20,7 @@ import { IconFont } from '@/utils/DataStore/icon_set.js';
 import './bills_list.less';
 import PropTypes from 'prop-types';
 
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
 const { Option } = Select;
 const { Search } = Input;
 const { RangePicker } = DatePicker;

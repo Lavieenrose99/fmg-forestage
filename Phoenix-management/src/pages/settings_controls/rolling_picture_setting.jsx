@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useRef
+  useState, useEffect
 }  from 'react';
 import { PlusSquareTwoTone, UploadOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
@@ -9,14 +9,14 @@ import { pictureSize }
 import {
   Form, Icon,
   Button, Select, 
-  InputNumber, Upload, Modal, Divider, Table, Space, Tabs, Row, Col
+  InputNumber, Upload, Modal, Divider, Table, Space, Tabs,  Col
    
 } from 'antd';
 import { connect, Link } from 'umi';
 import { get } from 'lodash';
 
 const { Option, OptGroup } = Select;
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 const { TabPane } = Tabs;
 
 const layout = {
@@ -36,7 +36,7 @@ const tailLayout = {
 
 const RollingPictures = (props) => {
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
-  const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+  const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
   const [qiniuToken, setQiniuToken] = useState('');
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');

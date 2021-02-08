@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import { noop } from 'lodash';
 //import MYURL  from '../api/config';
 const MYURL = 'http://upload-z2.qiniup.com';
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
 Quill.register('modules/imageDrop', ImageDrop);
 class RichTextEditor extends Component {
   constructor(props) {

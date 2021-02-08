@@ -93,6 +93,12 @@ export default defineConfig({
               //authority: ['admin'],
               },
               {
+                path: '/page/settings_controls/expire_time_setting',
+                name: '过期时间设置',
+                component: './settings_controls/time_setting',
+              //authority: ['admin'],
+              },
+              {
                 path: '/page/settings_controls/icon_setting',
                 name: '图标管理',
                 icon: 'smile',
@@ -232,20 +238,20 @@ export default defineConfig({
              
             ],
           },
-          // {
-          //   path: '/page/test',
-          //   name: '测试组件',
-          //   icon: 'dashboard',
-          //   routes: [
-          //     {
-          //       path: '/page/test/table',
-          //       name: '图片剪裁',
-          //       icon: 'setting',
-          //       component: './Test/test.jsx',
-          //     }
+          {
+            path: '/page/test',
+            name: '测试组件',
+            icon: 'dashboard',
+            routes: [
+              {
+                path: '/page/test/table',
+                name: '图片剪裁',
+                icon: 'setting',
+                component: './Test/test.jsx',
+              }
              
-          //   ],
-          // },
+            ],
+          },
           {
             component: './404',
           }

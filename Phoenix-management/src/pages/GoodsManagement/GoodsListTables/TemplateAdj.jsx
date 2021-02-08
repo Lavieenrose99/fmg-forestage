@@ -55,7 +55,7 @@ const TemplateAdj = (props) => {
   const [fileList, setFileList] = useState([]);
   const [qiniuToken, setQiniuToken] = useState('');
   const QINIU_SERVER = 'http://upload-z2.qiniup.com';
-  const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+  const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
   useEffect(() => {
     fromSpec.setFieldsValue({
       specification: [''],

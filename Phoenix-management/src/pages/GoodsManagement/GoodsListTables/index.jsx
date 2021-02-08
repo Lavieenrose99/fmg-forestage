@@ -15,7 +15,7 @@ import  './index.less';
 
 const { Column } = Table;
 const { Option, OptGroup } = Select;
-const BASE_QINIU_URL = 'http://qiniu.daosuan.net/';
+const BASE_QINIU_URL = 'http://qiniu.fmg.net.cn/';
 @connect(({
   goodsArea, goodsSale, CreateGoods, goodsClass, 
 }) => ({
